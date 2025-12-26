@@ -105,3 +105,8 @@ Thumbs.db
 *.log
 .benchmarks/
 fixtures/*.pkl
+
+# big files
+*.csv
+*.h5
+*.json
