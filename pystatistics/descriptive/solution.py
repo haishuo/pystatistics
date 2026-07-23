@@ -143,7 +143,7 @@ class DescriptiveSolution(SolutionReprMixin):
 
     @property
     def summary_table(self) -> NDArray[np.floating[Any]] | None:
-        """Six-number summary (6, p): Min, Q1, Median, Mean, Q3, Max."""
+        """Six-number summary of shape ``(6, p)`` — rows are Min, Q1, Median, Mean, Q3, Max."""
         return self._result.params.summary_table
 
     # --- Missing data ---

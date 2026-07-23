@@ -74,40 +74,46 @@ def pca(
         names: Variable names for the p columns.
         backend: Compute backend. The default depends on the input
             type:
-                - numpy array / CPU DataSource → ``'cpu'`` (R-reference
-                  path; matches R ``prcomp()`` to rtol = 1e-10). This is
-                  the regulated-industry default: unspecified means the
-                  validated-against-R path.
-                - torch.Tensor on GPU (e.g. ``ds.to('cuda')['X']``) →
-                  ``'gpu'``. Creating a GPU DataSource is already an
-                  opt-in to the GPU path, so we don't demand the user
-                  repeat the choice with an explicit ``backend='gpu'``.
+
+            - numpy array / CPU DataSource → ``'cpu'`` (R-reference
+              path; matches R ``prcomp()`` to rtol = 1e-10). This is
+              the regulated-industry default: unspecified means the
+              validated-against-R path.
+            - torch.Tensor on GPU (e.g. ``ds.to('cuda')['X']``) →
+              ``'gpu'``. Creating a GPU DataSource is already an
+              opt-in to the GPU path, so we don't demand the user
+              repeat the choice with an explicit ``backend='gpu'``.
+
             Explicit values:
-                - ``'cpu'``: force the numpy reference path (float64).
-                  Raises if given a GPU tensor (no silent device
-                  migration — Rule 1).
-                - ``'gpu'``: force GPU, float32. Raises if no GPU is
-                  available. Results match the CPU path at the
-                  ``GPU_FP32`` tolerance tier (rtol ≈ 1e-4) —
-                  statistically equivalent, not bitwise-equivalent.
-                - ``'gpu_fp64'``: force GPU, float64. CUDA only (MPS
-                  lacks float64; raises on Apple Silicon). CPU-matching
-                  precision at a performance cost — consumer NVIDIA
-                  parts run FP64 at ~1/64× FP32, so this is usually
-                  slower than CPU LAPACK.
-                - ``'auto'``: prefer GPU (float32) when CUDA is
-                  available, else CPU.
+
+            - ``'cpu'``: force the numpy reference path (float64).
+              Raises if given a GPU tensor (no silent device
+              migration — Rule 1).
+            - ``'gpu'``: force GPU, float32. Raises if no GPU is
+              available. Results match the CPU path at the
+              ``GPU_FP32`` tolerance tier (rtol ≈ 1e-4) —
+              statistically equivalent, not bitwise-equivalent.
+            - ``'gpu_fp64'``: force GPU, float64. CUDA only (MPS
+              lacks float64; raises on Apple Silicon). CPU-matching
+              precision at a performance cost — consumer NVIDIA
+              parts run FP64 at ~1/64× FP32, so this is usually
+              slower than CPU LAPACK.
+            - ``'auto'``: prefer GPU (float32) when CUDA is
+              available, else CPU.
         solver: Numerical algorithm to use. Only matters when actually
             running on GPU (the CPU path always uses SVD). The default
             (``None``) resolves by device: ``'svd'`` on CUDA, and
             ``'randomized'`` on Apple Silicon (MPS), where it is the only
             genuinely on-device path.
-            ``'svd'``: SVD of X. Always safe. Moderate (~3–4×) speedup
+
+            ``'svd'``
+                SVD of X. Always safe. Moderate (~3–4×) speedup
                 over CPU LAPACK. **CUDA only** — on MPS ``torch.linalg.svd``
                 silently falls back to the CPU, so an explicit
                 ``solver='svd'`` on Apple Silicon raises (no silent CPU
                 substitution).
-            ``'gram'``: Eigendecomposition of X'X — turns PCA into a
+            ``'gram'``
+                Eigendecomposition of X'X — turns PCA into a
                 big GEMM + small symmetric eigendecomp, both GPU
                 sweet spots. For tall-skinny well-conditioned data
                 (n ≫ p) this is typically 30–100×+ faster than the
@@ -117,7 +123,8 @@ def pca(
                 FP64, cond(X) ≲ 1e3 for FP32. **CUDA only** — on MPS
                 ``torch.linalg.eigh`` has no Metal kernel, so an explicit
                 ``solver='gram'`` on Apple Silicon raises.
-            ``'randomized'``: Halko–Martinsson–Tropp randomized truncated
+            ``'randomized'``
+                Halko–Martinsson–Tropp randomized truncated
                 SVD with CholeskyQR2 orthonormalization. Every X-sized
                 operation runs on-device via ``matmul`` + ``cholesky``
                 (only a tiny l×l eigendecomposition touches the host), so
@@ -128,7 +135,8 @@ def pca(
                 condition number inside CholeskyQR, so it gates on cond(X)
                 ≲ 1e3 (FP32) just like the Gram path; ``force=True``
                 bypasses.
-            ``'auto'``: On CUDA, uses ``'gram'`` when n > 2p AND the
+            ``'auto'``
+                On CUDA, uses ``'gram'`` when n > 2p AND the
                 condition check passes; falls back to ``'svd'`` otherwise.
                 On MPS, routes to ``'randomized'``.
         force: Bypass the condition-number gate (Gram and randomized

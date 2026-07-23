@@ -419,8 +419,10 @@ def multinom(
     (highest code) is the reference category, matching the convention
     used by R's nnet::multinom().
 
-    The model assumes:
+    The model assumes::
+
         P(Y = j | x) = exp(x' beta_j) / sum_k exp(x' beta_k)
+
     with beta_J = 0 for identifiability.
 
     Args:

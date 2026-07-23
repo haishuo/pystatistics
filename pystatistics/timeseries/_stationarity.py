@@ -39,12 +39,14 @@ def adf_test(
     Tests H0: x has a unit root (non-stationary)
     vs   H1: x is stationary
 
-    The test regression is:
+    The test regression is::
+
         Delta_x_t = alpha + beta*t + gamma*x_{t-1}
                     + sum_{i=1}^{p} delta_i * Delta_x_{t-i} + eps_t
 
     The test statistic is the t-statistic for gamma. The ``regression``
     parameter controls which deterministic terms are included:
+
     - 'nc': no constant, no trend
     - 'c': constant only
     - 'ct': constant + linear trend (default). This is what R's

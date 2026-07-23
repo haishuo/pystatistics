@@ -20,6 +20,12 @@ extensions = [
 napoleon_google_docstrings = True
 napoleon_numpy_docstrings = True
 napoleon_include_init_with_doc = True
+# Render "Attributes" sections as inline :ivar: field lists rather than
+# standalone attribute directives. Our result/spec classes are dataclasses,
+# so autodoc already emits an object description for each field; without this,
+# Napoleon emits a second one from the Attributes section, producing
+# "duplicate object description" warnings for every documented attribute.
+napoleon_use_ivar = True
 
 # Autodoc settings
 autodoc_member_order = 'bysource'

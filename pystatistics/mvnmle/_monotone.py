@@ -36,8 +36,8 @@ def is_monotone(data) -> bool:
 
     Parameters
     ----------
-    data : array-like, shape (n, v)
-        Data matrix with NaN for missing values.
+    data : array-like
+        Data matrix with NaN for missing values, shape ``(n, v)``.
 
     Returns
     -------
@@ -59,7 +59,8 @@ def monotone_permutation(data) -> Optional[NDArray]:
 
     Parameters
     ----------
-    data : array-like, shape (n, v)
+    data : array-like
+        Data matrix with NaN for missing values, shape ``(n, v)``.
 
     Returns
     -------
@@ -108,10 +109,12 @@ def mlest_monotone_closed_form(data) -> tuple[NDArray, NDArray, int]:
            $X_k$ is observed, fit OLS regression
            $X_k = \\beta_{k,0} + \\sum_{j<k} \\beta_{k,j} X_j + \\epsilon_k$
            with $\\mathrm{Var}(\\epsilon_k) = \\rho_k^2$. Back-
-           substitute into the full $(\\mu, \\Sigma)$ via
+           substitute into the full $(\\mu, \\Sigma)$ via::
+
                 $\\hat\\mu_k = \\beta_{k,0} + \\beta_{k,1:}^\\top \\hat\\mu_{1:k-1}$
                 $\\hat\\Sigma_{k, 1:k-1} = \\beta_{k,1:}^\\top \\hat\\Sigma_{1:k-1, 1:k-1}$
                 $\\hat\\Sigma_{k, k} = \\rho_k^2 + \\beta_{k,1:}^\\top \\hat\\Sigma_{1:k-1, 1:k-1} \\beta_{k,1:}$
+
         3. Undo the variable permutation to return parameters in the
            user's original variable order.
 
@@ -120,7 +123,8 @@ def mlest_monotone_closed_form(data) -> tuple[NDArray, NDArray, int]:
 
     Parameters
     ----------
-    data : array-like, shape (n, v)
+    data : array-like
+        Data matrix with NaN for missing values, shape ``(n, v)``.
 
     Returns
     -------

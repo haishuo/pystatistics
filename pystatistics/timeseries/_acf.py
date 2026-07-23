@@ -239,7 +239,8 @@ def pacf(
 
     Matches R's stats::pacf(). Uses the Durbin-Levinson recursion.
 
-    Algorithm:
+    Algorithm::
+
         phi_{1,1} = acf(1)
         For k = 2, 3, ...:
             phi_{k,k} = (acf(k) - sum_{j=1}^{k-1} phi_{k-1,j} * acf(k-j)) /

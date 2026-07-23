@@ -164,8 +164,9 @@ def little_mcar_test(data,
 
     Parameters
     ----------
-    data : array-like, shape (n_observations, n_variables)
-        Data matrix with missing values as np.nan.
+    data : array-like
+        Data matrix with missing values as np.nan, shape
+        ``(n_observations, n_variables)``.
     alpha : float, default=0.05
         Significance level.
     backend : str or None, default None

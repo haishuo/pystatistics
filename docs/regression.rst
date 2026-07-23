@@ -7,3 +7,4 @@ Linear and generalized linear models. OLS via QR (CPU) or Cholesky (GPU). GLM vi
    :members:
    :undoc-members:
    :show-inheritance:
+   :exclude-members: DataSource

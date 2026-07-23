@@ -37,6 +37,7 @@ def mlest(
     Maximum likelihood estimation for multivariate normal with missing data.
 
     Accepts EITHER:
+
         1. An MVNDesign object
         2. Raw data array or DataFrame (convenience)
 
@@ -46,6 +47,7 @@ def mlest(
         Data matrix with NaN for missing values, or MVNDesign object.
     method : str
         Estimation method:
+
         - 'direct' (default): gradient-based optimization on the
           log-likelihood. The parameterization depends on the backend (see
           ``backend``): the default CPU path uses a forward-Cholesky
@@ -61,6 +63,7 @@ def mlest(
           magnitude faster than iterative algorithms.
     backend : str or None
         Backend selection. Default None → 'cpu'.
+
         - 'cpu' (and the default): fast PyTorch forward-Cholesky FP64 path
           when PyTorch is installed; otherwise falls back (with a warning) to
           the numpy inverse-Cholesky reference. Both match R; the PyTorch path

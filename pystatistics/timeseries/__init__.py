@@ -6,7 +6,8 @@ Phase 7B: Exponential smoothing (ETS) models.
 Phase 7C: ARIMA models, forecasting, and automatic order selection.
 Phase 7D: Time series decomposition (classical and STL).
 
-Public API:
+Public API::
+
     acf(x)          - Autocorrelation function (matches R stats::acf)
     pacf(x)         - Partial autocorrelation function (matches R stats::pacf)
     diff(x)         - Difference a time series (matches R base::diff)

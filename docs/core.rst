@@ -7,10 +7,3 @@ Core infrastructure: DataSource container, Result wrapper, device selection, pre
    :members:
    :undoc-members:
    :show-inheritance:
-
-DataSource
-----------
-
-.. autoclass:: pystatistics.core.DataSource
-   :members:
-   :undoc-members:

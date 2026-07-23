@@ -141,17 +141,18 @@ class HTestSolution(SolutionReprMixin):
         """
         Format as R's print.htest output.
 
-        Produces output like:
+        Produces output like::
+
             Welch Two Sample t-test
 
-        data:  x and y
-        t = 2.2345, df = 17.43, p-value = 0.03891
-        alternative hypothesis: true difference in means is not equal to 0
-        95 percent confidence interval:
-         0.1234567  4.5678901
-        sample estimates:
-        mean of x mean of y
-         5.123456  2.789012
+            data:  x and y
+            t = 2.2345, df = 17.43, p-value = 0.03891
+            alternative hypothesis: true difference in means is not equal to 0
+            95 percent confidence interval:
+             0.1234567  4.5678901
+            sample estimates:
+            mean of x mean of y
+             5.123456  2.789012
         """
         p = self._result.params
         lines = []

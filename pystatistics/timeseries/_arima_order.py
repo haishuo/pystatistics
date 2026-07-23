@@ -78,11 +78,6 @@ class AutoARIMASolution(SolutionReprMixin):
         ``(order, ic_value)`` pairs for every model tried (including
         those that failed, recorded with ``inf``). For seasonal
         searches ``order`` is the pair ``((p, d, q), (P, D, Q, m))``.
-
-    Methods
-    -------
-    summary()
-        Human-readable summary of the search.
     """
 
     _result: Result[AutoARIMAParams]

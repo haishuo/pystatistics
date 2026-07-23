@@ -369,8 +369,10 @@ class Gaussian(Family):
         """Compute AIC matching R's gaussian family.
 
         R's gaussian()$aic uses MLE dispersion (dev/n, not dev/df) and
-        adds +2 for the dispersion parameter. The formula is:
+        adds +2 for the dispersion parameter. The formula is::
+
             AIC = -2 * loglik(sigma_mle) + 2 + 2 * rank
+
         where sigma_mle = sqrt(deviance / n), and the +2 comes from the
         gaussian family counting the dispersion as an extra parameter.
         """
