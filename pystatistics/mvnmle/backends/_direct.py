@@ -28,6 +28,8 @@ device memory; the numpy objective has nothing to release).
 
 from typing import Callable, Optional
 
+import numpy as np
+
 from pystatistics.core.result import Result
 from pystatistics.core.compute.timing import Timer
 from pystatistics.mvnmle.solution import MVNParams
@@ -95,6 +97,20 @@ def run_direct_solve(
     with timer.section('parameter_extraction'):
         mu, sigma, loglik = objective.extract_parameters(opt.x)
 
+    # A non-finite log-likelihood means the objective could not be evaluated at
+    # the reported optimum (e.g. the R-exact reconstruction broke down under
+    # extreme column-scale disparity). The optimizer may still flag success, but
+    # such a fit is not a trustworthy optimum: surface it loudly (Rule 1) and do
+    # not claim convergence, rather than returning a spurious enormous loglik.
+    loglik_ok = bool(np.isfinite(loglik))
+    if not loglik_ok:
+        warnings_list.append(
+            "Log-likelihood is not finite at the reported optimum: the objective "
+            "could not be evaluated there. This usually means the columns differ "
+            "enormously in scale — standardize/rescale the columns before fitting. "
+            "The reported fit is not a trustworthy optimum."
+        )
+
     if not opt.success:
         msg = opt.message or 'Unknown convergence failure'
         warnings_list.append(f"Optimization did not converge: {msg}")
@@ -111,7 +127,7 @@ def run_direct_solve(
         sigmahat=sigma,
         loglik=loglik,
         n_iter=opt.n_iter,
-        converged=opt.success,
+        converged=opt.success and loglik_ok,
         gradient_norm=opt.gradient_norm,
     )
 

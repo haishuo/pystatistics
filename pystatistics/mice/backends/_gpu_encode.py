@@ -84,5 +84,18 @@ def codes_to_indices(values, levels):
 
 
 def indices_to_codes(indices, levels):
-    """Map ``0..K-1`` class indices back to stored category codes (gather)."""
-    return levels[indices.long()]
+    """Map ``0..K-1`` class indices back to stored category codes (gather).
+
+    A NON-FINITE index is the degenerate-fit sentinel the GPU categorical
+    samplers emit (a fit that produced no usable class probabilities). It MUST
+    propagate as NaN so the backend's end-of-sweep non-finite guard catches it
+    and fails loud. Casting straight to ``long`` would turn NaN into a valid
+    index (0) and SILENTLY collapse the whole column onto ``levels[0]`` — the
+    Rule-1 sentinel erased before any guard sees it.
+    """
+    import torch
+
+    finite = torch.isfinite(indices)
+    safe = torch.where(finite, indices, torch.zeros_like(indices)).long()
+    codes = levels[safe].to(indices.dtype)
+    return torch.where(finite, codes, torch.full_like(codes, float("nan")))

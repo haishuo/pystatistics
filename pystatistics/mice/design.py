@@ -19,6 +19,7 @@ Immutable after construction. Follows the pystatistics Design pattern (cf.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import Any, Mapping, Sequence
 
@@ -198,6 +199,9 @@ class MICEDesign:
         names = _resolve_names(column_names, p)
         kinds = _resolve_kinds(column_kinds, p)
         levels = _resolve_levels(data, missing_mask, kinds, names, p)
+        _warn_constant_numeric_columns(
+            data, missing_mask, kinds, names, has_missing_per_col, p
+        )
         per_col_methods = _resolve_methods(
             method, methods, names, kinds, has_missing_per_col, p
         )
@@ -355,18 +359,54 @@ def _resolve_levels(data, missing_mask, kinds, names, p):
                 f"values; categorical columns must be integer category codes."
             )
         uniq = np.unique(observed)
-        if kinds[j] == "binary" and uniq.size != 2:
+        # The >= 2 levels requirement applies only to a column that must be
+        # IMPUTED. A fully-observed single-level categorical is a harmless
+        # constant predictor — treatment dummies drop the reference level, so it
+        # contributes no columns — and is accepted, mirroring how a constant
+        # fully-observed NUMERIC predictor is accepted. Rejecting it was an
+        # asymmetry that aborted otherwise-valid designs.
+        needs_imputation = bool(np.any(missing_mask[:, j]))
+        if kinds[j] == "binary" and uniq.size != 2 and needs_imputation:
             raise ValidationError(
                 f"Column {names[j]!r} is 'binary' but has {uniq.size} observed "
-                f"levels {uniq.tolist()}; binary columns need exactly 2."
+                f"levels {uniq.tolist()}; binary columns need exactly 2 to impute."
             )
-        if uniq.size < 2:
+        if uniq.size < 2 and needs_imputation:
             raise ValidationError(
                 f"Column {names[j]!r} is {kinds[j]!r} but has only "
                 f"{uniq.size} observed level; need at least 2 to impute."
             )
         levels.append(uniq.astype(np.float64))
     return tuple(levels)
+
+
+def _warn_constant_numeric_columns(
+    data, missing_mask, kinds, names, has_missing_per_col, p
+):
+    """Warn when a numeric column needing imputation has no observed variance.
+
+    A numeric column whose observed cells are (near-)constant gives pmm/norm
+    nothing to build a model from: every imputed cell equals the constant with
+    ZERO uncertainty, so the between-imputation variance is 0 and the fraction
+    of missing information collapses to 0 in Rubin's rules — silently
+    understating missing-data uncertainty. Surface it loudly (Rule 1) rather
+    than imputing a false zero-uncertainty constant. Categorical constants are
+    already rejected by ``_resolve_levels`` (needs >= 2 observed levels); this
+    covers the numeric case, mirroring R ``mice``'s logged 'constant' event.
+    """
+    for j in range(p):
+        if not has_missing_per_col[j] or kinds[j] in _CATEGORICAL_KINDS:
+            continue
+        observed = data[~missing_mask[:, j], j]
+        if observed.size and np.ptp(observed) <= 1e-10 * max(1.0, abs(observed[0])):
+            warnings.warn(
+                f"Column {names[j]!r} has (near-)constant observed values "
+                f"(= {observed[0]!r}); its imputations will all equal that "
+                f"constant with zero uncertainty, which understates missing-data "
+                f"uncertainty in Rubin's rules (between-imputation variance 0, "
+                f"fraction of missing information 0). Consider excluding it.",
+                stacklevel=2,
+            )
 
 
 def _resolve_methods(

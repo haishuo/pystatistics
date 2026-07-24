@@ -60,19 +60,38 @@ def _fit_logistic(y: np.ndarray, X: np.ndarray):
     """
     Xa = add_intercept(X)
     n, k = Xa.shape
-    beta = np.zeros(k, dtype=np.float64)
 
-    # Relative ridge, scaled by the predictor cross-product magnitude.
+    # A GENUINE ridge penalty toward a weakly-informative centre, not just a
+    # Hessian damper. The old code added the ridge to X'WX only, leaving the
+    # gradient X'(y-p); at convergence (delta -> 0) that solves the UNPENALISED
+    # score equation, so under (quasi-)complete separation beta still diverged
+    # and the imputed column collapsed onto one class. Here the penalty enters
+    # the gradient too (``- R @ (beta - beta0)``), so the fit stays finite and,
+    # under separation, shrinks toward ``beta0`` = [logit(marginal rate), 0, ...]
+    # — reproducing the observed marginal rather than collapsing or over-
+    # dispersing. This mirrors what ``polr``'s in-objective l2 penalty achieves.
+    #
+    # Ridge scale: ``_RIDGE * mean_col_second_moment * n`` on the SLOPES so it is
+    # ~_RIDGE relative to the n-scaled curvature X'WX (negligible when the fit is
+    # well identified). The intercept is penalised toward the marginal logit at a
+    # small fixed strength so the baseline rate is anchored, not shrunk to 0.5.
     diag_scale = float(np.mean(np.sum(Xa * Xa, axis=0))) / max(n, 1)
-    ridge = _RIDGE * max(diag_scale, 1e-12) * np.eye(k)
+    lam = _RIDGE * max(diag_scale, 1e-12) * n
+    ridge = lam * np.eye(k)
+    ridge[0, 0] = _RIDGE * n  # anchor the intercept toward the marginal logit
 
-    XtWX = ridge  # bound in case the loop body never runs (k==0 is impossible)
+    pbar = float(np.clip(np.mean(y), 1.0 / (n + 2.0), 1.0 - 1.0 / (n + 2.0)))
+    beta0 = np.zeros(k, dtype=np.float64)
+    beta0[0] = np.log(pbar / (1.0 - pbar))  # marginal-rate intercept, zero slopes
+    beta = beta0.copy()
+
+    XtWX = Xa.T @ Xa + ridge  # bound in case the loop body never runs
     for _ in range(_MAX_IRLS_ITER):
         eta = np.clip(Xa @ beta, -_ETA_CLIP, _ETA_CLIP)
         p = 1.0 / (1.0 + np.exp(-eta))
         w = np.clip(p * (1.0 - p), 1e-9, None)
         XtWX = Xa.T @ (w[:, None] * Xa) + ridge
-        grad = Xa.T @ (y - p)
+        grad = Xa.T @ (y - p) - ridge @ (beta - beta0)
         delta = np.linalg.solve(XtWX, grad)
         beta = beta + delta
         if np.max(np.abs(delta)) < _IRLS_TOL:

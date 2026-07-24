@@ -33,7 +33,11 @@ import warnings
 
 import numpy as np
 
-from pystatistics.core.exceptions import ConvergenceError, NumericalError
+from pystatistics.core.exceptions import (
+    ConvergenceError,
+    NumericalError,
+    ValidationError,
+)
 from pystatistics.mice.methods._draw import (
     marginal_indices,
     mvn_draw,
@@ -114,9 +118,14 @@ class PolrMethod:
         ridge = _slope_ridge(X_obs)
         try:
             fit = fit_polr(y, X_obs, l2=ridge)
-        except (ConvergenceError, NumericalError, np.linalg.LinAlgError) as exc:
+        except (
+            ConvergenceError,
+            NumericalError,
+            ValidationError,
+            np.linalg.LinAlgError,
+        ) as exc:
             warnings.warn(
-                f"polr fit did not converge ({type(exc).__name__}); using a "
+                f"polr fit failed ({type(exc).__name__}); using a "
                 f"marginal draw for this sweep step.",
                 UserWarning,
                 stacklevel=2,

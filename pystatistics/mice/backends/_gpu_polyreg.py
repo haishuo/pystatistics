@@ -30,9 +30,13 @@ columns together, which the sweep never does. All randomness flows through the
 passed generator (Rule 6). Matches the CPU reference distributionally at the
 GPU/FP32 tolerance tier.
 
-Like the CPU method, a marginal-distribution fallback covers a non-converged fit;
-here the per-step Cholesky is sync-free, so a genuinely degenerate fit surfaces as
-a non-finite imputation caught by the backend's end-of-sweep guard.
+There is NO marginal-distribution fallback here (unlike the CPU ``polyreg``,
+which falls back visibly). The per-step Cholesky is sync-free, so a genuinely
+degenerate fit is left to surface as a non-finite (NaN) imputation that the
+backend's end-of-sweep guard catches and raises on — fail-loud, not silent. That
+sentinel must be preserved end-to-end: ``_gpu_encode.indices_to_codes`` propagates
+a non-finite index as NaN rather than casting it to level 0 (which would silently
+collapse the column — the defect fixed in 6.0.x).
 """
 
 from __future__ import annotations

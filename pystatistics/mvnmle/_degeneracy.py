@@ -30,17 +30,21 @@ from pystatistics.core.exceptions import SingularMatrixError, ValidationError
 # 1e-5 sits in that gap; for two variables it corresponds to |corr| ~ 0.99999.
 DEFAULT_COLLINEARITY_TOL: float = 1e-5
 
-# A column whose observed values span no more than this fraction of their own
-# magnitude is treated as (near-)constant — zero variance, so its marginal MLE
-# is a degenerate point mass and no interior maximum-likelihood estimate exists.
-# This is deliberately a *relative-to-the-column's-own-scale* range test, NOT a
-# variance threshold: a genuinely small-variance column (e.g. values ~1e-6 that
-# really do vary) has range comparable to its magnitude and is full-rank, whereas
-# a constant column (all observed values identical) has range ~0 at any scale.
-# The scale-invariant correlation guard (below) cannot see this case — it
-# normalises each variable by its own standard deviation, dividing the zero
-# variance away — so it must be caught here, at the input boundary (Rule 2).
-CONSTANT_COLUMN_RANGE_RTOL: float = 1e-10
+# A column is treated as (near-)constant when its observed range is at the
+# floating-point NOISE FLOOR for its magnitude — machine epsilon times the
+# largest |value|, times this many ULP of slack for accumulated round-off. Zero
+# variance means the marginal MLE is a degenerate point mass and no interior
+# maximum-likelihood estimate exists; the scale-invariant correlation guard
+# (below) cannot see it (it divides each variable by its own standard deviation),
+# so it is caught here, at the input boundary (Rule 2).
+#
+# The test tracks fp RESOLUTION, not a fixed fraction of magnitude, so it does
+# NOT misfire on a genuinely-varying column with a large OFFSET: e.g.
+# ``1e8 + N(0, 1e-3)`` has range ~6e-3, thousands of ULP above the noise floor
+# (~2e-8 = eps*1e8), and is full-rank. The old fixed 1e-10-of-magnitude rtol had
+# a threshold of 1e-2 at magnitude 1e8 and wrongly rejected that column as
+# constant even though its MLE demonstrably exists.
+CONSTANT_COLUMN_NOISE_ULP: float = 4096.0
 
 
 def correlation_min_eigenvalue(sigma: NDArray[np.floating]) -> float:
@@ -80,14 +84,16 @@ def _constant_columns(data: NDArray[np.floating]) -> list[int]:
     """Indices of (near-)constant observed columns in an incomplete data matrix.
 
     A column is constant when the range of its *observed* (non-NaN) values is at
-    most :data:`CONSTANT_COLUMN_RANGE_RTOL` times the column's magnitude — a
-    scale-relative test, so a legitimately small-variance column that really does
-    vary is not flagged, while a column of identical values is, at any scale. A
-    column with fewer than two observed values also carries no variance
-    information and is reported.
+    the floating-point noise floor for its magnitude
+    (:data:`CONSTANT_COLUMN_NOISE_ULP` ULP of the largest |value|) — so a column
+    of identical values is flagged at any scale, while a genuinely-varying column
+    is not, even when its spread is tiny relative to a large offset. A column with
+    fewer than two observed values also carries no variance information and is
+    reported.
     """
     if data.ndim != 2:
         raise ValidationError(f"data must be 2-D (n, p), got shape {data.shape}")
+    eps = float(np.finfo(np.float64).eps)
     bad: list[int] = []
     for j in range(data.shape[1]):
         col = data[:, j]
@@ -96,7 +102,8 @@ def _constant_columns(data: NDArray[np.floating]) -> list[int]:
             bad.append(j)
             continue
         scale = max(float(np.max(np.abs(obs))), 1.0)
-        if float(np.ptp(obs)) <= CONSTANT_COLUMN_RANGE_RTOL * scale:
+        noise_floor = CONSTANT_COLUMN_NOISE_ULP * eps * scale
+        if float(np.ptp(obs)) <= noise_floor:
             bad.append(j)
     return bad
 

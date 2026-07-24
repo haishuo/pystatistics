@@ -9,6 +9,10 @@ import numpy as np
 import warnings
 from typing import Tuple, Optional, Any
 from pystatistics.core.exceptions import NumericalError
+from pystatistics.mvnmle._degeneracy import (
+    DEFAULT_COLLINEARITY_TOL,
+    correlation_min_eigenvalue,
+)
 
 from .base import MLEObjectiveBase
 from .parameterizations import (
@@ -152,6 +156,57 @@ class GPUObjectiveFP32(MLEObjectiveBase):
                     f"Check for collinear variables, remove constant columns, "
                     f"or scale your data before fitting."
                 )
+
+            # Scale-invariant collinearity screen (R12 no-silent-wrong), using
+            # the SAME correlation-matrix minimum eigenvalue and tolerance as the
+            # CPU fitted-covariance guard. The raw eigen-ratio above is
+            # scale-dependent and misses near-collinear data whose covariance is
+            # merely rescaled (correlation min-eig << tol, |corr| ~ 1) — e.g.
+            # condition ~9e7 sits under the 1e10 gate. Without this the fp32
+            # optimizer stalls at a non-stationary point whose fp32 fitted
+            # covariance looks full-rank, so the post-fit guard passes and a fit
+            # ~1000 nats below the true optimum is SILENTLY accepted, where the
+            # fp64 CPU path correctly refuses. Refuse here instead (safe side:
+            # the fp32 accept-set stays a subset of the fp64 accept-set).
+            # Scale-disparity screen with an HONEST diagnosis. Columns whose
+            # variances differ by more than fp32 can jointly represent cause the
+            # small-scale column's variance to collapse in the fp32 fit; the
+            # post-fit rank-deficiency guard then sees a corrupted FITTED
+            # covariance and blames INPUT collinearity ("remove the collinear
+            # column(s)") — a claim that is false when the data is full-rank and
+            # a remedy that is actively destructive. Catch it here, where the
+            # correct remedy (rescale) can be stated.
+            diag = np.diag(self.sample_cov_raw)
+            pos = diag[diag > 0]
+            if pos.size and (float(pos.max()) / float(pos.min())) > 1e10:
+                raise NumericalError(
+                    f"Column variances differ by a factor of "
+                    f"{float(pos.max()) / float(pos.min()):.2e}, beyond what "
+                    f"fp32 can represent jointly. This is a SCALING issue, not "
+                    f"collinearity: standardize/rescale the columns before "
+                    f"fitting, or use backend='cpu'."
+                )
+
+            # IMPORTANT: the raw pairwise covariance is a valid collinearity
+            # signal ONLY when it is itself positive-definite. With missing data,
+            # pairwise deletion very often yields a NON-PD matrix (negative
+            # eigenvalues) purely as an artefact of the deletion — not evidence
+            # of collinearity — and screening on that would refuse perfectly
+            # fittable incomplete-data problems that the fp64 path accepts (an R9
+            # false negative). So apply the screen only on a PD raw covariance;
+            # otherwise fall through to the existing post-fit guard.
+            raw_eigs = np.linalg.eigvalsh(self.sample_cov_raw)
+            if float(np.min(raw_eigs)) > 0.0:
+                corr_min_eig = correlation_min_eigenvalue(self.sample_cov_raw)
+                if corr_min_eig < DEFAULT_COLLINEARITY_TOL:
+                    raise NumericalError(
+                        f"Initial sample covariance is (near-)collinear "
+                        f"(correlation-matrix minimum eigenvalue "
+                        f"{corr_min_eig:.2e} < {DEFAULT_COLLINEARITY_TOL:.0e}): "
+                        f"no interior maximum-likelihood estimate exists and the "
+                        f"fp32 GPU path cannot fit it reliably. Remove the "
+                        f"collinear column(s) or use backend='cpu'."
+                    )
         except np.linalg.LinAlgError as e:
             raise NumericalError(
                 f"Eigenvalue decomposition of the sample covariance failed: {e}. "

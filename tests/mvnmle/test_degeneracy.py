@@ -229,3 +229,121 @@ class TestMlestDegeneracyGuard:
         assert not any(
             "rank-deficient" in w for w in res._result.warnings
         )
+
+
+class TestConstantGuardLargeOffset:
+    """Constant-column guard must track fp resolution, not magnitude — 6.0.x.
+
+    A genuinely-varying column with a large offset (1e8 + N(0,1e-3)) was wrongly
+    rejected as constant because the old threshold (1e-10 * magnitude = 1e-2 at
+    1e8) exceeded the genuine spread (~6e-3). The eps-based noise floor fixes it
+    while still catching truly-constant columns at any scale.
+    """
+
+    def test_large_offset_varying_column_fits(self):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        rng = np.random.default_rng(777)
+        col0 = 1e8 + rng.standard_normal(150) * 1e-3
+        col1 = rng.standard_normal(150)
+        X = np.column_stack([col0, col1])
+        res = mlest(X)  # must NOT raise
+        assert res.converged
+        assert res.sigmahat[0, 0] == pytest.approx(np.var(col0), rel=1e-3)
+
+    @pytest.mark.parametrize("const", [3.0, 1e8, 1e-6])
+    def test_true_constant_still_rejected_at_any_scale(self, const):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        from pystatistics.core.exceptions import SingularMatrixError
+        rng = np.random.default_rng(1)
+        X = np.column_stack([np.full(150, const), rng.standard_normal(150)])
+        with pytest.raises(SingularMatrixError):
+            mlest(X)
+
+
+class TestReferenceSolverNonFiniteLoglik:
+    """solver='reference' must not report a garbage loglik — 6.0.x red-team.
+
+    On scale-disparate (but full-rank) data the R-exact objective hits its
+    failure sentinel (1e20); the old code reported loglik = -5e19 with
+    converged=True. It now reports NaN, converged=False, and a rescale warning.
+    """
+
+    def test_scale_disparate_reference_flags_not_converged(self):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        rng = np.random.default_rng(1)
+        A = rng.standard_normal((4, 4))
+        L = np.linalg.cholesky(A @ A.T + 4 * np.eye(4))
+        Z = rng.standard_normal((300, 4)) @ L.T
+        Z[:, 0] *= 1e6
+        Z[:, 3] *= 1e-6
+        m = rng.random((300, 4)) < 0.10
+        Z[m] = np.nan
+        Z[np.all(np.isnan(Z), 1), 0] = 1.0
+        res = mlest(Z, solver="reference")
+        assert not res.converged
+        assert np.isnan(res.loglik)                       # not -5e19
+        assert any("not finite" in w for w in res.warnings)
+
+    def test_wellposed_reference_matches_default(self):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        rng = np.random.default_rng(5)
+        A = rng.standard_normal((4, 4))
+        L = np.linalg.cholesky(A @ A.T + 4 * np.eye(4))
+        Y = rng.standard_normal((400, 4)) @ L.T
+        mm = rng.random((400, 4)) < 0.12
+        Y[mm] = np.nan
+        Y[np.all(np.isnan(Y), 1), 0] = 0.1
+        rd = mlest(Y)
+        rr = mlest(Y, solver="reference")
+        assert rr.converged and np.isfinite(rr.loglik)
+        assert rr.loglik == pytest.approx(rd.loglik, abs=1e-5)  # unchanged
+
+
+def _gpu_available() -> bool:
+    try:
+        import torch
+        return torch.cuda.is_available() or torch.backends.mps.is_available()
+    except Exception:
+        return False
+
+
+@pytest.mark.skipif(not _gpu_available(), reason="no GPU (CUDA/MPS)")
+class TestFp32NoSilentWrongGate:
+    """fp32 GPU must not silently accept a fit fp64 refuses — 6.0.x (R12).
+
+    On near-collinear data the fp32 optimizer stalls at a non-stationary point
+    whose fp32 fitted covariance looks full-rank, so the post-fit guard passed
+    and a fit ~1000 nats below the optimum was accepted with converged=True,
+    while the fp64 CPU path refused. A scale-invariant collinearity screen on
+    the RAW sample covariance now refuses it at GPU init (safe side).
+    """
+
+    def test_near_collinear_refused_on_gpu(self):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        from pystatistics.core.exceptions import NumericalError, SingularMatrixError
+        rng = np.random.default_rng(20260723)
+        p, n = 5, 200
+        Q, _ = np.linalg.qr(rng.standard_normal((p, p)))
+        cov = (Q * np.logspace(0, -8, p)) @ Q.T
+        X = rng.multivariate_normal(rng.standard_normal(p) * 2, cov, size=n)
+        with pytest.raises(SingularMatrixError):
+            mlest(X, backend="cpu")
+        with pytest.raises((NumericalError, SingularMatrixError)):
+            mlest(X, backend="gpu")
+
+    def test_well_conditioned_still_fits_on_gpu(self):
+        import numpy as np
+        from pystatistics.mvnmle import mlest
+        rng = np.random.default_rng(0)
+        A = rng.standard_normal((4, 4))
+        C = A @ A.T + 4 * np.eye(4)
+        Y = rng.multivariate_normal(np.zeros(4), C, size=500)
+        mm = rng.random((500, 4)) < 0.1
+        Y[mm] = np.nan
+        Y[np.all(np.isnan(Y), 1), 0] = 0.0
+        assert mlest(Y, backend="gpu").converged  # no false refusal

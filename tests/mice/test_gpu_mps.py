@@ -486,3 +486,37 @@ class TestMpsScales:
         gpu = mice(miss, n_imputations=20, max_iter=8, method="pmm", seed=5, backend="gpu")
         for j in gpu.incomplete_columns:
             assert abs(gpu.imputations(j).mean() - cpu.imputations(j).mean()) < 0.1
+
+
+@pytest.mark.skipif(not _mps_available(), reason="MPS not available")
+class TestGpuCategoricalNoSilentCollapse:
+    """GPU categorical fits must fail loud, never silently collapse — 6.0.x.
+
+    A degenerate fp32 fit emits an all-NaN sentinel; the old
+    ``indices_to_codes`` cast NaN to level 0, silently collapsing the column.
+    The sentinel now propagates so the backend's end-of-sweep guard raises.
+    """
+
+    def test_degenerate_categorical_raises_not_collapses(self):
+        rng = np.random.default_rng(3)
+        n = 120
+        x0 = rng.standard_normal(n) * 1e20  # extreme-scale degenerate predictor
+        x1 = rng.standard_normal(n)
+        y = rng.integers(0, 3, n).astype(float)
+        data = np.column_stack([x0, x1, y])
+        data[rng.random(n) < 0.3, 2] = np.nan
+        des = MICEDesign.from_array(
+            data, method="auto",
+            column_kinds=["numeric", "numeric", "categorical"],
+        )
+        with pytest.raises(ValidationError, match="non-finite"):
+            mice(des, seed=3, n_imputations=6, max_iter=4, backend="gpu")
+
+    def test_indices_to_codes_propagates_nan(self):
+        import torch
+        from pystatistics.mice.backends._gpu_encode import indices_to_codes
+        levels = torch.tensor([0.0, 1.0, 2.0])
+        idx = torch.tensor([0.0, float("nan"), 2.0])
+        out = indices_to_codes(idx, levels)
+        assert torch.isnan(out[1])           # sentinel preserved, not -> level 0
+        assert out[0].item() == 0.0 and out[2].item() == 2.0

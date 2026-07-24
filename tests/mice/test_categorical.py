@@ -290,3 +290,76 @@ class TestCategoricalDesignValidation:
         # pmm is numeric-only; forcing it on the binary column must fail.
         with pytest.raises(ValidationError, match="imputes"):
             MICEDesign.from_array(miss, column_kinds=kinds, methods={1: "pmm"})
+
+
+class TestHighCardinalityFallback:
+    """polyreg/polr must fall back, not crash, on an unfittable sub-problem.
+
+    Red-team finding (6.0.x): a high-cardinality categorical column with many
+    predictors made ``multinom`` raise ``ValidationError`` ("insufficient
+    observations"), which the marginal-draw fallback did not catch — crashing
+    the entire ``mice()`` run instead of degrading that one sweep step.
+    """
+
+    def test_high_cardinality_polyreg_does_not_crash(self):
+        import warnings as _w
+        import numpy as _np
+        from pystatistics.mice import mice
+        from pystatistics.mice.design import MICEDesign
+        rng = _np.random.default_rng(10)
+        n, P = 140, 20
+        X = _np.column_stack(
+            [rng.normal(size=(n, P)), rng.integers(0, 10, size=n).astype(float)]
+        )
+        X[rng.random(n) < 0.15, P] = _np.nan
+        d = MICEDesign.from_array(X, column_kinds=["numeric"] * P + ["categorical"])
+        with _w.catch_warnings(record=True) as w:
+            _w.simplefilter("always")
+            res = mice(d, seed=0, n_imputations=2, max_iter=2)
+        assert len(res.completed_datasets()) == 2          # completed, no crash
+        assert any("marginal draw" in str(x.message) for x in w)
+
+
+class TestLogregSeparationNoCollapse:
+    """logreg must not collapse a binary column under quasi-separation — 6.0.x.
+
+    The old ridge lived only in the Hessian (X'WX), leaving the gradient
+    unpenalised, so at convergence beta solved the UNPENALISED score equation
+    and diverged under separation — the imputed column collapsed to all-0
+    (frac1 == 0, sd == 0). The genuine penalty toward a marginal-rate centre
+    keeps the fit finite and probabilistic.
+    """
+
+    def test_no_collapse_under_quasi_separation(self):
+        import numpy as np
+        from pystatistics.mice import mice, MICEDesign
+        rng = np.random.default_rng(3)
+        n = 600
+        x1 = rng.normal(size=n)
+        x2 = rng.normal(size=n)
+        score = x1 * 3.0 + rng.normal(size=n) * 0.001
+        y = np.zeros(n)
+        y[np.argsort(score)[-15:]] = 1
+        miss = rng.random(n) < 0.3
+        miss[y == 1] = False
+        data = np.column_stack([np.where(miss, np.nan, y), x1, x2])
+        des = MICEDesign.from_array(
+            data, method="auto", column_kinds=["binary", "numeric", "numeric"]
+        )
+        imp = mice(des, seed=0, n_imputations=20, max_iter=6)
+        fr = [float(np.mean(c[miss, 0] == 1)) for c in imp.completed_datasets()]
+        # Not a degenerate point mass at 0: there is genuine imputation variation.
+        assert np.std(fr) > 0.0
+        assert np.mean(fr) > 0.0
+
+    def test_finite_coefficients_under_separation(self):
+        import numpy as np
+        from pystatistics.mice.methods.logreg import _fit_logistic
+        rng = np.random.default_rng(3)
+        n = 600
+        x1 = rng.normal(size=n)
+        x2 = rng.normal(size=n)
+        y = np.zeros(n)
+        y[np.argsort(x1 * 3.0 + rng.normal(size=n) * 0.001)[-15:]] = 1
+        beta, cov = _fit_logistic(y, np.column_stack([x1, x2]))
+        assert np.all(np.abs(beta) < 100.0)  # was ~[-906, 471, -3]

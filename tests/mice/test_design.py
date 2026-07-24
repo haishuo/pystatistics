@@ -134,3 +134,48 @@ class TestNoMissing:
         assert not d.has_missing
         assert d.incomplete_columns == ()
         assert all(m == "" for m in d.methods)
+
+
+class TestConstantNumericColumnWarning:
+    """Numeric column with no observed variance — red-team finding (6.0.x).
+
+    Such a column was silently imputed as a zero-uncertainty constant (B == 0,
+    fmi == 0), understating missingness; it now warns (Rule 1). Categorical
+    constants are already rejected by level resolution.
+    """
+
+    def test_single_observed_value_warns(self):
+        from pystatistics.mice import mice
+        rng = np.random.default_rng(7)
+        X = rng.normal(size=(40, 3))
+        X[1:, 1] = np.nan  # col 1: exactly one observed value
+        X[rng.integers(0, 40, 6), 0] = np.nan
+        with pytest.warns(UserWarning, match="constant observed values"):
+            mice(X, seed=7, n_imputations=3, max_iter=3)
+
+    def test_many_identical_observed_warns(self):
+        from pystatistics.mice import mice
+        rng = np.random.default_rng(3)
+        X = rng.normal(size=(50, 3))
+        X[:23, 1] = 3.0            # 23 observed cells, all identical
+        X[23:, 1] = np.nan         # rest missing
+        with pytest.warns(UserWarning, match="constant observed values"):
+            mice(X, seed=3, n_imputations=3, max_iter=3)
+
+    def test_normal_numeric_column_does_not_warn(self):
+        import warnings as _w
+        from pystatistics.mice import mice
+        rng = np.random.default_rng(1)
+        Y = rng.normal(size=(200, 4))
+        mask = rng.random((200, 4)) < 0.15
+        for i in range(200):
+            if mask[i].all():
+                mask[i, 0] = False
+        Y[mask] = np.nan
+        with _w.catch_warnings():
+            _w.simplefilter("error", UserWarning)
+            try:
+                mice(Y, seed=1, n_imputations=2, max_iter=2)
+            except UserWarning as e:
+                if "constant observed" in str(e):
+                    raise

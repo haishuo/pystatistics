@@ -23,6 +23,7 @@ unchanged by Stage 2 (GPU) or Stage 3 (categorical methods).
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
 from typing import Any
 
@@ -165,11 +166,36 @@ def pool(
     se = np.sqrt(total)
 
     with np.errstate(divide="ignore", invalid="ignore"):
-        riv = np.where(ubar > 0, (1.0 + 1.0 / m) * between / ubar, 0.0)
         lam = np.where(total > 0, (1.0 + 1.0 / m) * between / total, 0.0)
+        # riv is DERIVED from lambda so the two can never disagree:
+        #   lambda = riv / (1 + riv)  <=>  riv = lambda / (1 - lambda),
+        # which is +inf when lambda == 1 (ubar == 0: all variance is
+        # between-imputation). Computing riv independently from ubar (the old
+        # code) made riv == 0 while lambda == 1 in exactly that degenerate case.
+        riv = np.where(lam < 1.0, lam / (1.0 - lam), np.inf)
+
+    # Zero within-imputation variance with positive between-imputation variance
+    # is a degenerate pooling input (the per-imputation analyses reported zero
+    # standard error): riv is infinite, fmi == 1, and with finite df_complete the
+    # Barnard-Rubin df collapses to 0 so the CI is undefined. Surface it loudly
+    # (Rule 1) rather than returning a silent NaN interval.
+    degenerate = (ubar == 0.0) & (between > 0.0)
+    if np.any(degenerate):
+        warnings.warn(
+            f"Within-imputation variance is zero for {int(np.sum(degenerate))} "
+            "pooled quantity(ies) while between-imputation variance is positive: "
+            "the relative increase in variance is infinite and the confidence "
+            "interval is undefined (fraction of missing information = 1). This "
+            "usually means the per-imputation analyses reported a zero standard "
+            "error.",
+            stacklevel=2,
+        )
 
     df = _barnard_rubin_df(m, lam, df_complete_val)
-    fmi = (riv + 2.0 / (df + 3.0)) / (riv + 1.0)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        fmi = np.where(
+            np.isinf(riv), 1.0, (riv + 2.0 / (df + 3.0)) / (riv + 1.0)
+        )
 
     # t-based CI; scipy handles df = inf as the normal limit.
     tail = (1.0 + conf_level) / 2.0

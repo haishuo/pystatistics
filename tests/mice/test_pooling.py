@@ -164,3 +164,34 @@ class TestEndToEndWithMice:
         assert res.ci_lower < 0.6 < res.ci_upper
         assert 0.0 <= res.fmi <= 1.0
         assert res.n_imputations == 8
+
+
+class TestDegenerateWithinVariance:
+    """Zero within-imputation variance (ubar == 0) — red-team finding (6.0.x).
+
+    The old code computed ``riv`` from ``ubar`` and ``lambda`` from ``total``
+    via separate guards, so at ubar == 0 they disagreed (riv == 0 while
+    lambda == 1) and the CI went silently NaN.
+    """
+
+    def test_riv_lambda_consistent_and_warns(self):
+        # Q varies, U all zero -> B > 0, ubar == 0: all variance between-imputation.
+        with pytest.warns(UserWarning, match="[Ww]ithin-imputation variance is zero"):
+            res = pool([1.0, 2.0, 3.0], [0.0, 0.0, 0.0], df_complete=10.0)
+        assert np.isinf(res.riv)          # riv is infinite, not 0
+        assert res.lambda_ == pytest.approx(1.0)
+        assert res.fmi == pytest.approx(1.0)  # fraction of missing information == 1
+
+    def test_riv_derived_from_lambda_in_normal_case(self):
+        # riv and lambda must satisfy lambda == riv / (1 + riv) exactly.
+        rng = np.random.default_rng(0)
+        Q = rng.normal(2.0, 0.5, 6)
+        U = rng.uniform(0.1, 0.3, 6)
+        res = pool(Q, U, df_complete=100.0)
+        assert res.lambda_ == pytest.approx(res.riv / (1.0 + res.riv), abs=1e-12)
+
+    def test_no_spurious_warning_when_within_variance_positive(self):
+        import warnings as _w
+        with _w.catch_warnings():
+            _w.simplefilter("error")  # any warning becomes an error
+            pool([1.0, 3.0], [0.5, 0.5])  # ubar > 0 -> must not warn

@@ -228,6 +228,12 @@ class MLEObjectiveBase:
                     # Not enough data for this variable, use unit variance
                     cov[i, i] = 1.0
 
+        # Stash the RAW pairwise covariance (before any PD regularization) so
+        # backend guards can screen for near-collinearity on the true data
+        # structure. The regularization below floors ONLY the optimizer's start,
+        # which would otherwise mask a rank-deficient sample from those guards.
+        self.sample_cov_raw = cov.copy()
+
         # Pairwise-complete sample covariance is frequently non-PD when
         # data has missing values — that is EXPECTED and is the reason
         # MVN-MLE exists. We need a PD starting point for the optimizer,

@@ -14,6 +14,13 @@ from .base import MLEObjectiveBase, PatternData
 from .parameterizations import InverseCholeskyParameterization
 from pystatistics.core.exceptions import NumericalError
 
+# Large finite penalty returned by ``compute_objective`` when the R-exact Givens
+# reconstruction cannot be evaluated at a given ``theta`` (e.g. a non-positive
+# Delta diagonal under extreme column-scale disparity). It is a valid "steer
+# away" penalty for the optimizer, but it is NOT a log-likelihood — callers
+# reporting a loglik MUST recognise it rather than returning ``-sentinel/2``.
+_OBJECTIVE_FAILURE_SENTINEL: float = 1e20
+
 
 class CPUObjectiveFP64(MLEObjectiveBase):
     """
@@ -201,7 +208,7 @@ class CPUObjectiveFP64(MLEObjectiveBase):
 
                 # Check for numerical issues
                 if np.any(diag_delta_k <= 0):
-                    return 1e20
+                    return _OBJECTIVE_FAILURE_SENTINEL
 
                 log_det_delta_k = np.sum(np.log(diag_delta_k))
 
@@ -217,7 +224,7 @@ class CPUObjectiveFP64(MLEObjectiveBase):
                 neg_loglik += obj_contribution
 
             except (np.linalg.LinAlgError, RuntimeError):
-                return 1e20
+                return _OBJECTIVE_FAILURE_SENTINEL
 
         return neg_loglik
 
@@ -290,7 +297,18 @@ class CPUObjectiveFP64(MLEObjectiveBase):
         except np.linalg.LinAlgError:
             sigma = np.eye(self.n_vars)
 
-        # Compute log-likelihood
-        loglik = -self.compute_objective(theta) / 2.0  # Objective is -2*log-likelihood
+        # Compute log-likelihood. compute_objective returns the large finite
+        # FAILURE SENTINEL when its R-exact Givens reconstruction breaks down at
+        # this theta (non-positive Delta diagonal under extreme column-scale
+        # disparity). That is a valid optimizer penalty but NOT a log-likelihood:
+        # report NaN rather than -sentinel/2 (a spurious, enormous "loglik").
+        # The backend surfaces the non-finite loglik loudly and marks the fit
+        # not-converged.
+        neg2ll = self.compute_objective(theta)
+        loglik = (
+            float("nan")
+            if neg2ll >= _OBJECTIVE_FAILURE_SENTINEL
+            else -neg2ll / 2.0
+        )
 
         return mu, sigma, loglik

@@ -17,7 +17,11 @@ import warnings
 
 import numpy as np
 
-from pystatistics.core.exceptions import ConvergenceError, NumericalError
+from pystatistics.core.exceptions import (
+    ConvergenceError,
+    NumericalError,
+    ValidationError,
+)
 from pystatistics.mice._encode import add_intercept
 from pystatistics.mice.methods._draw import (
     marginal_indices,
@@ -49,14 +53,23 @@ class PolyregMethod:
         Xa_obs = add_intercept(X_obs)  # multinom carries an explicit intercept
         Xa_mis = add_intercept(X_mis)
 
-        # A multinomial fit can fail to converge on an awkward intermediate
-        # sweep state; fall back to a marginal draw (visibly). Rule-1 documented
-        # exception: local, not silent, retried next iteration.
+        # A multinomial fit can fail on an awkward intermediate sweep state:
+        # non-convergence, or an unfittable/over-parameterized sub-problem
+        # (multinom raises ValidationError when n_obs <= (n_classes-1)*n_params,
+        # which a high-cardinality column with many predictors readily triggers).
+        # Both are recoverable — fall back to a marginal draw (visibly) rather
+        # than crashing the whole mice() run. Rule-1 documented exception: local,
+        # not silent, retried next iteration on the fresh sweep state.
         try:
             fit = multinom(y, Xa_obs)
-        except (ConvergenceError, NumericalError, np.linalg.LinAlgError) as exc:
+        except (
+            ConvergenceError,
+            NumericalError,
+            ValidationError,
+            np.linalg.LinAlgError,
+        ) as exc:
             warnings.warn(
-                f"polyreg fit did not converge ({type(exc).__name__}); using a "
+                f"polyreg fit failed ({type(exc).__name__}); using a "
                 f"marginal draw for this sweep step.",
                 UserWarning,
                 stacklevel=2,

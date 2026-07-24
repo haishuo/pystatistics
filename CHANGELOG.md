@@ -1,5 +1,56 @@
 # Changelog
 
+## 6.0.1
+
+Correctness and robustness fixes for `mice` (multiple imputation) and `mvnmle`
+(multivariate-normal maximum likelihood), concentrated in edge and adversarial
+regimes. Results on well-conditioned data are unchanged, bit-for-bit, from 6.0.0.
+
+### Fixed
+
+*mice*
+
+- `pool` (Rubin's rules) no longer returns self-contradictory diagnostics when
+  the within-imputation variance is zero. The relative increase in variance and
+  lambda could disagree and the confidence interval could come back as `NaN` with
+  no explanation. The quantities are now mutually consistent (infinite relative
+  increase in variance, fraction of missing information 1) and `pool` warns that
+  the interval is undefined.
+- A numeric column whose observed values are (near-)constant now warns instead of
+  being silently imputed as a zero-uncertainty constant, which understated
+  missing-data uncertainty.
+- A high-cardinality categorical column with many predictors no longer aborts the
+  whole imputation run. When a categorical model cannot be fit for a column on a
+  given iteration, that step falls back to a marginal draw (with a warning), as
+  intended, instead of raising.
+- Binary (`logreg`) imputation no longer collapses a column onto a single class
+  under (quasi-)complete separation. The fit is now regularized toward the
+  observed marginal rate so imputations stay probabilistic; agreement with R
+  `mice` on well-identified columns is unchanged.
+- The GPU path no longer silently collapses a categorical, binary, or ordinal
+  column onto its first level on a degenerate fit — it now fails loudly with a
+  clear error instead of producing wrong imputations.
+- A constant, fully-observed categorical *predictor* is now accepted, matching
+  how a constant numeric predictor was already handled (it was previously
+  rejected).
+
+*mvnmle*
+
+- `mlest` no longer rejects a genuinely-varying column that has a large offset
+  (for example values near 1e8 that vary by ~1e-3) as "constant". Truly-constant
+  columns are still rejected, at any scale.
+- `mlest(solver='reference')` no longer reports a meaningless, enormous
+  log-likelihood with `converged=True` on data whose columns differ enormously in
+  scale. It now reports `NaN`, marks the fit not converged, and warns to
+  standardize or rescale the columns.
+- The GPU backend no longer silently returns a wrong fit on near-collinear data
+  that the CPU path correctly refuses; such data is now refused on the GPU as
+  well.
+- GPU errors on badly-scaled input now carry the correct diagnosis — a scaling
+  problem with a "standardize or rescale" remedy — instead of a false "collinear
+  variables; remove columns" message, and extreme-collinearity errors raise the
+  documented exception type consistently.
+
 ## 6.0.0
 
 The library now ships as compiled binary wheels instead of a pure-Python
