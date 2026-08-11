@@ -267,8 +267,16 @@ class CPUObjectiveFP64(MLEObjectiveBase):
                 try:
                     f_minus = self.compute_objective(theta_minus)
                     grad[i] = (f_base - f_minus) / h
-                except Exception:
-                    grad[i] = 0.0
+                except Exception as exc:
+                    # A silently zeroed component would let the optimizer
+                    # report convergence at a non-stationary point (Rule 1:
+                    # fail loud). compute_objective normally absorbs numerical
+                    # breakdown into its finite failure sentinel, so reaching
+                    # here means something genuinely unexpected broke.
+                    raise NumericalError(
+                        f"Gradient evaluation failed in both forward and "
+                        f"backward differences at parameter index {i}."
+                    ) from exc
 
         return grad
 
@@ -295,7 +303,12 @@ class CPUObjectiveFP64(MLEObjectiveBase):
             sigma = (sigma + sigma.T) / 2.0
 
         except np.linalg.LinAlgError:
-            sigma = np.eye(self.n_vars)
+            # Delta is singular at the reported optimum, so the fitted
+            # covariance is undefined. Never substitute a fabricated value
+            # (Rule 1): fill with NaN, which the downstream degeneracy guard
+            # rejects loudly (SingularMatrixError, or a warning plus
+            # converged=False under force=True).
+            sigma = np.full((self.n_vars, self.n_vars), np.nan)
 
         # Compute log-likelihood. compute_objective returns the large finite
         # FAILURE SENTINEL when its R-exact Givens reconstruction breaks down at

@@ -7,7 +7,6 @@ objective with R-compatible pattern ordering.
 
 from .cpu import CPUObjectiveFP64
 from .parameterizations import (
-    get_parameterization,
     InverseCholeskyParameterization,
     CholeskyParameterization,
     BoundedCholeskyParameterization,
@@ -15,7 +14,6 @@ from .parameterizations import (
 
 __all__ = [
     'CPUObjectiveFP64',
-    'get_parameterization',
     'InverseCholeskyParameterization',
     'CholeskyParameterization',
     'BoundedCholeskyParameterization',

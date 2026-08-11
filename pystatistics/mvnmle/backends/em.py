@@ -22,7 +22,6 @@ from pystatistics.mvnmle.backends._em_batched import (
     _loglik_full_torch,
     build_pattern_index,
     compute_conditional_parameters_np,
-    compute_conditional_parameters_torch,
     compute_loglik_batched_np,
 )
 from pystatistics.mvnmle.backends._squarem import squarem_step, squarem_step_torch
@@ -131,6 +130,7 @@ class EMBackend:
                 self._run_em_loop_gpu(
                     patterns, n, p, tol, max_iter,
                     initial_mu=mu, initial_sigma=sigma, accelerate=accelerate,
+                    regularize=regularize,
                 )
             )
             loglik_history = [loglik]
@@ -142,8 +142,9 @@ class EMBackend:
             )
             if not converged:
                 warnings_list.append(
-                    f"EM did not converge after {max_iter} iterations "
-                    f"(final param change: {param_change:.2e}, tol: {tol:.2e})"
+                    f"EM did not converge after {n_iter} EM-step equivalents "
+                    f"(max_iter={max_iter}; final param change: "
+                    f"{param_change:.2e}, tol: {tol:.2e})"
                 )
             return Result(
                 params=params,
@@ -172,19 +173,31 @@ class EMBackend:
             def ensure_pd(sigma_in):
                 return self._ensure_pd(sigma_in, p, regularize=regularize)
 
+            def ensure_pd_strict(sigma_in):
+                # Feasibility check for SQUAREM's speculative trial iterates:
+                # must raise so the alpha back-off engages. The user-facing
+                # ``regularize`` policy is applied to the accepted iterate
+                # below, never to extrapolated trial points (which are
+                # routinely far outside the PD cone by design).
+                return self._ensure_pd(sigma_in, p, regularize=False)
+
             em_steps_consumed = 0
             while em_steps_consumed < max_iter:
                 theta_old = self._pack_params(mu, sigma, p)
 
                 if accelerate:
                     mu_new, sigma_new, steps_used = squarem_step(
-                        mu, sigma, p, em_step, loglik_fn, ensure_pd,
+                        mu, sigma, p, em_step, loglik_fn, ensure_pd_strict,
                     )
                     em_steps_consumed += steps_used
                 else:
                     mu_new, sigma_new = em_step(mu, sigma)
-                    sigma_new = ensure_pd(sigma_new)
                     em_steps_consumed += 1
+                # Apply the user-facing PD policy to the accepted iterate
+                # (an EM-step output on every path, including SQUAREM's
+                # stall/exhausted fallbacks): ridge+warn under
+                # regularize=True, raise under regularize=False.
+                sigma_new = ensure_pd(sigma_new)
 
                 theta_new = self._pack_params(mu_new, sigma_new, p)
                 param_change = np.max(np.abs(theta_new - theta_old))
@@ -204,8 +217,9 @@ class EMBackend:
 
         if not converged:
             warnings_list.append(
-                f"EM did not converge after {max_iter} iterations "
-                f"(final param change: {param_change:.2e}, tol: {tol:.2e})"
+                f"EM did not converge after {n_iter} EM-step equivalents "
+                f"(max_iter={max_iter}; final param change: "
+                f"{param_change:.2e}, tol: {tol:.2e})"
             )
 
         timer.stop()
@@ -362,7 +376,7 @@ class EMBackend:
 
     def _run_em_loop_gpu(
         self, patterns, n, p, tol, max_iter, *,
-        initial_mu, initial_sigma, accelerate,
+        initial_mu, initial_sigma, accelerate, regularize,
     ):
         """Fully device-resident EM loop.
 
@@ -457,10 +471,11 @@ class EMBackend:
 
         mu_out = mu_t.detach().cpu().numpy().astype(np.float64)
         sigma_out = sigma_t.detach().cpu().numpy().astype(np.float64)
-        # GPU path currently shares the regularize default (no parameter
-        # plumbed yet through _run_em_loop_gpu); fine for now as the
-        # observed failure mode is the CPU/numpy path.
-        sigma_out = self._ensure_pd(sigma_out, p, regularize=True)
+        # Honor the user's regularize policy on the returned covariance
+        # (ridge+warn under True, raise under False), same contract as the
+        # CPU path. Per-iteration feasibility on the GPU loop is handled by
+        # squarem_step_torch's Cholesky checks.
+        sigma_out = self._ensure_pd(sigma_out, p, regularize=regularize)
 
         return mu_out, sigma_out, n_iter, converged, param_change, loglik
 
@@ -492,11 +507,18 @@ class EMBackend:
                 if regularize:
                     ridge = max(0.0, 1e-10 - min_eig) + 1e-12
                     import warnings
+                    scale = float(np.max(np.abs(np.diag(sigma)))) or 1.0
+                    impact = (
+                        "negligible relative to the covariance scale"
+                        if ridge <= 1e-8 * scale
+                        else "NOT negligible relative to the covariance "
+                             "scale — inspect the data for degeneracy"
+                    )
                     warnings.warn(
-                        f"EM M-step covariance near-indefinite "
+                        f"EM covariance iterate near-indefinite "
                         f"(min eigenvalue={min_eig:.2e}); applying ridge "
-                        f"{ridge:.2e}·I. Statistical impact is negligible "
-                        f"at this scale. Pass regularize=False to raise "
+                        f"{ridge:.2e}·I to restore positive definiteness "
+                        f"({impact}). Pass regularize=False to raise "
                         f"instead.",
                         UserWarning, stacklevel=3,
                     )

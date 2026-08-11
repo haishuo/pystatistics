@@ -187,11 +187,17 @@ def mlest_monotone_closed_form(data) -> tuple[NDArray, NDArray, int]:
         rows = obs_per_col[:, k]
         n_k = int(rows.sum())
 
-        if n_k < k + 1:
+        if n_k < k + 2:
+            # The regression of X_k on k predictors plus an intercept has
+            # k+1 parameters, so n_k = k+1 observations interpolate exactly:
+            # the residual variance is 0 and the returned Sigma is singular
+            # (no interior MLE). At least one extra observation is required.
             raise ValidationError(
                 f"Monotone MLE: only {n_k} observations available for "
                 f"the regression of variable {int(order[k])} on "
-                f"{k} predictors; need at least {k + 1}."
+                f"{k} predictors; need at least {k + 2} for a nonzero "
+                f"residual variance (with exactly {k + 1} the regression "
+                f"interpolates and the fitted covariance is singular)."
             )
 
         # Predictors: columns 0..k-1 restricted to the rows where X_k
@@ -210,6 +216,17 @@ def mlest_monotone_closed_form(data) -> tuple[NDArray, NDArray, int]:
         # MLE variance (divide by n, not n-k-1) to match the
         # standard-MVN-MLE convention used elsewhere in this module.
         rho2 = float(np.mean(resid ** 2))
+        if rho2 <= 0.0:
+            # Exact interpolation despite n_k >= k+2 (duplicated rows or an
+            # exact linear dependence): the fitted covariance would be
+            # singular. Fail loud rather than return it (Rule 1).
+            raise ValidationError(
+                f"Monotone MLE: the regression of variable {int(order[k])} "
+                f"on its predecessors has zero residual variance — the "
+                f"variable is an exact linear function of them on its "
+                f"observed rows, so the fitted covariance is singular and "
+                f"no interior MLE exists."
+            )
 
         # Back-substitute into (mu, sigma) in the ordered basis.
         mu_prev = mu_ord[:k]

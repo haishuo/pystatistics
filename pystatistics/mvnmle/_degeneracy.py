@@ -149,6 +149,73 @@ def check_observed_variances(
     )
 
 
+def _never_jointly_observed_pairs(
+    data: NDArray[np.floating],
+) -> list[tuple[int, int]]:
+    """Variable pairs (i, j), i < j, never observed in the same row.
+
+    Computed from the joint-observation count matrix J^T J where J is the
+    boolean observed-mask. Counts are exact (they are integers far below
+    2**53, so float64 matmul is lossless) and the matmul keeps this O(n p^2)
+    check fast at survey scale.
+    """
+    if data.ndim != 2:
+        raise ValidationError(f"data must be 2-D (n, p), got shape {data.shape}")
+    observed = (~np.isnan(data)).astype(np.float64)
+    counts = observed.T @ observed
+    i_idx, j_idx = np.triu_indices(data.shape[1], k=1)
+    zero = counts[i_idx, j_idx] == 0.0
+    return [(int(i), int(j)) for i, j in zip(i_idx[zero], j_idx[zero])]
+
+
+def check_pairwise_observation(
+    data: NDArray[np.floating],
+    *,
+    force: bool = False,
+) -> str | None:
+    """Guard the input against variable pairs that are never jointly observed.
+
+    If variables i and j never appear observed in the same row, no pattern's
+    likelihood term involves ``sigma[i, j]``: the observed-data likelihood is
+    exactly flat in that entry, the MLE is non-unique, and the reported value
+    is an artifact of the starting point (the classical identifiability
+    condition for MVN missing-data MLE; Little & Rubin). Neither the
+    constant-column guard nor the fitted-covariance guard can see this — the
+    fitted covariance is typically well-conditioned — so it is detected here,
+    at the input boundary (Rule 2).
+
+    Returns ``None`` when every pair is jointly observed at least once. When
+    unidentified pairs exist *and* ``force`` is True, returns a warning
+    message (the caller marks the fit not-converged and attaches it).
+    Otherwise raises :class:`SingularMatrixError`.
+    """
+    bad = _never_jointly_observed_pairs(np.asarray(data))
+    if not bad:
+        return None
+
+    shown = ", ".join(f"({i}, {j})" for i, j in bad[:10])
+    if len(bad) > 10:
+        shown += f", ... ({len(bad) - 10} more)"
+    detail = (
+        f"variable pair(s) {shown} are never observed in the same row, so the "
+        f"corresponding covariance entries appear in no likelihood term. The "
+        f"observed-data likelihood is exactly flat in those entries: they are "
+        f"not identified, the maximum-likelihood estimate is not unique, and "
+        f"any reported value for them is an artifact of the starting point"
+    )
+    if force:
+        return (
+            f"Unidentified covariance entries accepted under force=True: "
+            f"{detail}. Treat the corresponding entries of sigmahat as "
+            f"meaningless."
+        )
+    raise SingularMatrixError(
+        f"MVN MLE failed: {detail}. Remove one variable of each pair before "
+        f"fitting, or pass force=True to obtain the (non-converged) result "
+        f"anyway."
+    )
+
+
 def check_fitted_covariance(
     sigma: NDArray[np.floating],
     *,

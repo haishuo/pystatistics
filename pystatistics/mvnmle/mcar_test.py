@@ -349,8 +349,10 @@ def little_mcar_test(data,
     if df <= 0:
         raise ValidationError(f"Invalid degrees of freedom: {df}")
 
-    # Step 5: P-value
-    p_value = 1 - stats.chi2.cdf(test_statistic, df)
+    # Step 5: P-value via the survival function — computes the upper tail
+    # directly, so it keeps full precision where 1 - cdf underflows to 0.0
+    # (matches R's pchisq(..., lower.tail = FALSE)).
+    p_value = stats.chi2.sf(test_statistic, df)
     rejected = p_value < alpha
 
     return MCARTestSolution(

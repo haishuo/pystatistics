@@ -142,3 +142,41 @@ def test_many_patterns_does_not_hang():
         f"{elapsed:.1f}s — regression in algorithm default?"
     )
     assert np.isfinite(result.statistic)
+
+
+class TestReferenceValues:
+    """Pin the statistic/df/p-value against the R-generated fixture
+    (BaylorEdPsych::LittleMCAR 0.5 + mvnmle 0.1.11.2, R 4.3.3).
+
+    Without these, a regression that e.g. dropped the n_k factor or broke
+    the df formula would pass a suite that only checks finiteness/ranges.
+    """
+
+    def test_apple_matches_r_reference(self):
+        import json
+        from pathlib import Path
+        from pystatistics.mvnmle import little_mcar_test, datasets
+
+        ref = json.loads(
+            (Path(__file__).parent / "references" /
+             "little_mcar_apple.json").read_text()
+        )
+        result = little_mcar_test(datasets.apple)
+        assert result.df == ref["df"]
+        assert result.statistic == pytest.approx(
+            ref["test_statistic"], rel=1e-4)
+        assert result.p_value == pytest.approx(ref["p_value"], rel=1e-3)
+
+    def test_p_value_uses_survival_function(self):
+        # Far in the tail, 1 - cdf underflows to exactly 0.0; sf does not.
+        import numpy as np
+        rng = np.random.default_rng(0)
+        n = 4000
+        x = rng.standard_normal((n, 2))
+        # Make missingness of col 1 depend strongly on col 0 (grossly not
+        # MCAR) so the statistic is enormous.
+        x[x[:, 0] > 0.0, 1] = np.nan
+        from pystatistics.mvnmle import little_mcar_test
+        result = little_mcar_test(x)
+        assert result.rejected
+        assert result.p_value >= 0.0

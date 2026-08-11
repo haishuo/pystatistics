@@ -105,19 +105,24 @@ class GPUObjectiveFP32(MLEObjectiveBase):
         Note: The caller (solvers._get_backend) handles the backend='gpu' vs
         'auto' distinction before instantiating this class. When backend='gpu',
         the solver calls select_device('gpu') which raises RuntimeError if no
-        GPU is available — so this class is never constructed with an invalid
-        explicit GPU request. The warnings below are therefore only reachable
-        in 'auto' mode, where silent CPU fallback is the intended behavior.
+        GPU is available — so this class is normally never constructed with an
+        invalid explicit GPU request. An explicit but unavailable device
+        nevertheless RAISES here (never a silent reroute); the warn-and-CPU
+        fallback below is reserved for the no-device-specified auto mode.
         """
         torch = self.torch
 
         if requested_device:
             device = torch.device(requested_device)
             if device.type == 'mps':
-                # Verify MPS is available
+                # An EXPLICIT device request must never be silently rerouted
+                # (Rule 1) — mirror the FP64 class, which raises here.
                 if not (hasattr(torch.backends, 'mps') and torch.backends.mps.is_available()):
-                    warnings.warn("MPS not available, falling back to CPU")
-                    return torch.device('cpu')
+                    raise RuntimeError(
+                        "device='mps' was requested but MPS is not available "
+                        "on this machine. Use device='cpu' (or None for "
+                        "auto-selection) instead."
+                    )
             return device
 
         # Auto-select: silent fallback to CPU is acceptable here because this
@@ -137,7 +142,8 @@ class GPUObjectiveFP32(MLEObjectiveBase):
         objective/gradient evaluation then reuses them in a single batched
         Cholesky instead of looping over patterns.
         """
-        consts = build_batched_constants(self.patterns, self.n_vars)
+        consts = build_batched_constants(
+            self.patterns, self.n_vars, var_scale=self.jitter_scale())
         self._consts = to_torch(consts, self.torch, self.device, self.dtype)
 
     def get_initial_parameters(self) -> np.ndarray:

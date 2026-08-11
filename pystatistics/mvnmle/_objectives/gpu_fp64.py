@@ -127,7 +127,8 @@ class GPUObjectiveFP64(MLEObjectiveBase):
 
         Built once; reused by every batched objective/gradient evaluation.
         """
-        consts = build_batched_constants(self.patterns, self.n_vars)
+        consts = build_batched_constants(
+            self.patterns, self.n_vars, var_scale=self.jitter_scale())
         self._consts = to_torch(consts, self.torch, self.device, self.dtype)
 
     def get_initial_parameters(self) -> np.ndarray:

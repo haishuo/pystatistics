@@ -255,3 +255,28 @@ def test_closed_form_faster_than_em_on_larger_v():
         f"(best of {n_reps}) — expected ≥ 1.3× speedup on a 20-variable "
         f"monotone workload."
     )
+
+
+class TestInterpolationGuard:
+    """n_k = k+1 observations interpolate the regression exactly; the fitted
+    covariance is then singular and must be refused, not returned."""
+
+    def test_exactly_identified_regression_raises(self):
+        from pystatistics.core.exceptions import ValidationError
+        from pystatistics.mvnmle import mlest_monotone_closed_form
+        rng = np.random.default_rng(0)
+        # Monotone: var 0 fully observed; var 1 observed on first 3 rows
+        # only. Regression of var 1 on var 0 + intercept has 2 parameters;
+        # 3 rows leaves 1 dof -> fine. Use 2 rows -> interpolation -> raise.
+        X = rng.standard_normal((10, 2))
+        X[2:, 1] = np.nan
+        with pytest.raises(ValidationError, match="need at least"):
+            mlest_monotone_closed_form(X)
+
+    def test_three_observations_two_predictors_ok(self):
+        from pystatistics.mvnmle import mlest_monotone_closed_form
+        rng = np.random.default_rng(1)
+        X = rng.standard_normal((12, 2))
+        X[4:, 1] = np.nan  # 4 rows observe var 1: n_k=4 >= k+2=3
+        mu, sigma, order = mlest_monotone_closed_form(X)
+        assert np.all(np.linalg.eigvalsh(sigma) > 0)

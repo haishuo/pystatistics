@@ -87,9 +87,23 @@ def identify_missingness_patterns(data: np.ndarray) -> List[PatternInfo]:
     # Create binary pattern matrix (1 = observed, 0 = missing)
     pattern_matrix = (~np.isnan(data)).astype(int)
 
-    # Convert patterns to unique identifiers using powers of 2
-    powers = 2 ** np.arange(n_vars - 1, -1, -1)
-    pattern_ids = pattern_matrix @ powers
+    # Convert patterns to unique identifiers using powers of 2. Each distinct
+    # missingness pattern must map to a distinct code, or rows with different
+    # patterns get grouped together and a group's observed mask is applied to
+    # rows it does not match — dropping observed data or pulling NaNs into it.
+    # For n_vars > 62, 2**i overflows int64 and causes exactly that collision
+    # (silently: numpy integer overflow raises no warning), so use
+    # arbitrary-precision Python integers in that regime, mirroring
+    # MLEObjectiveBase._apply_mysort.
+    if n_vars <= 62:
+        powers = (2 ** np.arange(n_vars - 1, -1, -1)).astype(np.int64)
+        pattern_ids = pattern_matrix @ powers
+    else:
+        powers = np.array(
+            [1 << (n_vars - 1 - i) for i in range(n_vars)],
+            dtype=object,
+        )
+        pattern_ids = pattern_matrix.astype(object) @ powers
 
     # Find unique patterns
     unique_patterns, inverse_indices = np.unique(pattern_ids, return_inverse=True)

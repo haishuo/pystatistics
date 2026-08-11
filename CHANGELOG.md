@@ -1,5 +1,92 @@
 # Changelog
 
+## 6.0.2
+
+Correctness fixes for `mvnmle` (multivariate-normal maximum likelihood with
+missing data), plus one `gam` fix. Results on well-conditioned, unit-scale
+data — including anything fit on standardized columns — are numerically
+unchanged from 6.0.1; the fixes concern wide data (65+ variables), very
+small-scale data, pathological missingness, and argument handling.
+
+### Fixed
+
+*mvnmle*
+
+- Little's MCAR test (`little_mcar_test`) and `analyze_patterns` are now
+  correct for 65 or more variables. Pattern identification used int64 powers
+  of two, which overflow silently from p = 65 and merge distinct missingness
+  patterns — the test could return a wrong statistic, degrees of freedom, and
+  p-value with no warning (for example, df 69 instead of the correct 207 on a
+  70-variable problem). Pattern codes now switch to arbitrary-precision
+  integers above 62 variables, as the estimator itself already did.
+- `mlest` now detects unidentified covariance entries. If two variables are
+  never observed in the same row, the likelihood carries no information about
+  their covariance: the entry is not identified, and any fitted value is an
+  artifact of the starting point. Such fits were previously returned with
+  `converged=True`; `mlest` now raises `SingularMatrixError`, or with
+  `force=True` returns the fit marked `converged=False` with a warning naming
+  the affected pairs.
+- The torch objectives' diagonal jitter is now relative to each variable's
+  observed variance instead of absolute. The absolute jitter (1e-6 on the
+  single-precision GPU path) biased every fitted variance downward by that
+  fixed amount — roughly -10% on data with variances near 1e-5, with no
+  warning. Unit-scale and standardized data are numerically unaffected.
+- The default (SQUAREM-accelerated) EM path no longer emits spurious
+  "covariance near-indefinite" ridge warnings: the safeguard for extrapolated
+  trial covariances was disabled under the default `regularize=True`, so
+  trial points that are legitimately outside the positive-definite cone were
+  "repaired" with data-scale ridges and misleading warnings — visible on
+  `mlest(datasets.missvals, method='em')`, which now runs warning-free with
+  identical estimates. The `regularize` policy now applies to accepted
+  iterates only, and SQUAREM's fallback iterates are checked as well.
+- GPU EM honors `regularize=False`. It was silently ignored on CUDA (with a
+  warning that advised passing the very flag the caller had already passed).
+- Conflicting arguments fail loudly instead of silently overriding:
+  `mlest(backend='gpu', solver='reference')` previously ran the CPU reference
+  with no error and skipped backend validation entirely; it now raises
+  `ValidationError`, as does an explicit GPU backend with
+  `method='monotone'` (a CPU closed form).
+- `mlest(method='em', backend='gpu_fp64')` no longer raises "Unknown
+  backend". EM computes in float64 on CUDA, so the documented backend now
+  routes like `'gpu'` (CUDA required).
+- Single-precision GPU fits use their precision-calibrated convergence
+  tolerance. `mlest` forced the double-precision gradient tolerance (1e-5)
+  onto the FP32 backend — below FP32's gradient noise floor, so the gradient
+  test could never be met. The backend's own default (1e-3) now applies when
+  `tol` is not specified; an explicit `tol` is honored unchanged.
+- Numerical breakdown no longer produces fabricated output: if the R-exact
+  reference objective cannot reconstruct the covariance at the reported
+  optimum, it previously returned the identity matrix as `sigmahat` — it now
+  fails loudly through the degeneracy guard. A finite-difference gradient
+  component whose evaluation fails in both directions raises
+  `NumericalError` instead of being silently zeroed. An explicit
+  `device='mps'` request with MPS unavailable raises instead of silently
+  running on CPU.
+- The closed-form monotone solver refuses regressions that interpolate: with
+  exactly k+1 observations for a k-predictor step (or an exact linear
+  dependence), the fitted covariance is singular and no interior maximum
+  likelihood estimate exists; both cases now raise `ValidationError` instead
+  of returning a singular matrix.
+- `little_mcar_test`'s p-value uses the chi-square survival function, which
+  keeps precision in the far tail where `1 - cdf` underflows to zero, and the
+  statistic is now validated against R reference values.
+- EM non-convergence warnings report the actual number of EM-step
+  equivalents consumed (acceleration cycles can overshoot `max_iter` by a few
+  steps; the warning previously contradicted the reported iteration count).
+- Removed dead code: an unused pattern-utility module, unused covariance
+  parameterization classes, and unused batched-EM functions. None were
+  reachable from the public API.
+
+*gam*
+
+- Smoothing-parameter selection no longer reports a fit from a branch the
+  criterion never accepted. With a multimodal inner P-IRLS problem (for
+  example `family=Gaussian(link='log')` with `method='GCV'`), the final fit
+  could be warm-started from a rejected line-search trial's state and land on
+  a different solution branch than the accepted optimum. Branch resolution
+  now leads with the best-scoring evaluation's state; results on unimodal
+  problems are bit-identical.
+
 ## 6.0.1
 
 Correctness and robustness fixes for `mice` (multiple imputation) and `mvnmle`

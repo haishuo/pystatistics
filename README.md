@@ -371,6 +371,27 @@ pip install pystatistics[dev]
 
 ## What's New
 
+### 6.0.2 — mvnmle correctness fixes
+
+- **Little's MCAR test is correct for 65+ variables** — pattern codes
+  previously overflowed silently, which could merge distinct missingness
+  patterns and corrupt the statistic, degrees of freedom, and p-value.
+- **Unidentified covariances are detected:** if two variables are never
+  observed together, their covariance cannot be estimated; `mlest` now raises
+  instead of returning an arbitrary value marked converged (`force=True`
+  returns it flagged, with a warning).
+- **No variance bias on small-scale data** on the single-precision GPU path —
+  the objective's diagonal jitter is now relative to each variable's scale.
+  Standardized and unit-scale data are numerically unaffected.
+- **Cleaner EM:** the default accelerated EM no longer emits spurious
+  "near-indefinite" ridge warnings, and `regularize=False` is honored on GPU.
+- **Stricter argument handling:** conflicting requests (such as
+  `backend='gpu'` with `solver='reference'`) raise instead of silently
+  overriding; `method='em'` accepts `backend='gpu_fp64'`; single-precision
+  fits use their own calibrated convergence tolerance.
+- Also fixes a `gam` smoothing-parameter selection edge case on multimodal
+  inner fits. Full details in the [changelog](CHANGELOG.md).
+
 ### 6.0.0 — compiled wheels, no first-use warm-up (packaging change)
 
 pystatistics now ships as **prebuilt binary wheels** instead of a pure-Python

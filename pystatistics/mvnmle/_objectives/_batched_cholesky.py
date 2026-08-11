@@ -59,18 +59,31 @@ class BatchedConstants:
     n_k: NDArray[np.float64]      # (P,) observations per pattern
     ybar: NDArray[np.float64]     # (P, v_obs_max) observed means, padded with 0
     c: NDArray[np.float64]        # (P, v_obs_max, v_obs_max) centered scatter
+    diag_scale: NDArray[np.float64]  # (P, v_obs_max) jitter scale, padded with 0
     v_obs_max: int
 
 
-def build_batched_constants(patterns, n_vars: int) -> BatchedConstants:
+def build_batched_constants(patterns, n_vars: int,
+                            var_scale=None) -> BatchedConstants:
     """Precompute padded per-pattern sufficient statistics from PatternData.
 
     Patterns with zero observed variables are kept as all-padding rows (they
     contribute nothing); this keeps indexing uniform.
 
+    Parameters
+    ----------
+    var_scale : (n_vars,) array or None
+        Per-variable scale for the diagonal jitter (typically each variable's
+        observed variance). The kernels add ``eps * diag_scale`` to the
+        observed diagonal, making the jitter — and hence its ~``-eps``
+        relative bias on the fitted variances — scale-invariant. ``None``
+        keeps the legacy ABSOLUTE jitter (scale 1.0 per observed slot), which
+        biases every fitted variance by ``-eps`` in absolute terms and is
+        badly wrong for small-variance data on the FP32 path.
+
     Raises
     ------
-    ValueError
+    ValidationError
         If there are no patterns, or every pattern has zero observed variables.
     """
     if len(patterns) == 0:
@@ -85,6 +98,18 @@ def build_batched_constants(patterns, n_vars: int) -> BatchedConstants:
     n_k = np.zeros(P, dtype=np.float64)
     ybar = np.zeros((P, v_obs_max), dtype=np.float64)
     c = np.zeros((P, v_obs_max, v_obs_max), dtype=np.float64)
+    diag_scale = np.zeros((P, v_obs_max), dtype=np.float64)
+
+    if var_scale is not None:
+        var_scale = np.asarray(var_scale, dtype=np.float64)
+        if var_scale.shape != (n_vars,):
+            raise ValidationError(
+                f"var_scale must have shape ({n_vars},), got {var_scale.shape}"
+            )
+        if not np.all(np.isfinite(var_scale)) or np.any(var_scale <= 0.0):
+            raise ValidationError(
+                "var_scale entries must be finite and positive"
+            )
 
     for k, pat in enumerate(patterns):
         v = len(pat.observed_indices)
@@ -99,9 +124,12 @@ def build_batched_constants(patterns, n_vars: int) -> BatchedConstants:
         n_k[k] = n
         ybar[k, :v] = mean
         c[k, :v, :v] = dc.T @ dc
+        diag_scale[k, :v] = (1.0 if var_scale is None
+                             else var_scale[pat.observed_indices])
 
     return BatchedConstants(obs_idx=obs_idx, obs_mask=obs_mask, n_k=n_k,
-                            ybar=ybar, c=c, v_obs_max=v_obs_max)
+                            ybar=ybar, c=c, diag_scale=diag_scale,
+                            v_obs_max=v_obs_max)
 
 
 def to_torch(consts: BatchedConstants, torch, device, dtype) -> dict:
@@ -112,6 +140,7 @@ def to_torch(consts: BatchedConstants, torch, device, dtype) -> dict:
         "n_k": torch.as_tensor(consts.n_k, device=device, dtype=dtype),
         "ybar": torch.as_tensor(consts.ybar, device=device, dtype=dtype),
         "c": torch.as_tensor(consts.c, device=device, dtype=dtype),
+        "diag_scale": torch.as_tensor(consts.diag_scale, device=device, dtype=dtype),
     }
 
 
@@ -274,7 +303,11 @@ def analytic_value_and_gradient(torch, theta, unpack, consts: dict, eps: float,
         # Closed-form upstream gradients (no autodiff through chol/inverse).
         with torch.no_grad():
             mu_kd = mu_k * maskf
-            sig_full = sig * mo + torch.diag_embed(eps * maskf + (1.0 - maskf))
+            # Jitter is eps * diag_scale (constant w.r.t. theta, zero on
+            # padding), so the closed form stays the exact gradient of the
+            # jittered objective; padding keeps its unit diagonal.
+            sig_full = sig * mo + torch.diag_embed(
+                eps * cc["diag_scale"] + (1.0 - maskf))
             delta = (ybar - mu_kd) * maskf
             nb = n_k.view(-1, 1, 1)
             M = (c + nb * (delta[:, :, None] * delta[:, None, :])) * mo
@@ -321,7 +354,9 @@ def batched_neg2_loglik(torch, mu, sigma, consts: dict, eps: float,
     mu : (n_vars,) tensor   — current mean
     sigma : (n_vars, n_vars) tensor — current covariance
     consts : dict of torch tensors from :func:`to_torch`
-    eps : float — diagonal jitter added to the real observed block (FP32/FP64)
+    eps : float — diagonal jitter coefficient; the observed diagonal receives
+        ``eps * consts['diag_scale']`` (per-variable scale-relative when the
+        constants were built with ``var_scale``, absolute otherwise)
     """
     idx = consts["obs_idx"]            # (P, v)
     mask = consts["obs_mask"]          # (P, v)
@@ -337,9 +372,10 @@ def batched_neg2_loglik(torch, mu, sigma, consts: dict, eps: float,
     # Gather mu_k and the observed sub-blocks of Sigma; zero the padding.
     mu_k = mu[idx] * maskf                                  # (P, v)
     sig = sigma[idx[:, :, None], idx[:, None, :]] * mask_outer  # (P, v, v)
-    # Real diagonal gets +eps (matches the looped objective); padded diagonal
-    # gets +1 so the batched Cholesky sees identity on padding.
-    diag_add = eps * maskf + (1.0 - maskf)                  # (P, v)
+    # Real diagonal gets +eps*diag_scale (scale-relative jitter, zero on
+    # padding); padded diagonal gets +1 so the batched Cholesky sees identity
+    # on padding.
+    diag_add = eps * consts["diag_scale"] + (1.0 - maskf)   # (P, v)
     sig = sig + torch.diag_embed(diag_add)
 
     # M_k = C_k + n_k delta delta^T, delta = ybar - mu_k (cancellation-free).

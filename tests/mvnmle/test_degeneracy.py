@@ -347,3 +347,55 @@ class TestFp32NoSilentWrongGate:
         Y[mm] = np.nan
         Y[np.all(np.isnan(Y), 1), 0] = 0.0
         assert mlest(Y, backend="gpu").converged  # no false refusal
+
+
+# ── Never-jointly-observed pair guard ────────────────────────────────
+
+def _disjoint_pair_data(seed: int = 0, n: int = 200) -> np.ndarray:
+    """Vars 1 and 2 are never observed in the same row (var 0 always seen).
+
+    The likelihood is exactly flat in sigma[1, 2]: that entry is
+    unidentified and any fitted value for it is a starting-point artifact.
+    """
+    rng = np.random.default_rng(seed)
+    cov = np.array([[1.0, 0.5, 0.5], [0.5, 1.0, 0.7], [0.5, 0.7, 1.0]])
+    X = rng.multivariate_normal(np.zeros(3), cov, size=n)
+    X[: n // 2, 1] = np.nan   # first half: var 1 missing
+    X[n // 2:, 2] = np.nan    # second half: var 2 missing
+    return X
+
+
+class TestPairwiseObservationGuard:
+    """Unidentified covariance entries must fail loud, not report converged."""
+
+    def test_checker_flags_the_pair(self):
+        from pystatistics.mvnmle._degeneracy import check_pairwise_observation
+        with pytest.raises(SingularMatrixError, match=r"\(1, 2\)"):
+            check_pairwise_observation(_disjoint_pair_data())
+
+    def test_checker_passes_jointly_observed_data(self):
+        from pystatistics.mvnmle._degeneracy import check_pairwise_observation
+        rng = np.random.default_rng(1)
+        X = rng.normal(size=(100, 4))
+        X[::7, 2] = np.nan
+        assert check_pairwise_observation(X) is None
+
+    def test_mlest_direct_raises(self):
+        with pytest.raises(SingularMatrixError, match="never observed"):
+            mlest(_disjoint_pair_data())
+
+    def test_mlest_em_raises(self):
+        with pytest.raises(SingularMatrixError, match="never observed"):
+            mlest(_disjoint_pair_data(), method='em')
+
+    def test_force_returns_non_converged_with_warning(self):
+        res = mlest(_disjoint_pair_data(), force=True)
+        assert res.converged is False
+        assert any("never observed" in w for w in res._result.warnings)
+
+    def test_complete_data_unaffected(self):
+        rng = np.random.default_rng(2)
+        X = rng.normal(size=(150, 3))
+        X[::9, 0] = np.nan
+        res = mlest(X)
+        assert res.converged is True

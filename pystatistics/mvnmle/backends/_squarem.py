@@ -61,8 +61,14 @@ def squarem_step(
     loglik_fn : callable
         Returns the observed-data log-likelihood at (mu, sigma).
     ensure_pd : callable
-        Validates / projects sigma to the PD cone; raises NumericalError
-        on irrecoverable non-PD.
+        STRICT feasibility check on speculative trial iterates: must RAISE
+        on non-PD sigma (the alpha back-off engages on the exception) and
+        return sigma unchanged otherwise. Do not pass a warn-and-ridge
+        policy here — extrapolated trial points are routinely far outside
+        the PD cone, and ridging them both disables the back-off safeguard
+        and emits spurious warnings. The caller applies its user-facing
+        regularization policy to the ACCEPTED iterate this function
+        returns.
 
     Returns
     -------

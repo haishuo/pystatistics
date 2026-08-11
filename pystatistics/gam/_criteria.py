@@ -241,6 +241,14 @@ def select_lambdas(
     # Warm start: nearby lambdas need ~2 PIRLS steps from the previous
     # evaluation's mu instead of ~6 from family.initialize.
     warm: dict[str, Any] = {"mu": None}
+    # The mu of the best-scoring evaluation so far. `warm` alone cannot
+    # serve branch resolution: after L-BFGS-B accepts the optimum, its
+    # REJECTED line-search trials still overwrite `warm`, and a trial far
+    # from the optimum can hop the inner fixed-point onto another branch —
+    # losing the branch the criterion was accepted on (observed: the deep
+    # GCV-4.4 branch replaced by the shallow GCV-38 one three evaluations
+    # after acceptance).
+    best: dict[str, Any] = {"f": np.inf, "mu": None}
     # The line search reads the criterion through the inner P-IRLS
     # convergence noise; at the user tol (1e-8) that noise floor is large
     # enough to stall the search short of the optimum on flat surfaces
@@ -285,6 +293,8 @@ def select_lambdas(
             return np.inf, np.zeros(len(roots), dtype=np.float64)
         warm["mu"] = fit.mu
         val = score_of(fit, lam)
+        if val < best["f"]:
+            best["f"], best["mu"] = val, fit.mu
         if method_u == "REML":
             grad = (
                 reml_gradient_gauss(fit, roots, lam, n) if gauss_identity
@@ -357,11 +367,15 @@ def select_lambdas(
     # criterion (adversarially verified: gaussian-log n=60, warm branch
     # GCV 4.4 — matching mgcv's 4.8 on the same data — vs fresh branch
     # 38.2). mgcv never refits from scratch after selection: its reported
-    # fit is the warm continuation of the search. Both branches at the
-    # accepted lambdas are therefore evaluated here and the BETTER one's mu
+    # fit is the warm continuation of the search. All known branches at the
+    # accepted lambdas are therefore evaluated here and the BEST one's mu
     # is handed back so the caller's final fit continues that branch — the
     # reported criterion always belongs to the reported fit, never a
-    # silently different branch.
+    # silently different branch. `best["mu"]` (the best-scoring evaluation
+    # of the whole search) must lead the candidates: `warm["mu"]` is only
+    # the LAST evaluation, and L-BFGS-B's rejected post-acceptance
+    # line-search trials can leave it on a different branch than the one
+    # the optimum was accepted on (see `best`'s definition above).
     mu_final: NDArray[np.floating[Any]] | None = None
     if not gauss_identity:
         lam_hat = np.exp(result.x)
@@ -373,8 +387,12 @@ def select_lambdas(
             )
             return fit, score_of(fit, lam_hat) / ref
 
+        starts: list[NDArray[np.floating[Any]] | None] = []
+        for mu0 in (best["mu"], warm["mu"], None):
+            if not any(mu0 is seen for seen in starts):
+                starts.append(mu0)
         candidates: list[tuple[float, NDArray[np.floating[Any]]]] = []
-        for mu0 in (warm["mu"], None):
+        for mu0 in starts:
             try:
                 fit_b, f_b = _branch_fit(mu0)
                 candidates.append((f_b, fit_b.mu))

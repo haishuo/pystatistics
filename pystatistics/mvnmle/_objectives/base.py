@@ -253,6 +253,21 @@ class MLEObjectiveBase:
 
         return cov
 
+    def jitter_scale(self) -> np.ndarray:
+        """Per-variable scale for the diagonal jitter: the observed variances.
+
+        Makes the torch objectives' jitter ``eps * var_j`` instead of an
+        absolute ``eps``, so its ~``-eps`` bias on the fitted variances is
+        relative to each variable's own scale — an absolute 1e-6 jitter
+        silently biased small-variance data (e.g. -10% on variances near
+        1e-5 in FP32). Non-positive or non-finite variances (rejected
+        upstream by the degeneracy guards anyway) fall back to scale 1.0.
+        """
+        var = np.diag(self.sample_cov_raw).copy()
+        bad = ~np.isfinite(var) | (var <= 0.0)
+        var[bad] = 1.0
+        return var
+
     def get_initial_parameters(self) -> np.ndarray:
         """Get initial parameter values. Subclasses must implement."""
         raise NotImplementedError("Subclasses must implement get_initial_parameters")

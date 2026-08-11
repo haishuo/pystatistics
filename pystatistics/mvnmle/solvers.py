@@ -78,11 +78,21 @@ def mlest(
         reference (no PyTorch needed; valid only with ``method='direct'``); any
         other value is passed as the scipy optimizer method. Ignored for EM.
     tol : float or None
-        Convergence tolerance. If None, uses algorithm-appropriate default:
-        direct = 1e-5 (gradient tolerance), em = 1e-4 (parameter change).
+        Convergence tolerance. If None, uses an algorithm- and
+        precision-appropriate default: direct = per-observation gradient
+        tolerance auto-selected by the backend (1e-5 on the FP64 paths,
+        1e-3 on the FP32 GPU path, whose gradient noise floor is far above
+        1e-5); em = 1e-4 (parameter change). For the direct method the
+        tolerance is a scipy ``gtol`` and applies only to gradient-based
+        solvers (BFGS, L-BFGS-B); derivative-free solvers ignore it.
     max_iter : int or None
         Maximum iterations. If None, uses algorithm-appropriate default:
         direct = 100, em = 1000.
+    regularize : bool
+        EM only (ignored by 'direct' and 'monotone'). When True (default),
+        a numerically near-indefinite EM covariance iterate is restored to
+        positive definiteness with a small diagonal ridge and a visible
+        warning; when False, it raises ``NumericalError`` instead.
     force : bool
         When False (default), a rank-deficient fit — caused by
         (near-)collinear variables, for which no interior maximum-likelihood
@@ -108,6 +118,28 @@ def mlest(
     >>> print(result.muhat)
     >>> print(result.loglik)
     """
+    # Conflicting-request guards (Rule 1: fail loud, never silently override
+    # an explicit choice). These must run BEFORE the backend normalization
+    # below so an explicit request is distinguishable from the default.
+    #
+    # solver='reference' selects the numpy inverse-Cholesky CPU reference; an
+    # explicit GPU backend alongside it is a contradiction, not a preference
+    # ranking. Likewise method='monotone' is a CPU closed form (Anderson
+    # 1957) and cannot honor an explicit GPU request.
+    if solver == 'reference' and backend not in (None, 'cpu'):
+        raise ValidationError(
+            f"solver='reference' selects the numpy inverse-Cholesky CPU "
+            f"reference and cannot run on backend={backend!r}. Drop the "
+            f"backend argument (or pass backend='cpu') to use the "
+            f"reference, or drop solver='reference' to run on the GPU."
+        )
+    if method == 'monotone' and backend not in (None, 'cpu'):
+        raise ValidationError(
+            f"method='monotone' is a closed-form CPU solver and cannot "
+            f"honor backend={backend!r}. Drop the backend argument, or use "
+            f"method='direct'/'em' for GPU execution."
+        )
+
     # Unspecified backend → CPU. GPU is never the default; callers must opt in
     # explicitly or request 'auto'.
     if backend is None:
@@ -137,13 +169,25 @@ def mlest(
         print(f"MVN MLE: {design.n} observations, {design.p} variables, "
               f"{design.missing_rate:.1%} missing")
 
-    # Input-boundary guard (Rule 2): a (near-)constant column has zero variance,
-    # so no interior MLE exists. This degeneracy is invisible to the
-    # scale-invariant fitted-covariance guard below (which divides each variable
-    # by its own standard deviation), so it must be caught here on the raw input.
-    # Raises unless force=True, in which case the warning is applied to the fit.
-    from pystatistics.mvnmle._degeneracy import check_observed_variances
-    constant_col_warning = check_observed_variances(design.data, force=force)
+    # Input-boundary guards (Rule 2). Each raises unless force=True, in which
+    # case its warning is applied to the fit below.
+    # 1. A (near-)constant column has zero variance, so no interior MLE
+    #    exists. Invisible to the scale-invariant fitted-covariance guard
+    #    (which divides each variable by its own standard deviation).
+    # 2. A variable pair never observed in the same row leaves its covariance
+    #    entry out of every likelihood term: the likelihood is flat in it and
+    #    the entry is unidentified. Also invisible to the fitted-covariance
+    #    guard (the fitted matrix is typically well-conditioned).
+    from pystatistics.mvnmle._degeneracy import (
+        check_observed_variances,
+        check_pairwise_observation,
+    )
+    input_warnings = [
+        w for w in (
+            check_observed_variances(design.data, force=force),
+            check_pairwise_observation(design.data, force=force),
+        ) if w is not None
+    ]
 
     if method == 'em':
         result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
@@ -164,14 +208,14 @@ def mlest(
     # trustworthy, so the fitted covariance is inspected directly.
     result = _guard_degeneracy(result, force=force, tol=collinearity_tol)
 
-    # Apply the constant-column warning gathered at the input boundary (only
-    # reachable under force=True; otherwise check_observed_variances raised).
-    if constant_col_warning is not None:
+    # Apply the input-boundary warnings (only reachable under force=True;
+    # otherwise the corresponding check raised).
+    if input_warnings:
         from dataclasses import replace
         result = replace(
             result,
             params=replace(result.params, converged=False),
-            warnings=result.warnings + (constant_col_warning,),
+            warnings=result.warnings + tuple(input_warnings),
         )
 
     if verbose:
@@ -275,7 +319,6 @@ def _solve_direct(design, backend, solver, tol, max_iter, verbose):
     (no PyTorch); any other ``solver`` value is the scipy optimizer method for
     the resolved (device, precision) backend.
     """
-    effective_tol = tol if tol is not None else 1e-5
     effective_max_iter = max_iter if max_iter is not None else 100
 
     if solver == 'reference':
@@ -288,7 +331,14 @@ def _solve_direct(design, backend, solver, tol, max_iter, verbose):
     if verbose:
         print(f"Backend: {backend_impl.name}")
 
-    solve_kwargs = {'max_iter': effective_max_iter, 'tol': effective_tol}
+    # Forward tol only when the user specified it — like `method`, the
+    # backend owns the default (DirectMLEBackend auto-selects by precision:
+    # 1e-5 for FP64 paths, 1e-3 for FP32, whose per-observation gradient
+    # floor sits near 2e-4 and cannot meet the FP64 tolerance). Forcing a
+    # value here would make that precision-aware default unreachable.
+    solve_kwargs = {'max_iter': effective_max_iter}
+    if tol is not None:
+        solve_kwargs['tol'] = tol
     if scipy_method is not None:
         solve_kwargs['method'] = scipy_method
 
@@ -406,7 +456,10 @@ def _get_em_device(
     elif backend_choice == 'cpu':
         return 'cpu'
 
-    elif backend_choice == 'gpu':
+    elif backend_choice in ('gpu', 'gpu_fp64'):
+        # EM computes in float64 on CUDA regardless (float32 only on MPS,
+        # which is rejected below), so the documented 'gpu_fp64' backend is
+        # honored by the same path as 'gpu'.
         device = select_device('gpu')  # raises RuntimeError if no GPU
         if device.device_type == 'mps':
             raise RuntimeError(
@@ -433,7 +486,9 @@ def _get_em_device(
 
     else:
         raise ValidationError(
-            unknown_backend_message(backend_choice, ('auto', 'cpu', 'gpu'))
+            unknown_backend_message(
+                backend_choice, ('auto', 'cpu', 'gpu', 'gpu_fp64')
+            )
         )
 
 

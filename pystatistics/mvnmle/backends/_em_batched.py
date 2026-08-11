@@ -24,12 +24,10 @@ from pystatistics.mvnmle.backends._em_batched_patterns import (
 from pystatistics.mvnmle.backends._em_batched_np import (
     compute_conditional_parameters_np,
     compute_loglik_batched_np,
-    e_step_full_batched_np,
 )
 from pystatistics.mvnmle.backends._em_batched_torch import (
     _e_step_full_torch,
     _loglik_full_torch,
-    compute_conditional_parameters_torch,
 )
 
 __all__ = [
@@ -38,8 +36,6 @@ __all__ = [
     "build_pattern_index",
     "compute_conditional_parameters_np",
     "compute_loglik_batched_np",
-    "e_step_full_batched_np",
     "_e_step_full_torch",
     "_loglik_full_torch",
-    "compute_conditional_parameters_torch",
 ]

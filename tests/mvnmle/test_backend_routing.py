@@ -120,3 +120,86 @@ class TestAutoWithoutCuda:
             pytest.skip("auto prefers CUDA when present; covered in test_gpu.py")
         result = mlest(datasets.apple, method='direct', backend='auto')
         assert result.backend_name == 'cpu_cholesky_fp64'
+
+
+class TestConflictingRequestsFailLoud:
+    """Explicit-but-contradictory argument combinations must raise, never
+    silently override the user's choice (Rule 1)."""
+
+    def test_reference_with_gpu_backend_raises(self):
+        from pystatistics.core.exceptions import ValidationError
+        with pytest.raises(ValidationError, match="reference"):
+            mlest(datasets.apple, solver='reference', backend='gpu')
+
+    def test_reference_with_gpu_fp64_backend_raises(self):
+        from pystatistics.core.exceptions import ValidationError
+        with pytest.raises(ValidationError, match="reference"):
+            mlest(datasets.apple, solver='reference', backend='gpu_fp64')
+
+    def test_reference_with_bogus_backend_raises(self):
+        # The backend string must not escape validation just because
+        # solver='reference' short-circuits backend resolution.
+        from pystatistics.core.exceptions import ValidationError
+        with pytest.raises(ValidationError):
+            mlest(datasets.apple, solver='reference', backend='bogus')
+
+    def test_reference_with_explicit_cpu_ok(self):
+        res = mlest(datasets.apple, solver='reference', backend='cpu')
+        assert res.backend_name == 'cpu_bfgs_fp64'
+
+    def test_monotone_with_gpu_backend_raises(self):
+        from pystatistics.core.exceptions import ValidationError
+        with pytest.raises(ValidationError, match="monotone"):
+            mlest(datasets.apple, method='monotone', backend='gpu')
+
+    def test_em_gpu_fp64_is_a_known_backend(self):
+        # Documented backend='gpu_fp64' must not be rejected as "Unknown
+        # backend" for EM. On CUDA machines it runs (EM is float64 on CUDA
+        # anyway); without CUDA it raises the GPU-availability RuntimeError.
+        from pystatistics.core.exceptions import ValidationError
+        try:
+            res = mlest(datasets.apple, method='em', backend='gpu_fp64')
+        except RuntimeError:
+            pass  # no CUDA on this machine — correct loud failure
+        except ValidationError as exc:
+            pytest.fail(f"gpu_fp64 rejected as unknown for EM: {exc}")
+
+
+class TestPrecisionAwareTolDefault:
+    """mlest must not clobber the backend's precision-calibrated tol."""
+
+    def test_direct_backend_receives_no_tol_when_unspecified(self, monkeypatch):
+        captured = {}
+        from pystatistics.mvnmle.backends import _direct
+
+        original = _direct.run_direct_solve
+
+        def spy(objective_factory, **kwargs):
+            captured.update(kwargs)
+            return original(objective_factory, **kwargs)
+
+        # Patch where the backends resolved it from.
+        import pystatistics.mvnmle.backends.gpu as gpu_mod
+        import pystatistics.mvnmle.backends.cpu as cpu_mod
+        monkeypatch.setattr(gpu_mod, 'run_direct_solve', spy)
+        monkeypatch.setattr(cpu_mod, 'run_direct_solve', spy)
+
+        mlest(datasets.apple)  # default: fast CPU path, FP64
+        assert captured.get('tol') == 1e-5  # backend's own FP64 default
+
+    def test_user_tol_still_forwarded(self, monkeypatch):
+        captured = {}
+        from pystatistics.mvnmle.backends import _direct
+        original = _direct.run_direct_solve
+
+        def spy(objective_factory, **kwargs):
+            captured.update(kwargs)
+            return original(objective_factory, **kwargs)
+
+        import pystatistics.mvnmle.backends.gpu as gpu_mod
+        import pystatistics.mvnmle.backends.cpu as cpu_mod
+        monkeypatch.setattr(gpu_mod, 'run_direct_solve', spy)
+        monkeypatch.setattr(cpu_mod, 'run_direct_solve', spy)
+
+        mlest(datasets.apple, tol=3e-6)
+        assert captured.get('tol') == 3e-6
