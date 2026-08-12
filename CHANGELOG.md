@@ -1,5 +1,34 @@
 # Changelog
 
+## 6.1.1
+
+Patch release reverting one 6.1.0 change that regressed mixed-type MICE on
+Apple Silicon with real survey data.
+
+### Fixed
+
+- **Reverted 6.1.0's switch to native `searchsorted` in the MICE
+  predictive-mean-matching donor search on Apple GPUs (PyTorch >= 2.13).**
+  The two implementations agree only on near-unique data: on heavily tied
+  columns (typical of real survey data) they seed the donor-search window at
+  different — individually valid — positions, which draws different donors
+  and changes the chained-equations trajectory. On the float32-only MPS
+  path that alternate trajectory pushed real-survey mixed-type imputations
+  (CSES at n=10,000) into non-finite refusals that 6.0.1 completes in ~45
+  seconds. 6.1.1 restores the 6.0.1 donor-search behavior and results on
+  MPS; CUDA and CPU were never affected. The other 6.1.0 Apple-Silicon
+  performance changes (the always-on matrix-multiply triangular inverse and
+  the `arima_batch` compiled likelihood) were tested for the same effect,
+  are not implicated, and remain.
+
+### Known issues
+
+- Mixed-type MICE on the GSS survey with `backend='gpu'` on Apple Silicon
+  is refused by the non-finite guard since 6.0.1 (6.0.0 completes it).
+  This is independent of the 6.1.0/6.1.1 donor-search change and is under
+  investigation; the refusal is loud, and `backend='cpu'` completes the
+  same imputation in double precision.
+
 ## 6.1.0
 
 Performance release for Apple Silicon and batched time-series fitting, plus an

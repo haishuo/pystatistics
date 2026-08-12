@@ -114,22 +114,32 @@ def _insertion_rank(sorted_obs, yhat_mis):
     """Insertion rank of each missing prediction among the sorted observed
     predictions: ``pos[i] = #{observed < yhat_mis[i]}``.
 
-    Device bridge, now version-gated. ``searchsorted`` is fast on CUDA; on MPS
-    it was pathologically slow (~1136x CUDA at n=20k) under the MPSGraph-routed
-    kernels of torch <= 2.12, so this path reconstructed the same ranks from one
-    combined stable sort + ``cumsum`` + scatter-back (all MPS-fast primitives).
-    PyTorch 2.13's native-Metal ``searchsorted`` removed the pathology (measured
-    2026-08-12: 37 us at n=20k, 9.5-16.4x faster than this bridge at MICE
-    shapes), so on torch >= 2.13 MPS uses ``searchsorted`` directly and the
-    bridge remains only for older torch. The two agree to within a ±1 tie
-    convention, which is harmless here: ``pos`` only seeds the width-``2k``
-    window that the contiguous-block search then refines exactly.
+    Device bridge — the one op that genuinely splits by device. ``searchsorted``
+    is fast on CUDA; on MPS it was pathologically slow (~1136x CUDA at n=20k)
+    under the MPSGraph-routed kernels of torch <= 2.12, so this path
+    reconstructs the same ranks from one combined stable sort + ``cumsum`` +
+    scatter-back (all MPS-fast primitives).
+
+    A retirement of this bridge in favor of PyTorch 2.13's fast native-Metal
+    ``searchsorted`` was attempted and REVERTED on 2026-08-12. The "±1 tie
+    convention" the two paths share holds only for near-unique values: on
+    heavily tied columns (real survey data) the bridge behaves like
+    ``side='right'`` while native ``searchsorted`` defaults to ``side='left'``,
+    so the donor-window *seed* shifts by whole tie-block widths. The window
+    still contains valid k-nearest donors either way (ties are interchangeable
+    by distance), but the different — equally valid — donor draws change the
+    chained-equations trajectory, and on the float32-only MPS path that
+    trajectory pushed real-survey mixed-type fits (CSES and GSS at n=10k,
+    m=20, maxit=10) into non-finite refusals that the bridge's trajectory
+    completes (verified: 6.0.1 and 6.1.0+bridge complete in ~45 s; 6.1.0 with
+    native searchsorted is refused by the end-of-sweep guard). CUDA has always
+    used native searchsorted and survives the same trajectory because its
+    discrete-GLM fits run in float64. Do not retire the bridge again without a
+    robustness fix that lets fp32 categorical fits survive either trajectory.
     """
     import torch
 
-    from pystatistics.core.compute.device import mps_native_kernels
-
-    if sorted_obs.device.type != "mps" or mps_native_kernels():
+    if sorted_obs.device.type != "mps":
         return torch.searchsorted(sorted_obs, yhat_mis)
 
     m, n_obs = sorted_obs.shape

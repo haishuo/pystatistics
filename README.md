@@ -371,6 +371,14 @@ pip install pystatistics[dev]
 
 ## What's New
 
+### 6.1.1 — fix Apple-Silicon MICE on tied survey data
+
+- Reverts one 6.1.0 Apple-GPU change (the MICE donor-search `searchsorted`
+  switch) that could push mixed-type imputations on heavily tied survey data
+  into loud non-finite refusals; 6.0.1 behavior and results are restored on
+  MPS. CUDA and CPU were never affected, and 6.1.0's other performance
+  improvements remain. Full details in the [changelog](CHANGELOG.md).
+
 ### 6.1.0 — faster Apple-Silicon MICE and batched ARIMA, ETS optimizer fix
 
 - **`arima_batch` GPU fits are 1.7–2.1x faster**: the Whittle likelihood is
