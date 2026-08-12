@@ -302,6 +302,14 @@ def arima_batch(
         ``'auto'`` (GPU-float32 if CUDA present, else CPU loop). A torch.Tensor
         input routes to its own device automatically (see CONVENTIONS.md).
 
+        On the GPU path the per-iteration likelihood is ``torch.compile``d by
+        default (measured ~1.75-2.14x end-to-end at K=1000), which costs a
+        ONE-TIME ~1 s compilation on the first call in a process — a strictly
+        one-shot call is slower end-to-end; repeated calls win from the second
+        onward. Falls back to the identical eager computation (with a
+        ``RuntimeWarning``) if the compile machinery is unavailable or fails;
+        the resolved mode is reported in ``Solution.info['nll_compiled']``.
+
     Returns
     -------
     ARMABatchSolution
@@ -406,6 +414,9 @@ def arima_batch(
         ar, ma, sigma2, n_iter, converged = fitter.fit(
             start_batch, lr=lr, max_iter=max_iter, tol=tol,
         )
+        # Disclose whether the per-iteration NLL ran torch.compile'd or
+        # eager (A6: default engine selection is disclosed, never silent).
+        nll_compiled = fitter.nll_compiled
         # Validity gate on the returned estimates — float64 root check
         # on the host, so the guarantee does not depend on the torch
         # build or the device's fp32 behavior. The single-series path
@@ -478,7 +489,10 @@ def arima_batch(
                 n_used=n_used,
                 method=method_str,
             ),
-            info={"method": method_str},
+            info=(
+                {"method": method_str, "nll_compiled": nll_compiled}
+                if run_gpu else {"method": method_str}
+            ),
             timing=None,
             backend_name=backend_name,
             warnings=contract_warnings,

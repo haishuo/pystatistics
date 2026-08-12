@@ -9,6 +9,26 @@
 
 ## Changes
 
+- **`arima_batch` GPU path: the per-iteration Whittle NLL is now
+  `torch.compile`d by default**
+  (`timeseries/backends/whittle_batch_gpu.py`). The NLL is an
+  einsum + elementwise + reduction chain executed ~hundreds of times per fit —
+  Inductor fuses it into a few kernels. Measured end-to-end (2026-08-12,
+  K=1000, n=2000, ARMA(2,0,1)): **1.75x on CUDA** (RTX 5070 Ti,
+  0.249 → 0.142 s) and **2.14x on MPS** (M2 Max, 0.642 → 0.300 s), with
+  estimates matching eager to ≤4e-7 (inside the GPU_FP32 tier). Costs a
+  ONE-TIME ~1 s compilation on the first call per process (documented in the
+  `backend` docstring) — a strictly one-shot call is slower end-to-end;
+  repeated-batch pipelines win from the second call. Falls back to the
+  identical eager NLL with a `RuntimeWarning` if the compile machinery is
+  unavailable or fails on first evaluation (a genuine numerical error still
+  propagates — the fallback retries eagerly and re-raises); the resolved mode
+  is disclosed in `Solution.info['nll_compiled']`. Rounding-level fusion
+  differences can flip ~1-2 per 1000 *marginal* per-row Adam `converged`
+  flags; row validity remains certified by the host-float64 AR-root check.
+  New tests: `tests/timeseries/test_whittle_batch_compile.py` (disclosure,
+  eager-equivalence at tier, warned fallback, fail-loud preservation).
+
 - **MICE MPS fast path: retired the merge-rank bridge on torch ≥ 2.13**
   (`mice/backends/_gpu_methods.py::_insertion_rank`). PyTorch 2.13's
   native-Metal `searchsorted` removed the pathology the ~10-op

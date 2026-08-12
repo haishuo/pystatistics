@@ -371,6 +371,46 @@ Constraints that make this *engineering* rather than a flag-flip:
 
 **Gate:** same benchmark matrix as Phase 1. Adopt where ≥1.3× and tolerance-clean; document; feed the numbers to §6.5.
 
+> #### Phase 2 — EXECUTED 2026-08-12. Results (prototype/monkeypatch measurements, no library changes yet):
+>
+> | Compile target | MPS (M2 Max) | CUDA (5070 Ti) | Tolerance | Gate ≥1.3× |
+> |---|---|---|---|---|
+> | MVNMLE `analytic_value_and_gradient` | 1.08× (2.59→2.40 s/eval) | 1.00× (Dynamo fell back on an unsupported call; output bit-identical) | grad ≤3.3e-6 | ✗ not adopted |
+> | MICE `batched_bayes_linreg_draw` | 1.00–1.05× | 1.14–1.17× | finite, distributionally clean | ✗ not adopted |
+> | **Whittle batched NLL** (`BatchedWhittleGPU._nll_per_series`) | **2.14×** (0.642→0.300 s, K=1000 n=2000) | **1.75×** (0.249→0.142 s) | estimates ≤4e-7; 1–2/1000 marginal `converged` flags flip (validity is certified by the host-fp64 AR-root check, not this flag) | ✅ **adoption candidate** |
+>
+> **Why MVNMLE/MICE didn't move:** the component decomposition at MICE n=2000 shapes shows the
+> draw's 1.23 ms is ~85% single-kernel batched compute (XtX matmul 0.49 ms + series inverse
+> 0.45 ms + cholesky 0.12 ms) — there is nothing left for a fusing compiler to fuse; torch 2.13 +
+> Phase 1 already collected the dispatch win. `reduce-overhead`/CUDA-Graph trials were reasoned
+> out rather than run: measured launch overhead on these paths is ~50 launches × ~3 µs ≈ 0.15 ms
+> against 1.27 s of eval compute (~0.01%).
+>
+> **Why Whittle moved:** its per-Adam-step NLL is einsum + elementwise + reductions — exactly
+> Inductor's fusion sweet spot — executed ~300 times per fit, on both backends (no Inductor-Metal
+> codegen issues encountered).
+>
+> **The whittle adoption trade-off — DECIDED (Hai-Shuo, 2026-08-12): option A, default-on.**
+> Cold compile costs ~+0.9 s once per process (Inductor disk cache barely helps: 1.02 vs 1.06 s
+> first call), while the win is ~0.1–0.35 s per call — compile pays from the second `arima_batch`
+> call onward and loses on a strictly one-shot call; the API's audience is repeated-batch
+> pipelines, so default-on with the first-call cost documented. **Implemented** in
+> `whittle_batch_gpu.py`: lazy `torch.compile` of `_nll_per_series` with a first-evaluation
+> fallback that retries eagerly (so a compiler failure warns and degrades to identical-but-slower,
+> while a genuine numerical error still propagates), disclosure via
+> `Solution.info['nll_compiled']`, documented in the `arima_batch` backend docstring, covered by
+> `tests/timeseries/test_whittle_batch_compile.py` (4 tests: disclosure, eager-equivalence at the
+> GPU_FP32 tier, warned fallback, fail-loud preservation).
+>
+> **Phase 3 verdict: entry condition NOT met.** Phase 3 was gated on "Phase 2's profiles still
+> show launch-bound sections" — they don't; every remaining hot path is compute-bound on
+> single-kernel batched linalg. Hand-fused Metal kernels (`torch.mps.compile_shader`) would be
+> re-implementing batched Cholesky/GEMM by hand to save glue ops around kernels that already
+> dominate — the BaseRT calibration (tens of percent vs a well-batched baseline) prices that
+> effort out. **The upgrade path terminates here**: Phases 0–1 collected the real wins
+> (workaround retirement, 1.1–1.3× MICE MPS), Phase 2 yields one adoption candidate (whittle
+> compile, 1.75–2.14×), and the remaining ~3–4× MPS-vs-CUDA gap is the fp32 silicon ratio.
+
 ### Phase 3 — Fused custom kernels, only where Phase 2 leaves measured dispatch on the table (weeks–months; highest cost, bounded upside)
 
 `torch.mps.compile_shader` (MSL strings, zero new dependencies, no build toolchain) fusing the MVNMLE value+gradient chain — one command buffer per L-BFGS evaluation — and, if MICE still shows dispatch residue, the per-column step's gather/draw/scatter chain. CUDA equivalent: manual CUDA-Graph capture where `reduce-overhead` fell short.
