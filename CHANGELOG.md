@@ -1,5 +1,66 @@
 # Changelog
 
+## 6.1.0
+
+Performance release for Apple Silicon and batched time-series fitting, plus an
+ETS optimizer fix. Statistical results are unchanged except where noted for
+ETS damped fits (a genuine optimizer improvement on affected platforms).
+
+### Performance
+
+- **`arima_batch` GPU fits are 1.7–2.1x faster end to end.** The
+  per-iteration Whittle likelihood is now compiled with `torch.compile` by
+  default (measured at K=1000 series, n=2000: 1.75x on an NVIDIA RTX 5070 Ti,
+  2.14x on an Apple M2 Max; estimates match the uncompiled path to ~4e-7,
+  inside the published GPU FP32 tolerance tier). Compilation costs about one
+  second once per process on the first call, so a single one-shot call is
+  slower end to end while repeated calls win from the second onward. If
+  `torch.compile` is unavailable or fails, the fit falls back to the
+  identical uncompiled computation with a `RuntimeWarning`; the mode actually
+  used is reported in `Solution.info['nll_compiled']`.
+- **Faster MICE on Apple Silicon with PyTorch >= 2.13** — up to 1.3x end to
+  end at small n (p=20, m=100 imputations: 0.92 s -> 0.70 s at n=2,000).
+  PyTorch 2.13's native Metal kernels made two long-standing MPS workarounds
+  obsolete: the predictive-mean-matching donor search now uses
+  `torch.searchsorted` directly (9.5–16.4x faster than the workaround it
+  replaces), and the posterior draw's matrix-multiply-only triangular inverse
+  is now used at every problem size (it beats Metal's `solve_triangular`
+  across the board). Both changes are version-gated: PyTorch <= 2.12 keeps
+  the previous (equally correct, slower) paths. CUDA and CPU results and
+  performance are unchanged.
+
+### Fixed
+
+- **ETS damped fits no longer land in a worse optimum than fixed-phi fits.**
+  On some BLAS stacks (notably Accelerate builds on macOS), the free-phi
+  damped-trend optimizer could converge to a local optimum with a *lower*
+  likelihood than the same model with the damping parameter held fixed —
+  impossible at a true optimum. The optimizer now adds a pin-and-release
+  start at the damping upper bound; a strict tie-break keeps healthy fits
+  bit-identical, so only genuinely affected fits change (to a higher
+  likelihood). Costs one extra inner fit, paid only by free-phi damped fits.
+- The `mvnmle` EM-on-Apple-GPU error message now states the real reason the
+  combination is unsupported — float32 EM is numerically unreliable (the
+  fixed-point iteration stalls at the float32 noise floor and the E-step can
+  lose positive-definiteness) — and its documentation pointer now references
+  a file that exists.
+- The `benchmarks/mvnmle_bench.py` script works with the current API again
+  (it had continued to use a parameter name removed in 4.0) and now detects
+  Apple GPUs instead of reporting no GPU on Apple Silicon.
+
+### Documentation
+
+- Apple-GPU (MPS) performance guidance re-measured on PyTorch 2.13: the
+  `scatter_add_` and `searchsorted` pathologies that shaped earlier guidance
+  are fixed by PyTorch 2.13's native Metal kernels, while the dense
+  factor-and-solve kernels (`solve_triangular`, `linalg.solve`/`inv`,
+  `cholesky_solve`) remain slow and the library's matrix-multiply-only
+  workarounds stay. `docs/GPU_NOTES.md` carries the updated measurements for
+  both PyTorch generations, and the new `docs/ACCELERATION_AUDIT_2026-08.md`
+  documents the full acceleration study behind this release.
+- Corrected the Apple benchmark machine's hardware identification (Mac
+  Studio M2 Max) across the performance docs; all measurements unchanged.
+
 ## 6.0.2
 
 Correctness fixes for `mvnmle` (multivariate-normal maximum likelihood with

@@ -113,7 +113,7 @@ Consumer GPUs (NVIDIA RTX series) execute FP32 at 5-10x the throughput of FP64. 
 
 ### CUDA vs MPS: Not All GPU Backends Are Equal
 
-Certain operations (notably `scatter_add_` with sparse targets) are 1000x slower on Apple MPS than on NVIDIA CUDA due to Metal's weaker atomic memory support. PyStatistics detects these cases and either fails fast or routes to CPU. See [docs/GPU_BACKEND_NOTES.md](docs/GPU_BACKEND_NOTES.md) for detailed benchmarks and guidance on when GPU helps vs hurts.
+Metal's dense factor-and-solve kernels (`solve_triangular`, `linalg.solve`, `cholesky_solve`) remain far slower than CUDA's, so PyStatistics routes around them with matrix-multiply-only formulations on MPS. (Earlier guidance also flagged `scatter_add_` and `searchsorted` as pathologically slow on Metal; PyTorch 2.13's native Metal kernels fixed both, and PyStatistics uses the fast paths automatically on PyTorch >= 2.13.) Where a computation is genuinely unreliable in float32 — such as EM for `mvnmle` — the MPS backend fails fast with an explanation rather than returning a slow or wrong result. See [docs/GPU_NOTES.md](docs/GPU_NOTES.md) for measurements and guidance on when GPU helps vs hurts.
 
 ---
 
@@ -370,6 +370,23 @@ pip install pystatistics[dev]
 ---
 
 ## What's New
+
+### 6.1.0 — faster Apple-Silicon MICE and batched ARIMA, ETS optimizer fix
+
+- **`arima_batch` GPU fits are 1.7–2.1x faster**: the Whittle likelihood is
+  compiled with `torch.compile` by default (one-time ~1 s first-call cost per
+  process; automatic fallback with a warning if compilation is unavailable;
+  the mode used is reported in `Solution.info['nll_compiled']`).
+- **MICE on Apple Silicon is up to 1.3x faster with PyTorch >= 2.13**, whose
+  native Metal kernels made two internal MPS workarounds obsolete; older
+  PyTorch keeps the previous (equally correct) paths, and CUDA/CPU are
+  unchanged.
+- **ETS damped fits** no longer converge to a worse optimum than fixed-phi
+  probes on some BLAS stacks — a pin-and-release start was added; healthy
+  fits are unchanged.
+- Apple-GPU performance guidance re-measured on PyTorch 2.13 — see
+  [docs/GPU_NOTES.md](docs/GPU_NOTES.md). Full details in the
+  [changelog](CHANGELOG.md).
 
 ### 6.0.2 — mvnmle correctness fixes
 
