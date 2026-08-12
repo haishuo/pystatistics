@@ -70,7 +70,7 @@ CASES = [
 def _gpu_available():
     try:
         import torch
-        return torch.cuda.is_available()
+        return torch.cuda.is_available() or torch.backends.mps.is_available()
     except ImportError:
         return False
 
@@ -84,7 +84,7 @@ def bench_one(data, algorithm, backend, max_iter, repeat=1):
 
     # Warmup
     try:
-        _ = mlest(data, algorithm=algorithm, backend=backend,
+        _ = mlest(data, method=algorithm, backend=backend,
                   max_iter=max_iter, verbose=False)
     except Exception as e:
         return {"time_ms": None, "n_iter": None, "converged": False,
@@ -97,7 +97,7 @@ def bench_one(data, algorithm, backend, max_iter, repeat=1):
     for _ in range(repeat):
         t = time.perf_counter()
         try:
-            r = mlest(data, algorithm=algorithm, backend=backend,
+            r = mlest(data, method=algorithm, backend=backend,
                       max_iter=max_iter, verbose=False)
             times.append(time.perf_counter() - t)
             n_iter = r.n_iter

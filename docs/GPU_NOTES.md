@@ -69,7 +69,7 @@ Metal has to:
    commands through a command buffer; every scatter operation requires a
    full encode-dispatch-wait cycle, unlike CUDA's inline kernel execution.
 
-**Measured**: ~150 ms per `scatter_add_` call on M2 Ultra — **3,000x
+**Measured**: ~150 ms per `scatter_add_` call on M2 Max — **3,000x
 slower** than the same operation on CUDA.
 
 ### The Cascading Effect
@@ -83,18 +83,49 @@ scatter) makes MPS *worse* because it creates a single huge sparse array.
 **Result**: Batch AUC for 5,000 markers takes ~0.015s on CUDA, ~20s on
 MPS, vs ~0.9s on CPU. MPS is 22x slower than CPU.
 
+> **Update (2026-08-12, torch 2.13.0):** this section's numbers are from the
+> torch 2.10/2.11 MPSGraph-routed `scatter_add_`. PyTorch 2.13 (July 2026)
+> replaced scatter/gather with hand-written native Metal kernels, and the
+> re-measurement (M2 Max vs RTX 5070 Ti, 2.5M items, sparse random buckets)
+> gives **0.45 ms/call on MPS vs 0.060 ms on CUDA — 7.6x, not 3,000x — and
+> ~8x FASTER than CPU `np.add.at` (3.9 ms)**. The end-to-end batch-AUC
+> conclusion above (and pystatsbio's `backend='gpu'`-on-MPS refusal built on
+> it) is based on a number that no longer exists.
+> Full re-measurement table: `docs/ACCELERATION_AUDIT_2026-08.md` §1.4.
+>
+> **Confirmed end-to-end (2026-08-12, Powerhouse M2 Max, torch 2.13.0):**
+> batch AUC 5,000 markers × 500 samples = **0.012 s on MPS vs 0.67 s CPU
+> (~55x)**, and 2.6–67x faster than CPU across the full historical grid
+> (100–20,000 markers × 500–1,155 samples), passing the `GPU_FP32` check
+> against the CPU fp64 reference in every cell. pystatsbio has lifted the
+> refusal, version-gated on torch >= 2.13 (`_mps_native_kernels()` in
+> `pystatsbio/diagnostic/_batch.py`), and `'auto'` now picks MPS there.
+> Forensic caveat: on this machine/macOS 26.5 the workload is equally fast
+> on torch 2.9–2.12 (35–38 ms warm), so the old ~20 s pathology lived in
+> the April 2026 OS/MPSGraph stack, not the torch version alone — and
+> since "Mainframe" was this same physical machine (Powerhouse's original
+> name), hardware is a controlled variable: the OS/framework stack is the
+> only thing that changed. The >= 2.13 gate is kept because it is the
+> first torch whose scatter speed is guaranteed by bundled native kernels
+> rather than the host OS. Grid table: pystatsbio
+> `docs/GPU_BACKEND_NOTES.md`.
+
 ---
 
 ## What We Did About It
 
-### pystatsbio `batch_auc`
+### pystatsbio `batch_auc` (updated 2026-08-12)
 
 - `backend='gpu'` on CUDA: uses the vectorized `scatter_add_` kernel.
   49-63x faster than CPU.
-- `backend='gpu'` on MPS: **raises `RuntimeError`** with an actionable
-  message explaining why. Fail fast, fail loud (Coding Bible Rule 1).
-- `backend='auto'` on MPS: routes to CPU silently (auto means "best
-  available", and CPU *is* best on MPS for this workload).
+- `backend='gpu'` on MPS with torch >= 2.13: supported — 2.6–67x faster
+  than CPU across the benchmark grid (see the update note above).
+- `backend='gpu'` on MPS with torch < 2.13: **raises `RuntimeError`**
+  with an actionable message (upgrade torch, or `backend='cpu'`). Fail
+  fast, fail loud (Coding Bible Rule 1).
+- `backend='auto'` on MPS: picks MPS (float32) on torch >= 2.13, CPU
+  below — auto means "best available", and the version gate decides
+  which one that is.
 
 ### Could It Be Fixed for MPS?
 
@@ -125,7 +156,7 @@ future Metal versions, but today, if your algorithm requires
 
 ## General Rules for GPU Backend Selection
 
-Based on validation across Mac Studio M2 Ultra and Linux RTX 5070 Ti:
+Based on validation across Mac Studio M2 Max and Linux RTX 5070 Ti:
 
 ### Operations That Are Fast on Both CUDA and MPS
 
@@ -167,7 +198,10 @@ Based on validation across Mac Studio M2 Ultra and Linux RTX 5070 Ti:
 ## Benchmark Reference
 
 All benchmarks measured on Forge (RTX 5070 Ti, CUDA 12.0) and Mainframe
-(Mac Studio M2 Ultra) during the April 2026 Linux/NVIDIA validation.
+(Mac Studio M2 Max — the same machine since renamed Powerhouse) during
+the April 2026 Linux/NVIDIA validation. Historical note: these numbers
+were long mis-attributed to an "M2 Ultra"; no such machine ever existed
+in the fleet.
 
 ### Regression (pystatistics)
 
@@ -207,30 +241,55 @@ in-sweep runs). Two distinct causes, both defensible:
    replaced `searchsorted`→merge-rank and `solve_triangular`→matmul-series
    inverse, closing most of the *mid/large-n* gap to ~the raw FP32 silicon
    ratio (~3-4x).
-2. **Per-op dispatch overhead is the small-n floor and is NOT recoverable.**
-   In a sequential per-step sweep (steps that cannot be re-batched), MPS pays
-   ~0.5-1ms of command-encode overhead *per op*, and — unlike CUDA — has no
-   graph-capture to amortize it. So at small n the sweep is dispatch-bound,
-   not compute-bound: a fast many-op method and a slow-single-kernel method
-   net out, and no linalg reformulation helps (the cost is launches, not
-   math). This is an intrinsic platform limitation; the honest answer to "why
-   is MPS's small-n speedup-over-CPU far below CUDA's" is this dispatch floor,
-   not silicon. The only lever left is reducing *op count per step* (fuse the
-   per-step gathers/scatter), which attacks the dispatch floor directly.
+2. **Per-op dispatch overhead is the small-n floor** — but the "~0.5-1 ms/op,
+   NOT recoverable, no graph capture" characterization below is **obsolete as
+   of torch 2.12/2.13** (re-measured 2026-08-12; the original text is kept
+   for the record, struck through in spirit):
+
+   > *Original (torch 2.10/2.11):* In a sequential per-step sweep, MPS pays
+   > ~0.5-1ms of command-encode overhead *per op*, and — unlike CUDA — has no
+   > graph-capture to amortize it… This is an intrinsic platform limitation.
+
+   **What the ~0.5-1 ms actually was:** a per-op *command-buffer commit +
+   CPU-GPU sync* regime (MPSGraph per-op scheduling, plus our own per-step
+   `.item()` syncs before 3.14.0) — not a Metal hardware floor. The measured
+   decomposition (2026-08-12): encoding one more dispatch into an open command
+   buffer costs ~1-6 µs; a PyTorch native-Metal-shader op dispatches in
+   ~1.2-1.4 µs; an MPSGraph-routed op ~20 µs; the expensive event is the
+   command-buffer **commit + sync** at ~0.1-1 ms — which is what per-op-synced
+   sweeps paid on every op.
+
+   **Measured now (M2 Max):** torch 2.12/2.13 eager elementwise chains run
+   at **~4.2-4.5 µs/op** (parity with CUDA eager at 3.3 µs), and
+   **`torch.compile` works on MPS** (Inductor-Metal), fusing a 1000-op chain
+   to **~0.023 µs/op** — the graph-capture-equivalent that "does not exist"
+   now ships in-framework. PyTorch 2.13 also migrated scatter/gather, cumsum,
+   sort, reductions, RNG, and copy/cast off MPSGraph onto hand-written Metal
+   kernels. The remaining levers, in cost order: (1) re-audit which ops still
+   route through MPSGraph, (2) `torch.compile` the sweep step, (3)
+   `torch.mps.compile_shader` for hand-fused kernel chains (one command
+   buffer per solver iteration). The *conclusion* of this section — reduce op
+   count per step / fuse — was correct; the floor it fights is ~100-200x
+   lower than documented, and the empirically-tuned crossovers calibrated
+   against the old floor (e.g. `_SERIES_INV_MIN_NOBS = 3000`) need re-tuning.
+   See `docs/ACCELERATION_AUDIT_2026-08.md` for the full audit.
 
 ### MPS dense factor-and-solve: fast vs slow/absent
 
 Apple MPS executes batched **matmul** and **cholesky** fast, but its small
 dense **factor-and-solve** kernels are slow or absent:
 
-| op | MPS status (torch 2.10/2.11, this repo's measurements) |
-|---|---|
-| `matmul`, `cholesky_ex`, `sort`, `cumsum`, `gather` | fast |
-| `solve_triangular` | slow (~4 ms for a 20×20 batch, **n-independent**) |
-| `linalg.solve`, `linalg.inv`, `pinv` | slow (~100-300× matmul) |
-| `cholesky_solve` | **unimplemented** (errors on MPS) |
-| `linalg.eigh` | **unimplemented** (errors on MPS) |
-| `searchsorted` | fine at small size, slow at scale |
+| op | torch 2.10/2.11 (original) | torch 2.13.0 (re-measured 2026-08-12, M2 Max) |
+|---|---|---|
+| `matmul`, `cholesky_ex`, `sort`, `cumsum`, `gather` | fast | fast (confirmed; cumsum 2.5M = 0.10 ms, cholesky_ex B=1000 p=20 = 0.23 ms) |
+| `scatter_add_` (sparse targets) | ~150 ms / 2.5M items (~3000× CUDA) | **0.45 ms (7.6× CUDA; 8× faster than CPU) — FIXED** |
+| `searchsorted` | ~1136× CUDA at n=20k | **37 µs at n=20k (7.4× CUDA; 38× faster than CPU) — FIXED** |
+| `solve_triangular` | slow (~4 ms for a 20×20 batch, n-independent) | still slow: 3.8 ms @ B=100 p=20 → 352 ms @ B=10⁴ (12-190× the cholesky cost) — **workaround stays** |
+| `linalg.solve`, `linalg.inv` | slow (~100-300× matmul) | still slow: ~465 ms @ B=1000 p=20 (~3300× matmul) — **workaround stays** |
+| `pinv` | slow | 29.6 ms via **CPU-fallback SVD** (now emits an explicit UserWarning) |
+| `cholesky_solve` | **unimplemented** (errors on MPS) | implemented but **~1300× CUDA** (66 ms @ B=1000 p=20) — worse than failing loud; **workaround stays** |
+| `linalg.eigh` | **unimplemented** (errors on MPS) | still unimplemented |
+| `linalg.lstsq` | unsupported (CPU detour) | still unimplemented (CPU detour stays) |
 
 ### The in-house remedy
 

@@ -307,8 +307,14 @@ evaluations, batched independent fits, frequency-domain transforms.
 - Many-small-fits workflows where per-call launch overhead dominates compute
   (e.g. ANOVA SS, which fits a chain of tiny regressions — the CPU LAPACK call
   is microseconds, the GPU kernel launch is milliseconds).
-- Inherently sequential algorithms without exploitable parallelism (most EM
-  variants below a certain dataset size, Cox PH partial likelihood).
+- Algorithms whose parallel formulations only pay far above our problem-size
+  regime. (Precision matters here: "inherently sequential" is usually the wrong
+  reason. Cox PH risk-set sums are prefix sums — GPU implementations win from
+  n ≳ 1e5 (Suchard et al., JCGS 2024) — and Kalman/additive-ETS recursions
+  admit associative-scan forms; but the measured crossovers vs a compiled
+  sequential CPU loop sit at n ≈ 1e5 / T ≈ 1e6, orders of magnitude above
+  R-parity sizes, and EM remains sequential *across* iterations. See
+  `docs/ACCELERATION_AUDIT_2026-08.md` §3.1 for the math and measurements.)
 - Algorithms already bounded by PCIe / device-to-host transfer, where compute
   is cheap enough that copying costs more than the kernel.
 - Algorithms where the existing scipy / LAPACK implementation is already within

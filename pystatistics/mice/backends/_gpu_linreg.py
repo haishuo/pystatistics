@@ -44,14 +44,17 @@ from pystatistics.core.compute.linalg import (
 # the batched Gram matrices invertible under FP32.
 _DEFAULT_RIDGE = 1e-5
 
-# MPS dispatch threshold for the matmul-series inverse vs solve_triangular.
-# torch's MPS solve_triangular is a single but ~250x-slower-than-CUDA kernel;
-# the series inverse is ~log2(p) fast matmuls but more launches. In a per-step
-# sweep the small-n regime is dispatch-bound, so for small n_obs the single
-# solve_triangular kernel still edges out the multi-op series; above ~n_obs 3000
-# the series wins (and keeps winning at scale). Empirically tuned (m=100,
-# q+1~20); a speed heuristic, not a correctness boundary, so a fixed threshold
-# is fine and may want per-device tuning. CUDA/CPU always use solve_triangular
+# MPS dispatch threshold for the matmul-series inverse vs solve_triangular —
+# torch-version-dependent. torch's MPS solve_triangular is a single but
+# ~250x-slower-than-CUDA kernel; the series inverse is ~log2(p) fast matmuls
+# but more launches. Under torch <= 2.12 the per-op dispatch cost made the
+# small-n sweep launch-bound, so below ~n_obs 3000 the single solve_triangular
+# kernel edged out the multi-op series (empirically tuned, m=100, q+1~20).
+# torch 2.13 collapsed the MPS dispatch floor (~0.5-1 ms/op -> ~4 us/op), and
+# the re-ablation (2026-08-12, M2 Max, same shapes) showed the series wins at
+# EVERY n_obs — 6.75x at n_obs=1700, 3.2x at 6800, 1.95x at 17000 — so on
+# torch >= 2.13 the threshold is bypassed (always series on MPS). A speed
+# heuristic, not a correctness boundary. CUDA/CPU always use solve_triangular
 # (fast there) — see use_blocked_inverse, which is MPS-only.
 _SERIES_INV_MIN_NOBS = 3000
 
@@ -141,14 +144,19 @@ def batched_bayes_linreg_draw(
     z_chi = torch.randn((m, df), generator=gen, dtype=dtype, device=device)
     z_beta = torch.randn((m, n_params), generator=gen, dtype=dtype, device=device)
 
-    # HOW we apply L^-1 is device- and size-split: MPS's triangular-solve kernel
-    # is ~250x slower than its matmul, so above a size threshold we invert L with
-    # the matmul-series inverse (Neumann doubling + 1 Newton step) and apply by
-    # matmul. Below it (small n_obs) the sweep is dispatch-bound and the single
-    # solve_triangular kernel still edges out the multi-op series; on CUDA/CPU
-    # triangular solves are fast — so both keep solve_triangular there.
+    # HOW we apply L^-1 is device-, size-, and torch-version-split: MPS's
+    # triangular-solve kernel is ~250x slower than its matmul, so we invert L
+    # with the matmul-series inverse (Neumann doubling + 1 Newton step) and
+    # apply by matmul — always on torch >= 2.13 (measured faster at every
+    # n_obs), and above _SERIES_INV_MIN_NOBS on older torch, where the
+    # dispatch-bound small-n sweep favoured the single solve_triangular kernel.
+    # On CUDA/CPU triangular solves are fast — both keep solve_triangular.
+    from pystatistics.core.compute.device import mps_native_kernels
+
     Xty = Xt @ y_obs.unsqueeze(-1)                   # (m, q+1, 1)
-    if use_blocked_inverse(L) and n_obs >= _SERIES_INV_MIN_NOBS:
+    if use_blocked_inverse(L) and (
+        mps_native_kernels() or n_obs >= _SERIES_INV_MIN_NOBS
+    ):
         Linv = batched_tri_inv_series(L)             # L^-1, matmul-series (MPS)
         Linvt = Linv.transpose(1, 2)
         beta_hat = (Linvt @ (Linv @ Xty)).squeeze(-1)    # G^-1 X'y via matmul

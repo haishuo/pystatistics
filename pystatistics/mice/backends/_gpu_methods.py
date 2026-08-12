@@ -114,18 +114,22 @@ def _insertion_rank(sorted_obs, yhat_mis):
     """Insertion rank of each missing prediction among the sorted observed
     predictions: ``pos[i] = #{observed < yhat_mis[i]}``.
 
-    Device bridge — the one op that genuinely splits by device. ``searchsorted``
-    is fast on CUDA but pathologically slow on MPS at scale, so on MPS we
-    reconstruct the same ranks from one combined sort (``sort`` is fast on MPS):
-    concatenate observed+missing, sort once, count observed elements preceding
-    each slot with a ``cumsum``, and scatter the count back to each missing
-    element. The two agree to within a ±1 tie convention, which is harmless
-    here: ``pos`` only seeds the width-``2k`` window that the contiguous-block
-    search then refines exactly.
+    Device bridge, now version-gated. ``searchsorted`` is fast on CUDA; on MPS
+    it was pathologically slow (~1136x CUDA at n=20k) under the MPSGraph-routed
+    kernels of torch <= 2.12, so this path reconstructed the same ranks from one
+    combined stable sort + ``cumsum`` + scatter-back (all MPS-fast primitives).
+    PyTorch 2.13's native-Metal ``searchsorted`` removed the pathology (measured
+    2026-08-12: 37 us at n=20k, 9.5-16.4x faster than this bridge at MICE
+    shapes), so on torch >= 2.13 MPS uses ``searchsorted`` directly and the
+    bridge remains only for older torch. The two agree to within a ±1 tie
+    convention, which is harmless here: ``pos`` only seeds the width-``2k``
+    window that the contiguous-block search then refines exactly.
     """
     import torch
 
-    if sorted_obs.device.type != "mps":
+    from pystatistics.core.compute.device import mps_native_kernels
+
+    if sorted_obs.device.type != "mps" or mps_native_kernels():
         return torch.searchsorted(sorted_obs, yhat_mis)
 
     m, n_obs = sorted_obs.shape

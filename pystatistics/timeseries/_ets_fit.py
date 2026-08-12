@@ -34,7 +34,8 @@ parameter count ``k`` is identical under both conventions, so AIC/AICc/
 BIC *differences and rankings* between models on the same data are
 identical, and automatic model selection (``model="ZZZ"``) picks the
 same model either way.  Only the printed log-likelihood/AIC numbers
-differ from R's.  Public model selection lives in ``_ets_select.py``.
+differ from R's.  Public model selection lives in ``_ets_select.py``;
+initial-state heuristics and free-state expansion live in ``_ets_init.py``.
 """
 
 from __future__ import annotations
@@ -46,6 +47,11 @@ from scipy.optimize import minimize
 from pystatistics.core.exceptions import ConvergenceError, ValidationError
 from pystatistics.core.result import Result
 from pystatistics.core.validation import check_array, check_1d, check_finite
+from pystatistics.timeseries._ets_init import (
+    _assemble_init_states,
+    _init_level_trend,
+    _init_season,
+)
 from pystatistics.timeseries._ets_models import (
     ETSSpec,
     ets_recursion,
@@ -189,116 +195,6 @@ def _decode_smooth(
             else _inv_logit(theta_smooth[i], _PHI_BOUNDS[0], _PHI_BOUNDS[1])
         )
     return out
-
-
-def _assemble_init_states(free_states: NDArray, spec: ETSSpec) -> NDArray:
-    """Expand the optimiser's free initial states to the full state vector.
-
-    Seasonal models optimise ``m - 1`` initial seasonal states (as R
-    forecast::ets does); the remaining one — the index used at the first
-    observation — is determined by the normalisation ``sum(s) = 0``
-    (additive) / ``sum(s) = m`` (multiplicative).
-    """
-    if spec.season == "N":
-        return np.asarray(free_states, dtype=np.float64)
-    n_lead = 1 + (1 if spec.trend in ("A", "Ad") else 0)
-    lead = free_states[:n_lead]
-    s_free = free_states[n_lead:]
-    target = 0.0 if spec.season == "A" else float(spec.period)
-    s_first = target - float(np.sum(s_free))
-    return np.concatenate([lead, [s_first], s_free])
-
-
-# ---------------------------------------------------------------------------
-# Initial state heuristics
-# ---------------------------------------------------------------------------
-
-def _init_level_trend(y: NDArray, spec: ETSSpec) -> tuple[float, float | None]:
-    """
-    Estimate initial level and trend from the data.
-
-    For non-seasonal models, uses the first 10 observations (or fewer).
-    For seasonal models, uses the mean of the first complete period for
-    level and a simple slope for trend.
-
-    Parameters
-    ----------
-    y : NDArray
-        Time series.
-    spec : ETSSpec
-        Model specification.
-
-    Returns
-    -------
-    tuple
-        ``(level, trend_or_None)``
-    """
-    m = spec.period
-    has_season = spec.season in ("A", "M")
-
-    if has_season and len(y) >= 2 * m:
-        level = float(np.mean(y[:m]))
-    else:
-        k = min(10, len(y))
-        level = float(np.mean(y[:k]))
-
-    trend: float | None = None
-    if spec.trend in ("A", "Ad"):
-        if has_season and len(y) >= 2 * m:
-            # Average slope across first two periods
-            trend = float(np.mean(y[m : 2 * m] - y[:m]) / m)
-        else:
-            k = min(10, len(y))
-            if k >= 2:
-                trend = float((y[k - 1] - y[0]) / (k - 1))
-            else:
-                trend = 0.0
-
-    return level, trend
-
-
-def _init_season(y: NDArray, spec: ETSSpec, level: float) -> NDArray | None:
-    """
-    Estimate initial seasonal indices via classical decomposition.
-
-    Parameters
-    ----------
-    y : NDArray
-        Time series.
-    spec : ETSSpec
-        Model specification.
-    level : float
-        Initial level estimate.
-
-    Returns
-    -------
-    NDArray or None
-        Seasonal indices of length ``period``, or ``None`` if no season.
-    """
-    if spec.season == "N":
-        return None
-
-    m = spec.period
-    n_full = min(len(y), 3 * m)
-    y_sub = y[:n_full]
-
-    if spec.season == "A":
-        # Additive: s_i = mean(y[i::m]) - level
-        season = np.array([float(np.mean(y_sub[i::m])) - level for i in range(m)])
-        # Centre so they sum to zero
-        season -= np.mean(season)
-    else:
-        # Multiplicative: s_i = mean(y[i::m]) / level
-        if abs(level) < 1e-15:
-            season = np.ones(m)
-        else:
-            season = np.array(
-                [float(np.mean(y_sub[i::m])) / level for i in range(m)]
-            )
-            # Normalise so product = 1 (equivalent: mean = 1)
-            season *= m / np.sum(season)
-
-    return season
 
 
 # ---------------------------------------------------------------------------
@@ -601,8 +497,9 @@ def fit_ets_model(
         )
 
     # Damped models are optimised from two phi starts (mid-range 0.9 and
-    # R's initparam 0.9782 — see the phi_free comment above) and the
-    # better optimum kept; other models run once.
+    # R's initparam 0.9782 — see the phi_free comment above) plus a
+    # pin-and-release cascade at the upper phi bound (below), and the
+    # best optimum kept; other models run once.
     starts = [theta0]
     if phi_free:
         alt = theta0.copy()
@@ -639,6 +536,67 @@ def fit_ets_model(
         )
         if result is None or res.fun < result.fun:
             result = res
+
+    if phi_free:
+        # Third leg — pin-and-release cascade at the upper phi bound.
+        # Both plain starts can converge into a basin worse than a fit
+        # with phi FIXED near 0.98 (macOS Accelerate-BLAS builds landed
+        # co2 MAdM at ll -66.944 while phi=0.98 reached -66.692; the
+        # free-phi feasible set contains every fixed-phi model, so such
+        # an inversion is always an optimiser artefact).  The problem
+        # basin sits at the upper bound, where damping degenerates
+        # toward "no damping" and the logit transform saturates.  So:
+        # optimise with phi pinned at 0.98 (one dimension smaller), then
+        # restart the free-phi optimisation from that optimum with phi
+        # nudged just inside the bound.  L-BFGS-B accepts only descent
+        # steps, so the release leg ends at or below its start — the
+        # free fit matches any phi=0.98 fit to within the nudge (~3e-4
+        # log-likelihood units) by construction.  The strict `<`
+        # tie-break keeps the plain-start result unless the cascade is
+        # genuinely better, leaving healthy fits' results unchanged.
+        pin_slot = n_smooth - 1
+        pin_fixed = list(fixed_smooth)
+        pin_fixed[pin_slot] = _PHI_BOUNDS[1]
+        pin_idx = [i for i in free_idx if i != pin_slot]
+
+        def _objective_pinned(theta_free: NDArray) -> float:
+            theta_full = theta0.copy()
+            theta_full[pin_idx] = theta_free
+            return _neg_loglik(
+                theta_full, y_arr, spec, pin_fixed, alpha_box, n_smooth,
+                _ws_cell=_ws_cell,
+            )
+
+        pin_res = minimize(
+            _objective_pinned,
+            theta0[pin_idx],
+            method="L-BFGS-B",
+            options={
+                "maxiter": max_iter,
+                "maxfun": max(15000, max_iter * (len(pin_idx) + 1) * 2),
+                "ftol": tol,
+                "gtol": tol,
+            },
+        )
+        release = theta0.copy()
+        release[pin_idx] = pin_res.x
+        release[pin_slot] = _logit(
+            _PHI_BOUNDS[1] - 1e-6, _PHI_BOUNDS[0], _PHI_BOUNDS[1]
+        )
+        res = minimize(
+            _objective,
+            release[free_idx],
+            method="L-BFGS-B",
+            options={
+                "maxiter": max_iter,
+                "maxfun": maxfun,
+                "ftol": tol,
+                "gtol": tol,
+            },
+        )
+        if res.fun < result.fun:
+            result = res
+
     converged = result.success
 
     # Reconstruct full theta and map back to bounded values

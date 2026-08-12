@@ -464,13 +464,15 @@ def _get_em_device(
         if device.device_type == 'mps':
             raise RuntimeError(
                 "backend='gpu' for the EM algorithm is not supported on "
-                "Apple Silicon (MPS). EM is an iterative fixed-point "
-                "method with small per-step work and per-pattern scatter "
-                "fills — a workload shape where Metal's kernel-launch "
-                "overhead makes it far slower than the CPU (see "
-                "docs/GPU_BACKEND_NOTES.md). Use backend='cpu' (or "
+                "Apple Silicon (MPS). MPS is float32-only, and EM's "
+                "fixed-point iteration is unreliable in float32: the "
+                "iteration stalls at the fp32 noise floor (measured ~50x "
+                "the iteration count of the fp64 CPU path before "
+                "converging) and the per-pattern E-step Cholesky can lose "
+                "positive-definiteness outright at moderate dimension "
+                "(see docs/GPU_NOTES.md). Use backend='cpu' (or "
                 "backend='auto', which routes to CPU on MPS). CUDA is "
-                "supported."
+                "supported (EM runs in float64 there)."
             )
         if not worth_gpu:
             warnings.warn(

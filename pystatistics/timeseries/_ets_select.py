@@ -58,7 +58,8 @@ so per-candidate parameter counts and log-likelihoods are directly
 comparable to R's.  The *selected model* usually matches but can still
 differ, because the engines optimise differently: PyStatistics uses
 L-BFGS-B on logit-transformed parameters (damped models from two phi
-starts), R uses Nelder-Mead, and on seasonal candidates R's optimiser
+starts plus a pin-and-release cascade at the upper phi bound — see
+``_ets_fit.py``), R uses Nelder-Mead, and on seasonal candidates R's optimiser
 frequently stalls well short of the optimum (tens of log-likelihood
 units on the classic benchmark series).
 

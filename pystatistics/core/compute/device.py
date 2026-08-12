@@ -151,3 +151,31 @@ def select_device(prefer: Literal['cpu', 'gpu', 'auto'] = 'auto') -> DeviceInfo:
     
     # auto: prefer GPU if available
     return gpu if gpu is not None else get_cpu_info()
+
+
+def mps_native_kernels() -> bool:
+    """Whether the installed torch has the PyTorch 2.13 native-Metal kernels.
+
+    PyTorch 2.13 (July 2026) migrated ``searchsorted``, ``scatter``/``gather``,
+    ``cumsum``, ``sort``, reductions, RNG, and copy/cast on MPS from
+    MPSGraph-routed implementations to hand-written Metal kernels, removing the
+    per-dispatch scheduling overhead that made several of them 2-4 orders of
+    magnitude slower than CUDA. Backends use this to retire MPS-specific
+    reformulations that only paid off against the old kernels (measured
+    2026-08-12 on an M2 Max; see docs/ACCELERATION_AUDIT_2026-08.md §1.4 and
+    docs/GPU_NOTES.md).
+
+    torch is imported lazily; callers only consult this on a GPU path, so a
+    CPU-only install never pays the import (and never reaches here).
+    """
+    import torch
+
+    version = str(torch.__version__).split("+")[0]
+    parts = version.split(".")
+    try:
+        major, minor = int(parts[0]), int(parts[1])
+    except (IndexError, ValueError):
+        # Unparseable version string: assume old kernels (the conservative
+        # path is correct on every torch, just slower on >=2.13).
+        return False
+    return (major, minor) >= (2, 13)
