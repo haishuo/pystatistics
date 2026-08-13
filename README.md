@@ -371,6 +371,25 @@ pip install pystatistics[dev]
 
 ## What's New
 
+### 6.1.2 — GPU MICE categorical fits: separation fixed, fp32 much faster
+
+- **Binary GPU imputation fits now carry the CPU's separation penalty.**
+  Separated or extremely imbalanced binary columns (common in real survey
+  data) previously diverged on GPU: refused loudly on Apple Silicon (the
+  6.1.1 known issue, now fixed) and **silently distorted on CUDA** in every
+  earlier version. Re-run prior `backend='gpu'` MICE results on categorical
+  survey-like data.
+- **Unordered-categorical fits are penalised on every backend** — under
+  complete separation (e.g. a column that is a recode of another), all
+  prior versions mis-imputed such columns on CPU and GPU alike; both now
+  fit a penalised multinomial with a line search and match R's
+  `nnet::multinom` on well-identified data.
+- **Float32 categorical fits are much faster** — a float64-tuned tolerance
+  made every fp32 ordinal/multinomial fit burn its full iteration budget;
+  with the fp32 floor, real-survey mixed-type MICE on an M2 Max completes
+  CSES (n=50,000, m=20) in 26 s and GSS (n=10,000) in 44 s. Full details
+  in the [changelog](CHANGELOG.md).
+
 ### 6.1.1 — fix Apple-Silicon MICE on tied survey data
 
 - Reverts one 6.1.0 Apple-GPU change (the MICE donor-search `searchsorted`

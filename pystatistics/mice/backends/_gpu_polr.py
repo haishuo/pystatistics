@@ -35,7 +35,14 @@ penalised NLL decreases for that chain. This is load-bearing — without it the
 on imbalanced ordinals (a sparse extreme category under (quasi-)separation), the
 gradient vanishes, and the iterate sticks at a degenerate ``|alpha| ~ 1e6`` fit that
 assigns every missing row one category (issue #8). Per-chain convergence freezing;
-bounded iterations.
+bounded iterations. The step tolerance (checked on the DAMPED update) is floored at
+1e-5 in FP32 — the fp64 tolerance of 1e-8 sits BELOW the fp32 solve/autograd noise
+floor (measured ~1e-7-1.5e-6 stall on MPS well-identified fixtures), so without the
+floor every fp32 fit burned the full 100-iteration budget of double-backward
+Hessians without ever reporting convergence — on the real GSS/CSES survey configs
+ALL pre-fix polr calls hit the cap. With the floor every measured chain converges
+(zero capped calls: ~29 iters/call on GSS, ~5 on CSES and well-identified
+fixtures; the polyreg/logreg/multinom floor).
 
 This is the heaviest GPU method (autograd double-backward per Newton step); an
 analytical Hessian is a possible future optimization. Like the CPU method there is
@@ -57,6 +64,8 @@ from pystatistics.mice.backends._gpu_spd import apply_inv_factor_T, solve_spd
 _RIDGE = 1e-5
 _MAX_NEWTON_ITER = 100
 _NEWTON_TOL = 1e-8
+# FP32 floor for the step tolerance (see batched_polr_newton / polyreg precedent).
+_NEWTON_TOL_FP32 = 1e-5
 _PROB_FLOOR = 1e-12
 # Backtracking line-search budget for the damped Newton step. The full Newton
 # step is halved until the penalised NLL decreases per chain; 50 halvings reach
@@ -338,6 +347,14 @@ def batched_polr_newton(y_obs, X_obs, n_classes):
     slope_ridge = _RIDGE * (second_moment / max(n, 1)).clamp_min(1e-12) * max(n, 1)  # (m,)
     eye = torch.eye(P, dtype=dtype, device=device)
 
+    # FP32 cannot reach the fp64 step tolerance: the damped update stalls at the
+    # solve/autograd noise floor (measured ~1e-7-1.5e-6 > 1e-8 on MPS), burning
+    # the full 100-iteration budget — each a P+1-backward autograd Hessian, the
+    # dominant cost of this heaviest GPU method. Floor it at 1e-5 (~5 iterations
+    # on a well-identified fit), far below any statistically material parameter
+    # change; the polyreg Newton / multinom solver's documented fp32 floor.
+    tol = _NEWTON_TOL if dtype == torch.float64 else max(_NEWTON_TOL, _NEWTON_TOL_FP32)
+
     converged = torch.zeros(m, dtype=torch.bool, device=device)
     for _ in range(_MAX_NEWTON_ITER):
         g, H, f0 = _grad_and_hessian(params, y_obs, X_obs, K, slope_ridge)
@@ -358,7 +375,7 @@ def batched_polr_newton(y_obs, X_obs, n_classes):
         # in the line search; together they keep the fit finite regardless of
         # device solve precision.
         update = torch.where(torch.isfinite(update), update, torch.zeros_like(update))
-        small = update.abs().amax(dim=1) < _NEWTON_TOL
+        small = update.abs().amax(dim=1) < tol
         params = params - update                                  # damped, minimise NLL
         converged = converged | (~converged & small)
         if bool(converged.all()):

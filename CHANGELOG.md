@@ -1,6 +1,78 @@
 # Changelog
 
-## 6.1.1
+## 6.1.2
+
+Correctness release for mixed-type MICE with `backend='gpu'`: the categorical
+imputation fits (binary and unordered) now handle separated and extremely
+imbalanced columns correctly on every backend, and fp32 categorical fits no
+longer waste their iteration budget. This resolves the known issue from
+6.1.1 (GSS mixed-type MICE refused on Apple Silicon). **If you have run GPU
+MICE on real categorical data — especially survey data with recoded or
+rare-category columns — with any earlier version, re-run it on 6.1.2; see
+the notes on each fix below.**
+
+### Fixed
+
+- **Binary (`logreg`) GPU fits now carry the same separation penalty as the
+  CPU method.** Since 6.0.1 the CPU logistic fit shrinks a (quasi-)separated
+  binary column toward its marginal rate; the GPU fit kept a weaker scheme
+  that left the score equation unpenalised, so a separated or extremely
+  imbalanced binary column diverged. On Apple Silicon (float32) the
+  divergence went non-finite and the end-of-sweep guard refused the
+  imputation — the 6.1.1 known issue, observed on the GSS survey and on CSES
+  at n=50,000. On CUDA (float64) the same fit stayed finite but stopped far
+  from any optimum and **completed silently with distorted imputations**:
+  on GSS at n=10,000, a flag observed at 8.0% was imputed at 44.6% (the
+  penalised CPU reference imputes 17.1%), and the distortion propagated
+  through the chained equations to every other column. Both surveys now
+  complete on Apple Silicon with imputed marginals matching the CPU
+  reference. GSS/CSES-like `backend='gpu'` results from any earlier version
+  should be considered suspect — refused on Apple Silicon since 6.0.1,
+  silently corrupted on Apple Silicon in 6.0.0 and earlier, silently
+  distorted on CUDA in every earlier version.
+
+- **Logistic fits (CPU and GPU) are now globalized.** On predictors with
+  structurally-zero indicator columns (common after survey recodes) the
+  undamped iteration could oscillate and stop at a wildly non-stationary
+  point even in double precision — measured coefficient norms near 1e5
+  where the true optimum is ~8 — on the CPU path as well as the GPU one.
+  Both now use a step-halving line search, and the float32 normal-equations
+  factorization escalates to a damped solve when accumulation error swamps
+  the ridge. Large-n binary imputations on such data from earlier versions
+  (all backends) drew from non-stationary fits and deserve re-examination.
+
+- **Unordered-categorical (`polyreg`) fits are now penalised on every
+  backend.** Under a completely separated unordered target (e.g. a column
+  that is a deterministic recode of another), the GPU multinomial fit
+  saturated at astronomically large but finite coefficients and the
+  posterior draw collapsed every missing cell of every chain onto a single
+  category — silently, invisible to the non-finite guard (measured imputed
+  marginal [0, 0, 1] on a column observed at 92/6/2). The CPU path
+  delegated to an unpenalised fit whose near-singular information matrix
+  blew up the coefficient draw ([0.18, 0.82, 0.00] on the same column).
+  Both sides now fit a penalised multinomial Newton (slope ridge,
+  per-class intercepts free, step-halving line search): the in-sample
+  predicted marginal now equals the observed marginal to machine precision
+  even under complete separation, and on well-identified data the fit
+  matches R's `nnet::multinom` to 5e-5. The over-parameterisation guard
+  (visible fallback to a marginal draw) now applies on GPU as it always
+  did on CPU. Unordered columns under complete separation were mis-imputed
+  by **all** prior versions on **every** backend, CPU included.
+
+### Performance
+
+- **Float32 categorical fits converge in ~5–30 iterations instead of
+  always burning the 100-iteration cap.** The Newton step tolerance was
+  tuned for float64 and sits below the float32 solve noise floor, so every
+  fp32 ordinal and multinomial fit ran its full iteration budget without
+  ever reporting convergence — for the ordinal method, each iteration is
+  an autograd Hessian, the single heaviest computation in GPU MICE. The
+  tolerance is now floored at 1e-5 in float32 (far below any statistically
+  material coefficient change). Combined with the fixes above, real-survey
+  mixed-type MICE on Apple Silicon goes from refused (or slow-and-corrupt)
+  to fast and correct: on an M2 Max (m=20, maxit=10), CSES completes in
+  6 s at n=10,000 and 26 s at n=50,000; GSS in 44 s at n=10,000 and 181 s
+  at n=50,000. On an RTX 5070 Ti the same GSS fits take 19 s and 73 s.
 
 Patch release reverting one 6.1.0 change that regressed mixed-type MICE on
 Apple Silicon with real survey data.

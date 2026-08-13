@@ -520,3 +520,133 @@ class TestGpuCategoricalNoSilentCollapse:
         out = indices_to_codes(idx, levels)
         assert torch.isnan(out[1])           # sentinel preserved, not -> level 0
         assert out[0].item() == 0.0 and out[2].item() == 2.0
+
+
+class TestMpsLogregCompleteSeparation:
+    """A completely separated binary target must fit finite on MPS fp32 — 6.1.x.
+
+    Real-survey regression (GSS): a binary "case was retrieved" flag is a
+    deterministic recode of a categorical coding-status column, so every
+    chained-equations fit of that column is COMPLETELY separated by the
+    recode's dummies. The GPU IRLS carried only the pre-6.0.1 Hessian ridge
+    (unpenalised score), so beta diverged, the fp32 fit went non-finite, and
+    the NaN sentinel — correctly propagated since 6.0.1 — had the end-of-sweep
+    guard refuse the whole run (~30% of chain-sweeps degenerate at m=20,
+    maxit=10). With the CPU's genuine penalty ported, the fit stays finite and
+    the run completes with the observed marginal reproduced, matching the CPU
+    reference on the same data.
+    """
+
+    @staticmethod
+    def _separated_design(seed=0):
+        # Mirror the GSS structure: binary col 0 is a deterministic recode of
+        # the 3-level column 1 (col1 > 0  <=>  col0 == 0), imbalanced ~8/92,
+        # missing in the SAME rows (one missingness block), plus numeric noise.
+        rng = np.random.default_rng(seed)
+        n = 2000
+        cat = rng.choice([0.0, 1.0, 2.0], size=n, p=[0.92, 0.06, 0.02])
+        b = (cat == 0.0).astype(float)                  # complete separation
+        x1 = rng.standard_normal(n)
+        x2 = rng.standard_normal(n)
+        X = np.column_stack([b, cat, x1, x2])
+        block = rng.random(n) < 0.25                    # shared missing block
+        X[block, 0] = np.nan
+        X[block, 1] = np.nan
+        return MICEDesign.from_array(
+            X, column_kinds=["binary", "categorical", "numeric", "numeric"]
+        )
+
+    def test_completes_and_does_not_collapse(self):
+        d = self._separated_design()
+        m = 20
+        sol = mice(d, n_imputations=m, max_iter=10, seed=13, backend="gpu")
+        assert sol.info["device"] == "mps"
+        imp = sol.imputations(0)                         # (m, n_mis)
+        for dset in sol.completed_datasets():
+            assert np.isfinite(dset).all()
+        # POOLED majority proportion must not collapse toward the minority
+        # class (the 6.0.0 silent failure imputed ~0.29 pooled on GSS's
+        # analogue; a healthy run sits ~0.75-0.85). Deliberately NOT a
+        # per-chain bound: on a doubly-missing deterministic pair the
+        # R-style posterior draw under separation has sd ~ 1/sqrt(lam) along
+        # the separated direction, so individual chains legitimately disperse
+        # (and occasionally invert the coupling) on the CPU reference too —
+        # measured CPU per-chain majority 0.18-0.95 at this config. The CPU
+        # is the calibration oracle (companion test), not per-chain
+        # realizations.
+        assert imp.mean() > 0.6, f"pooled collapse: {imp.mean():.3f}"
+
+    def test_matches_cpu_under_separation(self):
+        d = self._separated_design(seed=1)
+        m = 20
+        cpu = mice(d, n_imputations=m, max_iter=10, seed=7, backend="cpu")
+        gpu = mice(d, n_imputations=m, max_iter=10, seed=7, backend="gpu")
+        c1 = cpu.imputations(0).ravel().mean()
+        g1 = gpu.imputations(0).ravel().mean()
+        assert abs(c1 - g1) < 0.06, f"separated binary drift: cpu={c1:.3f} gpu={g1:.3f}"
+
+
+class TestMpsPolyregCompleteSeparation:
+    """A completely separated UNORDERED target must fit finite on MPS fp32 —
+    the polyreg sibling of the GSS logreg refusal (6.1.x).
+
+    The pre-fix ``_gpu_polyreg`` carried the same defect as the pre-fix
+    logreg: Hessian-only ridge, unpenalised score. Under complete separation
+    the fp32 batched Newton saturated at |beta| ~1e26 FINITE, and the
+    penalty-free posterior draw collapsed every missing cell of every chain
+    onto ONE category — silent corruption the end-of-sweep non-finite guard
+    cannot see (measured: imputed marginal [0, 0, 1] on a 92/6/2 column).
+    With the CPU slope ridge ported (in the score, intercepts free) plus the
+    damped step, the fit shrinks to the CPU optimum and the imputed marginal
+    tracks the CPU reference.
+    """
+
+    @staticmethod
+    def _separated_design(seed=0):
+        # Mirror the GSS structure with an unordered pair: two 3-level
+        # categorical columns that are identical by construction (an identity
+        # recode), imbalanced 92/6/2, missing in the SAME rows — so every
+        # chained-equations fit of either column on the other's dummies is
+        # COMPLETELY separated in every class direction.
+        rng = np.random.default_rng(seed)
+        n = 2000
+        cat = rng.choice([0.0, 1.0, 2.0], size=n, p=[0.92, 0.06, 0.02])
+        X = np.column_stack(
+            [cat, cat.copy(), rng.standard_normal(n), rng.standard_normal(n)]
+        )
+        block = rng.random(n) < 0.25                    # shared missing block
+        X[block, 0] = np.nan
+        X[block, 1] = np.nan
+        return MICEDesign.from_array(
+            X, column_kinds=["categorical", "categorical", "numeric", "numeric"]
+        )
+
+    def test_completes_and_no_chain_collapses(self):
+        d = self._separated_design()
+        m = 20
+        sol = mice(d, n_imputations=m, max_iter=10, seed=13, backend="gpu")
+        assert sol.info["device"] == "mps"
+        for dset in sol.completed_datasets():
+            assert np.isfinite(dset).all()
+        imp = sol.imputations(0)                         # (m, n_mis)
+        # The pre-fix failure imputes ONE constant category in every chain.
+        constant_chains = sum(np.unique(imp[c]).size < 2 for c in range(m))
+        assert constant_chains < m // 2, (
+            f"{constant_chains}/{m} chains imputed a constant category"
+        )
+        # All three classes must appear somewhere, and the pooled majority
+        # share must stay majority (the collapse landed on a minority class).
+        assert np.unique(imp).size == 3
+        assert (imp == 0.0).mean() > 0.5
+
+    def test_matches_cpu_under_separation(self):
+        d = self._separated_design(seed=1)
+        m = 20
+        cpu = mice(d, n_imputations=m, max_iter=10, seed=7, backend="cpu")
+        gpu = mice(d, n_imputations=m, max_iter=10, seed=7, backend="gpu")
+        levels = [0.0, 1.0, 2.0]
+        ci, gi = cpu.imputations(0).ravel(), gpu.imputations(0).ravel()
+        cp = np.array([np.mean(ci == lv) for lv in levels])
+        gp = np.array([np.mean(gi == lv) for lv in levels])
+        tv = 0.5 * float(np.abs(cp - gp).sum())
+        assert tv < 0.10, f"separated nominal drift: cpu={np.round(cp, 3)} gpu={np.round(gp, 3)}"

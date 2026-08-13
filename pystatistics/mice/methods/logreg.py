@@ -28,6 +28,8 @@ _MAX_IRLS_ITER = 50
 _IRLS_TOL = 1e-8
 # Clamp the linear predictor so exp() can't overflow and weights stay positive.
 _ETA_CLIP = 30.0
+# Line-search halving budget (see the loop in ``_fit_logistic``).
+_MAX_HALVINGS = 30
 
 
 class LogregMethod:
@@ -85,6 +87,17 @@ def _fit_logistic(y: np.ndarray, X: np.ndarray):
     beta0[0] = np.log(pbar / (1.0 - pbar))  # marginal-rate intercept, zero slopes
     beta = beta0.copy()
 
+    # Line-search objective: the penalised NLL, via a stable log-sigmoid
+    # identity (no exp overflow at any finite eta). Strictly convex and
+    # coercive (every coordinate penalised), so a decreasing step always
+    # exists and accepted iterates stay bounded.
+    def _pen_nll(b: np.ndarray) -> float:
+        eta_raw = Xa @ b
+        fit = float(np.sum((1.0 - y) * eta_raw + np.logaddexp(0.0, -eta_raw)))
+        dev = b - beta0
+        return fit + 0.5 * float(dev @ (ridge @ dev))
+
+    f0 = _pen_nll(beta)
     XtWX = Xa.T @ Xa + ridge  # bound in case the loop body never runs
     for _ in range(_MAX_IRLS_ITER):
         eta = np.clip(Xa @ beta, -_ETA_CLIP, _ETA_CLIP)
@@ -93,8 +106,27 @@ def _fit_logistic(y: np.ndarray, X: np.ndarray):
         XtWX = Xa.T @ (w[:, None] * Xa) + ridge
         grad = Xa.T @ (y - p) - ridge @ (beta - beta0)
         delta = np.linalg.solve(XtWX, grad)
-        beta = beta + delta
-        if np.max(np.abs(delta)) < _IRLS_TOL:
+        # Halving line search (the polyreg/polr globalisation): accept the
+        # first step that decreases the penalised NLL. Full steps descend on
+        # well-identified fits, so those trajectories are unchanged; without
+        # this the undamped iteration OSCILLATES on ill-conditioned designs
+        # (structurally-zero dummy columns dilute the mean-moment ridge) and
+        # stops at the cap on a wildly non-stationary iterate — measured
+        # |beta| ~ 1e5 with penalised |grad| ~ 1.4e4 on GSS n=50k survey
+        # columns, where the true penalised optimum has |beta| ~ 8.
+        step, accepted = 1.0, False
+        slack = 1e-8 * (1.0 + abs(f0))
+        for _ in range(_MAX_HALVINGS):
+            f1 = _pen_nll(beta + step * delta)
+            if np.isfinite(f1) and f1 <= f0 + slack:
+                accepted = True
+                break
+            step *= 0.5
+        if not accepted:
+            break  # genuinely degenerate; keep the last (finite) iterate
+        beta = beta + step * delta
+        f0 = f1
+        if np.max(np.abs(step * delta)) < _IRLS_TOL:
             break
 
     cov = np.linalg.inv(XtWX)
