@@ -74,6 +74,8 @@ the notes on each fix below.**
   6 s at n=10,000 and 26 s at n=50,000; GSS in 44 s at n=10,000 and 181 s
   at n=50,000. On an RTX 5070 Ti the same GSS fits take 19 s and 73 s.
 
+## 6.1.1
+
 Patch release reverting one 6.1.0 change that regressed mixed-type MICE on
 Apple Silicon with real survey data.
 
