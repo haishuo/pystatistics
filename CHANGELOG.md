@@ -1,5 +1,79 @@
 # Changelog
 
+## 6.1.3
+
+Reliability release for GPU MICE at survey scale, in three parts: float32
+categorical fits no longer waste work — or, in the worst case, refuse a
+run — on floating-point noise; numerical failures that previously could
+pass silently now fail loudly; and the library now detects and warns about
+an upstream PyTorch Apple-GPU bug that can silently corrupt results at
+large n, with a self-test to check your own machine.
+
+### Fixed
+
+- **Float32 categorical line searches no longer reject good steps on
+  noise.** The unordered (`polyreg`) and ordered (`polr`) GPU fits accepted
+  an update step only if the objective decreased within a float64-scale
+  margin. At survey scale (n ≈ 50,000) the float32 objective's evaluation
+  noise is 17–47x that margin, so near convergence the acceptance test
+  could fail on pure noise: measured across 30 survey-scale multinomial
+  sweeps, 798 of 2,766 rejected full steps actually descended (13 of 36 on
+  an ordered fixture) — zero after the fix. For unordered fits an unlucky
+  streak could poison the chain and refuse the whole run — the same failure
+  family as the 6.1.2 binary-fit fix, closed here before any release hit
+  it. The wasted evaluations also cost real time: at n = 50,000 on an M2
+  Max the multinomial fit runs ~1.5x faster and the ordinal fit ~1.7x
+  faster. Float64 behaviour is unchanged, and fits land on the same optimum
+  (deviation from the float64 reference unchanged, ~7e-4).
+
+- **A failed batched Cholesky factorization can no longer pass silently.**
+  The shared factorization behind the numeric (`norm`/`pmm`) posterior draw
+  and the multinomial Newton never checked the solver's failure flag, and a
+  failed factor can contain finite garbage (measured on Apple Silicon at
+  n = 50,000: 5 of 10 failures), which then flowed into posterior draws
+  unnoticed. Each chain now retries with escalating jitter — recovering
+  chains whose matrix is merely at the float32 rounding edge, with
+  first-try results bit-identical — and beyond that returns an explicit NaN
+  factor, so a genuinely bad matrix surfaces as the run's standard
+  non-finite refusal instead of a silently wrong draw.
+
+- **Predictive mean matching (`pmm`) fails loudly on non-finite
+  predictions.** Because PMM copies observed donor values, its output
+  stayed finite no matter how degenerate the underlying fit — a broken fit
+  scrambled the donor matching silently. Rows (or whole chains) whose
+  predicted means are non-finite now impute NaN and are caught by the
+  end-of-sweep guard, like every other method. Healthy rows are unchanged
+  (same donors, same RNG stream).
+
+### Added — Apple-GPU (MPS) integrity warning and self-test
+
+PyTorch's Apple-GPU backend up to and including 2.13.0 (current stable) has
+an upstream bug — reported as
+[pytorch/pytorch#193487](https://github.com/pytorch/pytorch/issues/193487) —
+in which matrix products can silently return values wrong by 10–30% of
+scale after large prior GPU allocations. Measured impact on MICE: at
+n = 50,000, roughly one imputation chain in twenty can converge to a wrong
+but plausible-looking fit that no error check can see. The corruption stops
+reproducing on the PyTorch 2.14 line (verified against nightly builds; the
+change upstream is an allocator behaviour change, so treat it as mitigated
+rather than fixed). This release adds:
+
+- a **UserWarning** before `backend='gpu'` MICE runs on Apple Silicon with
+  an affected PyTorch at n ≥ 20,000 (results at smaller n have never shown
+  the corruption). Installing a PyTorch with the mitigation (2.14 or later;
+  before its stable release, a nightly ≥ 2.14.0.dev20260624) silences it
+  automatically.
+- a **self-test**, `pystatistics.mice.diagnostics.mps_matmul_canary()`,
+  which fits a fixed survey-scale benchmark on your GPU and your CPU and
+  returns `'corrupted'` or `'clean'` for your PyTorch/macOS combination in
+  a few seconds (measured separation: worst-chain deviation 42.9 on an
+  affected build vs 1.1e-5 on a mitigated one).
+- a **known-issue section in the README** with remedies.
+
+Published 6.1.2 survey benchmarks were re-validated against CPU references
+and show no corruption fingerprint (those datasets never invoke the
+affected code shapes); the warning exists because other datasets can.
+
 ## 6.1.2
 
 Correctness release for mixed-type MICE with `backend='gpu'`: the categorical

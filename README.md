@@ -399,6 +399,25 @@ pip install pystatistics[dev]
 
 ## What's New
 
+### 6.1.3 — no more noise-driven float32 refusals; Apple-GPU integrity warning
+
+- **Float32 categorical line searches no longer reject good update steps on
+  floating-point noise** — at survey scale this wasted ~2.8x the
+  line-search work (the multinomial fit is now ~1.5x faster and the ordinal
+  fit ~1.7x at n=50,000 on an M2 Max) and in the worst case could refuse a
+  run outright.
+- **Numerical failures now fail loudly**: a failed batched Cholesky
+  factorization can no longer feed finite garbage into posterior draws, and
+  predictive mean matching imputes NaN instead of silently mis-matched
+  donors when its predictions go non-finite.
+- **Apple-GPU integrity**: PyTorch up to 2.13.0 on Apple Silicon can
+  silently corrupt large matrix products (upstream bug
+  [pytorch#193487](https://github.com/pytorch/pytorch/issues/193487)).
+  MICE now warns before affected large-n GPU runs, and
+  `pystatistics.mice.diagnostics.mps_matmul_canary()` self-tests your
+  machine in a few seconds. See the known-issue section above and the
+  [changelog](CHANGELOG.md).
+
 ### 6.1.2 — GPU MICE categorical fits: separation fixed, fp32 much faster
 
 - **Binary GPU imputation fits now carry the CPU's separation penalty.**
