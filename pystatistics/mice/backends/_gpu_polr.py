@@ -284,11 +284,26 @@ def _backtracking_step(params, delta, gdotdelta, f0, y_obs, X_obs, K, slope_ridg
     category an ill-conditioned step can produce a non-finite trial objective,
     and ``NaN <= f0`` is always False — so a NaN-blind search would shrink the
     step yet never accept, then commit ``step*NaN`` and poison the fit. Requiring
-    ``isfinite(f1)`` rejects such trials. Evaluated without autograd."""
+    ``isfinite(f1)`` rejects such trials. Evaluated without autograd.
+
+    The slack is DTYPE-AWARE — the logreg 6.1.2 lesson, shared by every
+    penalised-NLL line search in this backend: descent must be judged against
+    the objective's own evaluation noise, and in fp32 at survey n the NLL
+    sum's rounding error dwarfs the fp64-appropriate ``1e-8`` (measured on the
+    polyreg twin on MPS at n=50k: noise sd ~8e-6 vs slack ~5e-7). With the
+    fixed slack, near-converged chains rejected truly-descending full steps on
+    pure noise (measured here: 13 of 36 full-step rejections on an n=50k
+    ordered fixture were of steps fp64 confirms descend; zero after), each
+    spurious rejection burning extra objective evaluations of this heaviest
+    GPU method — and a noise-exhausted budget freezes the chain at a
+    pre-convergence iterate. ``100*eps`` of the compute dtype (fp64: keeps
+    1e-8) sits above the noise while still rejecting the saturation-overshoot
+    increases this search exists to stop."""
     import torch
 
     with torch.no_grad():
-        slack = 1e-8 * (1.0 + f0.abs())
+        eps_slack = max(1e-8, 100.0 * torch.finfo(f0.dtype).eps)
+        slack = eps_slack * (1.0 + f0.abs())
         phi_prime0 = -gdotdelta                                     # (m,), < 0 for descent
         tiny = torch.finfo(f0.dtype).tiny
         step = torch.ones_like(f0)

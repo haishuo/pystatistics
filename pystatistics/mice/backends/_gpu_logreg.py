@@ -102,8 +102,8 @@ def _pd_gram_cholesky(G):
     """Lower Cholesky of the penalised Gram with per-chain Levenberg-Marquardt
     escalation — the polr ``_pd_cholesky``, reused verbatim.
 
-    The fixed tiny jitter in ``_cholesky_ridged`` is calibrated to
-    well-conditioned Grams. At survey n the fp32 Gram's accumulation error
+    The single tiny jitter ``_cholesky_ridged`` carried before 6.1.3 is
+    calibrated to well-conditioned Grams. At survey n the fp32 Gram's accumulation error
     (~entries * eps ~ 5e-3 at n=50k, entries ~4e4) can EXCEED the penalty
     floor when structurally-zero dummy columns dilute the mean-moment ridge
     (~0.03) — numerical PD-ness then depends on each chain's imputed values,

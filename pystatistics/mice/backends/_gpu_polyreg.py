@@ -152,8 +152,8 @@ def _pen_nll(beta, y_onehot, Xa, pen):
 def _halving_step(beta, delta, f0, y_onehot, Xa, pen, frozen):
     """Per-chain halving line-search scale for the Newton step ``delta``
     (m, K-1, P) — the CPU method's damping, batched: halve from 1 until the
-    penalised NLL decreases for that chain (small relative slack absorbs FP
-    noise at the full step near convergence; the trial must also be FINITE, as
+    penalised NLL decreases for that chain (a relative slack absorbs FP noise
+    at the full step near convergence; the trial must also be FINITE, as
     in the polr search — ``NaN <= f0`` is always False, so a NaN-blind search
     would shrink forever and then commit a poisoned step). ``frozen`` chains
     are not searched. A chain that exhausts the budget without a decreasing
@@ -162,6 +162,20 @@ def _halving_step(beta, delta, f0, y_onehot, Xa, pen, frozen):
     fail loud via the end-of-sweep guard, mirroring the CPU NumericalError
     (which the CPU fallback converts to a visible marginal draw).
 
+    The slack is DTYPE-AWARE — the logreg 6.1.2 lesson, which this search
+    shares: descent must be judged against the objective's own evaluation
+    noise, and in fp32 at survey n the NLL sum's rounding error dwarfs the
+    fp64-appropriate ``1e-8`` (measured on MPS at n=50k: noise sd ~8e-6, max
+    ~2.3e-5, vs slack ~5e-7 — 17-47x). With the fixed slack, near-converged
+    chains rejected truly-descending full steps on pure noise (798 of 2766
+    full-step rejections across 30 survey-scale sweeps were of steps fp64
+    confirms descend; zero after), burning ~2.8x the halving evaluations —
+    and because THIS search poisons on no-descent, a noise-exhausted budget
+    would refuse a whole run, the exact GSS logreg failure. ``100*eps`` of the
+    compute dtype (fp64: keeps 1e-8) sits comfortably above the noise while
+    still rejecting the orders-of-magnitude oscillation increases the search
+    exists to stop.
+
     Returns ``(step (m,), accepted (m,), f1 (m,))`` — ``f1`` is each accepted
     chain's objective at its accepted step, so the caller reuses it as the next
     iteration's ``f0`` instead of recomputing the NLL (the polr line-search
@@ -169,7 +183,8 @@ def _halving_step(beta, delta, f0, y_onehot, Xa, pen, frozen):
     import torch
 
     with torch.no_grad():
-        slack = 1e-8 * (1.0 + f0.abs())
+        eps_slack = max(1e-8, 100.0 * torch.finfo(f0.dtype).eps)
+        slack = eps_slack * (1.0 + f0.abs())
         step = torch.ones_like(f0)
         accepted = frozen.clone()
         for _ in range(_MAX_HALVINGS):

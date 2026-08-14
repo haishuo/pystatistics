@@ -308,3 +308,153 @@ MPS hot path can be reformulated the same way (chol + matmul-inverse, or
 SVD-based PCA in place of `eigh`). Each such fix is its own task with R-fidelity
 plus FP32 re-validation on **both** MPS and CUDA, since the shared-primitive
 change touches both devices.
+
+---
+
+## MPS strided-matmul buffer corruption: silently wrong fits at survey n (2026-08-13)
+
+**The short version.** On torch 2.7.1 → **2.13.0 (current stable)**, an MPS
+matmul whose
+left operand is a **transpose view** can return results that are wrong by
+double-digit *percent of scale* — deterministically within a process, but
+dependent on the MPS caching-allocator state, so a fresh process with the
+same data computes correctly. The tensor contents are intact (CPU
+round-trip copies verify bitwise); the matmul kernel *misreads* certain
+allocator-cached buffer placements. This is a torch/MPS bug, not a
+pystatistics bug — but at survey scale it produces **silently wrong,
+finite, plausible-looking model fits** that no NaN guard can see.
+
+**Minimal repro** (M2 Max, torch 2.12.1, macOS 25.5.0):
+
+```python
+A  = torch.tensor(rng.standard_normal((50_000, 25)), dtype=torch.float32)
+w  = ...  # any weights; also reproduces UNWEIGHTED
+Aw = A * w.unsqueeze(-1)
+# 1. trigger: one big prior matmul (200k rows) through the same allocator
+(bigw.to("mps").T @ big.to("mps")).cpu()
+# 2. victim: |err|_max vs fp64 ≈ 13–28 on a Gram of scale ~90 (~15–30%!)
+(Aw.to("mps").T @ A.to("mps"))
+```
+
+Discriminating facts (all measured 2026-08-13; standalone repro:
+`docs/mps_matmul_corruption_repro.py`):
+
+- **Fresh process, no trigger: error 8.9e-5.** After one 200k-row matmul:
+  error 13–28 on scale 90. `torch.mps.empty_cache()` between the two
+  restores correctness in the minimal repro; syncs do not.
+- **Copies are intact** — `A.to("mps").cpu()` is bitwise equal. Only the
+  strided (transpose-view) matmul misreads; `torch.mm(Aw.T.contiguous(), A)`
+  is fine (1.4e-3), and an operand **produced on-device** (fresh buffer) is
+  fine even against a copied RHS.
+- Plain `A.T @ A` corrupts too (error 11–23) — weighting not required.
+  Small n (5k) after the trigger: fine. All torch versions 2.7.1, 2.9.0,
+  2.11.0, 2.12.0, 2.12.1: identical corrupted values.
+- **Production shape reproduces it end-to-end**: `batched_multinomial_newton`
+  (polyreg) at n=50k, m=20, K=3 on a separated survey-like fixture fits
+  chain 19 (the buffer tail — it is always the last chains) to
+  max|beta| = 49.6 where CPU fp64 and CPU fp32 both say 15.6 —
+  **finite, "converged", invisible to the end-of-sweep guard**, with a
+  recomputed Hessian indefinite by ~10% of scale (an exactly-convex NLL
+  cannot do that). Roughly one chain in twenty per fit in that regime, and
+  `empty_cache()` between fits does NOT prevent it — a single n=50k fit's
+  own allocation churn is trigger enough. Across processes the same seed
+  fits differently (allocator placement nondeterminism).
+
+**What this re-taints — RESOLVED by re-validation (2026-08-14).** The
+initial worry: the 6.1.2 logreg "fp32 Gram cholesky per-chain coin flip at
+n≈44k" carries this bug's fingerprint, and the GSS/CSES@50k MPS legs might
+contain silently corrupted chains. The re-validation
+(`pystatistics-validation/artifacts/mice/v6.1.2/runs/
+mps_misread_revalidation.json`) reran the paper's exact curated cells
+(gss@10k/50k, cses@50k; same seed/config; pystatistics pinned to the PyPI
+6.1.2 the records used) on MPS under BOTH torch 2.13.0 (the affected build
+the v612 legs ran on) and the mitigated nightly, comparing pooled and
+per-chain against a torch-free CPU reference of the same pin. **Verdict: no
+corruption fingerprint** — the two torches are statistically
+indistinguishable on every metric in every cell (pooled TV max
+0.035/0.043/0.002; per-chain spreads matching, and equally present on the
+clean stack — legitimate chain-level Monte-Carlo variation). Mechanism:
+the curated GSS/CSES cells contain no unordered columns, so polyreg — the
+method whose (m, 50, 50) Hessian assembly reliably triggers the misread on
+this machine — never runs, and the sweep's smaller logreg/polr/pmm
+allocations never produce the triggering placements. The published v6.1.2
+MPS survey numbers stand for these cells; polyreg-bearing problems at
+survey scale on affected torches remain dangerous (the canary proves it),
+and the ≤6.0.0/≤6.1.1 invalidations (penalty-bug era, unrelated mechanism)
+are untouched. The 6.1.2 logreg coin-flip observation could not be
+reproduced in this pass (zero first-try factor failures on the GSS-shaped
+fixture and clean real-cell runs); it stays historical, with the LM
+escalation as the standing defense.
+
+**Version status (follow-up session, 2026-08-13).** Retested with fresh
+venvs on the same machine:
+
+- **torch 2.13.0 (current stable): STILL AFFECTED.** The minimal repro above
+  no longer triggers (2.13's rewritten alloc/copy paths shift buffer
+  placements), but the production-shaped fixture corrupts identically —
+  chain 19 fits to 48.8 vs 15.6 truth, and the op-level Hessian comparison
+  reproduces the same wrong entries as 2.12.1. Do NOT treat 2.13 as safe.
+- **torch nightly 2.15.0.dev20260813: clean.** Chain 19 lands on the fp64
+  truth (15.57, err 1e-3); the 8-seed sequential fixture that failed at 6/8
+  seeds on 2.12.1 is 16/16 clean across two runs; the full mice suite passes
+  (266/266, ~20% faster).
+- **Bisected by dated nightlies to pytorch #187441** ("[MPS] Bucket large
+  allocations to bound caching-allocator reserved memory during decode",
+  landed on master 2026-06-23): `2.14.0.dev20260622` corrupts,
+  `2.14.0.dev20260624` (and 0626, 0628) is clean, on both the production
+  fixture and the 8-seed sequence. The 2.13 release branch was cut
+  2026-06-10 — before the change — which is why stable 2.13.0 is affected.
+  The 2.14 release branch (cut 2026-08-11) contains it, so **2.14.0 stable
+  should be clean**.
+- **MITIGATED, not fixed.** #187441 is a memory-footprint optimization
+  (bucket large allocations so freed buffers get reused instead of new heaps
+  each step) — nothing in it fixes a kernel. The misreading code path is
+  most likely still present; the allocator simply no longer produces the
+  triggering buffer placements under our workloads. A different
+  workload/size profile, or a future allocator change, could resurface it —
+  which is why the canary below stays part of release validation even on
+  "clean" torch versions.
+- **Saved-tensor replay proves state-dependence:** the exact fp32 tensors
+  that produce error 51.3 in-process compute cleanly (4.8e-1 on scale ~400,
+  normal fp32) in a fresh process on 2.12.1, 2.13.0, AND nightly. The
+  arithmetic is fine; only the allocator state makes the kernel misread.
+- **`.contiguous()`-LHS mitigation: INSUFFICIENT.** Materializing the
+  Hessian-assembly LHS moves the wrong chain from 49 to 24 — still wrong;
+  the misread relocates to another strided op (and polr's autograd-internal
+  matmuls can never be patched this way). Not a viable defense.
+
+**Current defense (6.1.3).** Three layers, decided 2026-08-13:
+
+1. `_cholesky_ridged` checks `info`+finiteness, escalates jitter ×100 to at
+   most 1e-2·scale (covers genuine fp32 rounding indefiniteness), and
+   returns an explicit all-NaN factor beyond that — converting the
+   *detectable* half of the corruption (indefinite misread Hessians;
+   measured 5 of 10 failed factors were previously FINITE garbage) into an
+   end-of-sweep refusal. Misread fits that stay PD (the |beta|=49.6 chain)
+   are NOT catchable at the factor — hence layers 2 and 3.
+2. **Version-gated UserWarning at the point of use**
+   (`mice/backends/gpu.py::_warn_if_mps_misread`, classifier
+   `core.compute.device.mps_misread_status`): `backend='gpu'` on MPS at
+   n >= 20,000 warns when the installed torch classifies 'affected'
+   (<= 2.13.x, or a 2.14 nightly < dev20260624). Installing a 'mitigated'
+   torch (2.14 line, or nightly >= 2.14.0.dev20260624) silences it — that
+   IS the supported opt-in path for users who need MPS-at-scale before the
+   fixed stable ships (documented in the README known-issue note, with the
+   no-promises pre-release caveat). Status is 'mitigated', never 'fixed'.
+3. **Empirical canary** (`pystatistics.mice.diagnostics.mps_matmul_canary`):
+   fits the production fixture on MPS and CPU (fp32) and compares per-chain
+   (~3 s). Measured verdicts: 'corrupted' with max deviation 42.9 on torch
+   2.12.1; 'clean' at 1.1e-5 on nightly 2.15.0.dev20260813 — six orders of
+   magnitude of separation. A 'corrupted' verdict is proof; a 'clean'
+   verdict is evidence (the bug is allocator-state-dependent). Wired into
+   `.release/CHECKLIST.md` step 0 for Mac releases.
+
+Tests: `tests/mice/test_mps_misread.py`. Upstream issue: FILED 2026-08-13 as
+pytorch/pytorch#193487 (https://github.com/pytorch/pytorch/issues/193487),
+in deliberate fire-and-forget form — the report is self-contained (minimal
+repro, bisection to #187441, all measurements) and states up front that the
+account is unlikely to respond to follow-ups; no monitoring obligation
+exists on our side. The in-repo defenses do not depend on upstream action. The isolated logreg fit at n=50k does NOT corrupt (its
+allocation churn is milder), so the 6.1.2 logreg coin-flip reattribution
+remains plausible-unconfirmed pending a real-GSS rerun under a mitigated
+torch.

@@ -15,6 +15,19 @@ permanent cruft with a warning. Do this as its own commit before the release bum
 
 ## Release flow
 
+0. **MPS corruption canary (Mac releases, while the torch-MPS misread is
+   live — see docs/GPU_NOTES.md "MPS strided-matmul buffer corruption"):**
+
+   ```
+   KMP_DUPLICATE_LIB_OK=TRUE python -c "from pystatistics.mice.diagnostics import mps_matmul_canary; print(mps_matmul_canary())"
+   ```
+
+   `'corrupted'` on the release machine's torch is expected on torch <= 2.13
+   and means MPS-at-scale benchmark numbers from this machine/torch must not
+   be published; `'clean'` on a torch >= 2.14 line is the precondition for
+   trusting any new MPS survey-scale results. Drop this step when the fixed
+   stable torch becomes the required minimum.
+
 1. **Sanity check:** `python .release/release.py --status`
 
 2. **Write the `CHANGELOG.md` entry by hand.** Open `UNRELEASED.md` for

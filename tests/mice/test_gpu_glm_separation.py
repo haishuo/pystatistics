@@ -353,3 +353,291 @@ class TestPolyregPenalisedFitParity:
         assert np.abs(coef).max() < 1e3                 # bounded, not divergent
         for c in range(beta.shape[0]):
             np.testing.assert_allclose(beta[c].numpy(), coef, atol=1e-9)
+
+
+# ------------------------------------------------- line-search slack (fp32)
+
+class TestLineSearchSlackDtypeAware:
+    """The line-search acceptance slack must be judged against the objective's
+    OWN evaluation noise — dtype-aware, the logreg 6.1.2 fix ported to
+    polyreg/polr in 6.1.3. In fp32 at survey n (~50k) the penalised-NLL sum's
+    rounding error (measured on MPS: sd ~8e-6, max ~2.3e-5) is 17-47x the
+    fp64-appropriate ``1e-8*(1+f0)`` slack, so near-converged chains rejected
+    truly-descending full steps on pure noise (measured: 798/2766 full-step
+    rejections across 30 survey-scale polyreg sweeps, 13/36 on an ordered
+    polr fixture — zero after the fix) — and the polyreg search POISONS on
+    no-descent, making the noise hazard refusal-grade there.
+
+    Deterministic mechanism pins (no accelerator, CPU fp32): hand the search
+    an ``f0`` that sits a noise-scale amount BELOW the trial objective — the
+    ratcheted state a noise-favoured accepted ``f0`` reaches — with a ZERO
+    step, so every trial evaluates to exactly ``f0 + gap`` forever. A gap
+    between the fp64 slack (1e-8) and the fp32 slack (100*eps ~ 1.2e-5)
+    rejected every halving pre-fix; the dtype-aware slack accepts the full
+    step. A genuine increase (gap far above any slack) must still reject, so
+    the widened slack cannot mask the oscillation/saturation runaways the
+    searches exist to stop."""
+
+    # Gap coefficients relative to (1 + f0): between the two slacks / far above.
+    _NOISE_GAP = 1e-6
+    _GENUINE_GAP = 1e-2
+
+    @staticmethod
+    def _polyreg_inputs(m=2, n=400):
+        from pystatistics.mice.backends._gpu_linreg import add_intercept
+        from pystatistics.mice.backends._gpu_polyreg import _penalty_diag, _pen_nll
+
+        rng = np.random.default_rng(0)
+        K = 3
+        X = torch.tensor(
+            rng.standard_normal((n, 2)), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1, 1)
+        y = torch.tensor(
+            rng.choice(K, size=n).astype(np.float64), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1)
+        Xa = add_intercept(X)
+        y_onehot = torch.zeros((m, n, K), dtype=torch.float32)
+        y_onehot.scatter_(2, y.to(torch.int64).unsqueeze(-1), 1.0)
+        pen = _penalty_diag(Xa, K - 1)
+        beta = torch.zeros((m, K - 1, Xa.shape[2]), dtype=torch.float32)
+        f_true = _pen_nll(beta, y_onehot, Xa, pen)
+        return beta, y_onehot, Xa, pen, f_true
+
+    def test_polyreg_noise_gap_accepts_full_step(self):
+        from pystatistics.mice.backends._gpu_polyreg import _halving_step
+
+        beta, y_onehot, Xa, pen, f_true = self._polyreg_inputs()
+        f0 = f_true - self._NOISE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(beta.shape[0], dtype=torch.bool)
+        step, accepted, _ = _halving_step(
+            beta, torch.zeros_like(beta), f0, y_onehot, Xa, pen, frozen
+        )
+        assert bool(accepted.all()), "noise-scale gap rejected: chain would be poisoned"
+        assert bool((step == 1.0).all())
+
+    def test_polyreg_genuine_increase_still_rejected(self):
+        from pystatistics.mice.backends._gpu_polyreg import _halving_step
+
+        beta, y_onehot, Xa, pen, f_true = self._polyreg_inputs()
+        f0 = f_true - self._GENUINE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(beta.shape[0], dtype=torch.bool)
+        _, accepted, _ = _halving_step(
+            beta, torch.zeros_like(beta), f0, y_onehot, Xa, pen, frozen
+        )
+        assert not bool(accepted.any()), "genuine increase slipped past the slack"
+
+    @staticmethod
+    def _polr_inputs(m=2, n=400):
+        from pystatistics.mice.backends._gpu_polr import _nll_per_chain
+
+        rng = np.random.default_rng(1)
+        K, q = 3, 2
+        X = torch.tensor(
+            rng.standard_normal((n, q)), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1, 1)
+        y = torch.tensor(
+            rng.choice(K, size=n).astype(np.float64), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1)
+        slope_ridge = torch.full((m,), 0.1, dtype=torch.float32)
+        params = torch.zeros((m, (K - 1) + q), dtype=torch.float32)
+        f_true = _nll_per_chain(params, y, X, K, slope_ridge)
+        return params, y, X, K, slope_ridge, f_true
+
+    def test_polr_noise_gap_accepts_full_step(self):
+        from pystatistics.mice.backends._gpu_polr import _backtracking_step
+
+        params, y, X, K, slope_ridge, f_true = self._polr_inputs()
+        f0 = f_true - self._NOISE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(params.shape[0], dtype=torch.bool)
+        step = _backtracking_step(
+            params, torch.zeros_like(params), torch.zeros_like(f0), f0,
+            y, X, K, slope_ridge, frozen,
+        )
+        assert bool((step == 1.0).all()), (
+            "noise-scale gap rejected: chain would burn the backtrack budget "
+            "and freeze pre-convergence"
+        )
+
+    def test_polr_genuine_increase_still_rejected(self):
+        from pystatistics.mice.backends._gpu_polr import _backtracking_step
+
+        params, y, X, K, slope_ridge, f_true = self._polr_inputs()
+        f0 = f_true - self._GENUINE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(params.shape[0], dtype=torch.bool)
+        step = _backtracking_step(
+            params, torch.zeros_like(params), torch.zeros_like(f0), f0,
+            y, X, K, slope_ridge, frozen,
+        )
+        assert bool((step < 1e-12).all()), "genuine increase slipped past the slack"
+
+    @staticmethod
+    def _logreg_inputs(m=2, n=400):
+        from pystatistics.mice.backends._gpu_linreg import add_intercept
+        from pystatistics.mice.backends._gpu_logreg import _pen_nll, _penalty_terms
+
+        rng = np.random.default_rng(2)
+        X = torch.tensor(
+            rng.standard_normal((n, 2)), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1, 1)
+        y = torch.tensor(
+            (rng.random(n) < 0.4).astype(np.float64), dtype=torch.float32
+        ).unsqueeze(0).repeat(m, 1)
+        Xa = add_intercept(X)
+        ridge_diag, beta0 = _penalty_terms(y, Xa)
+        beta = beta0.clone()
+        f_true = _pen_nll(beta, y, Xa, ridge_diag, beta0)
+        return beta, y, Xa, ridge_diag, beta0, f_true
+
+    def test_logreg_noise_gap_accepts_full_step(self):
+        """Pins the originating 6.1.2 logreg fix with the same mechanism."""
+        from pystatistics.mice.backends._gpu_logreg import _halving_step
+
+        beta, y, Xa, ridge_diag, beta0, f_true = self._logreg_inputs()
+        f0 = f_true - self._NOISE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(beta.shape[0], dtype=torch.bool)
+        step, accepted, _ = _halving_step(
+            beta, torch.zeros_like(beta), f0, y, Xa, ridge_diag, beta0, frozen
+        )
+        assert bool(accepted.all())
+        assert bool((step == 1.0).all())
+
+    def test_logreg_genuine_increase_still_rejected(self):
+        from pystatistics.mice.backends._gpu_logreg import _halving_step
+
+        beta, y, Xa, ridge_diag, beta0, f_true = self._logreg_inputs()
+        f0 = f_true - self._GENUINE_GAP * (1.0 + f_true.abs())
+        frozen = torch.zeros(beta.shape[0], dtype=torch.bool)
+        _, accepted, _ = _halving_step(
+            beta, torch.zeros_like(beta), f0, y, Xa, ridge_diag, beta0, frozen
+        )
+        assert not bool(accepted.any())
+
+
+# ------------------------------------------------ shared Gram factor (6.1.3)
+
+class TestCholeskyRidgedEscalationAndPoison:
+    """``_gpu_linreg._cholesky_ridged`` (shared by the numeric draw and the
+    polyreg Hessian) escalates its jitter per chain and explicitly poisons a
+    chain that never factors — the logreg ``_pd_gram_cholesky`` lesson, ported
+    sync-free. Pre-6.1.3 it added one fixed ``1e-8·scale`` jitter and returned
+    ``cholesky_ex``'s output UNCHECKED: at survey n a failed factor can be
+    FINITE garbage (measured on MPS: 5 of 10 failed polyreg-Hessian factors),
+    which then flowed silently into the Newton step and the posterior draw.
+
+    Deterministic CPU-fp32 pins via synthetic spectra: a healthy chain must
+    keep its first-try factor bit-identically; a chain indefinite at the fp32
+    accumulation-error scale (the GSS logreg coin-flip regime, between the
+    base jitter and the 1e-2·scale cap) must factor finite via escalation; a
+    chain indefinite far beyond the cap (a genuinely wrong matrix — degenerate
+    design or the strided-matmul corruption in docs/GPU_NOTES.md) must come
+    back all-NaN, never finite garbage."""
+
+    @staticmethod
+    def _spectrum_matrix(evals):
+        """Symmetric fp32 matrix with the given eigenvalues (fixed basis)."""
+        rng = np.random.default_rng(3)
+        p = len(evals)
+        Q, _ = np.linalg.qr(rng.standard_normal((p, p)))
+        M = (Q * np.asarray(evals)) @ Q.T
+        return torch.tensor(0.5 * (M + M.T), dtype=torch.float32)
+
+    def _batch(self):
+        healthy = self._spectrum_matrix([5.0, 3.0, 2.0, 1.0])
+        # mean diag ~2.5 -> jitter ladder ~2.5e-8, 2.5e-6, 2.5e-4, 2.5e-2:
+        # -1e-4 factors at the second escalation, -1.0 never factors.
+        marginal = self._spectrum_matrix([5.0, 3.0, 2.0, -1e-4])
+        wrong = self._spectrum_matrix([5.0, 3.0, 2.0, -1.0])
+        return torch.stack([healthy, marginal, wrong])
+
+    def test_healthy_chain_bit_identical_first_try(self):
+        from pystatistics.mice.backends._gpu_linreg import _cholesky_ridged
+
+        G = self._batch()
+        L = _cholesky_ridged(G)
+        G0 = G[0:1]
+        Gs0 = 0.5 * (G0 + G0.transpose(1, 2))
+        jitter = torch.diagonal(Gs0, dim1=1, dim2=2).mean(dim=1).clamp_min(1.0) * 1e-8
+        eye = torch.eye(4, dtype=torch.float32)
+        expected, info = torch.linalg.cholesky_ex(Gs0 + jitter[:, None, None] * eye)
+        assert int(info[0]) == 0
+        assert torch.equal(L[0], expected[0])
+
+    def test_marginally_indefinite_chain_recovered_by_escalation(self):
+        from pystatistics.mice.backends._gpu_linreg import _cholesky_ridged
+
+        G = self._batch()
+        L = _cholesky_ridged(G)
+        assert torch.isfinite(L[1]).all(), "escalation failed to rescue the chain"
+        # The factor reconstructs G plus at most the capped jitter (1e-2*scale).
+        scale = float(torch.diagonal(G[1]).mean())
+        delta = (L[1] @ L[1].T) - G[1]
+        assert float(delta.abs().max()) < 2e-2 * scale
+
+    def test_never_pd_chain_poisoned_all_nan(self):
+        from pystatistics.mice.backends._gpu_linreg import _cholesky_ridged
+
+        G = self._batch()
+        L = _cholesky_ridged(G)
+        assert torch.isnan(L[2]).all(), (
+            "a matrix indefinite beyond the jitter cap must poison, "
+            "never return (possibly finite) garbage"
+        )
+
+    def test_all_healthy_batch_unchanged(self):
+        from pystatistics.mice.backends._gpu_linreg import _cholesky_ridged
+
+        rng = np.random.default_rng(4)
+        A = torch.tensor(rng.standard_normal((3, 50, 6)), dtype=torch.float32)
+        G = A.transpose(1, 2) @ A + 0.1 * torch.eye(6)
+        L = _cholesky_ridged(G)
+        assert torch.isfinite(L).all()
+        recon = L @ L.transpose(1, 2)
+        assert float((recon - 0.5 * (G + G.transpose(1, 2))).abs().max()) < 1e-4
+
+
+class TestPmmFailLoud:
+    """``gpu_pmm_impute`` must emit NaN, never a silently mis-matched donor,
+    when the predicted means are non-finite (6.1.3). Donor copies are finite
+    observed values, so unlike every other method a NaN-blind PMM stays
+    invisible to the backend's end-of-sweep non-finite guard — the imputation
+    is scrambled silently (measured: a chain with a poisoned fit returned
+    fully finite donor copies). The mask is chain-wide for a non-finite
+    observed prediction (the whole sorted donor ordering is invalid) and
+    row-level for a non-finite missing-row prediction."""
+
+    @staticmethod
+    def _inputs(m=2, n=200, n_mis=6):
+        from pystatistics.mice.backends._gpu_methods import gpu_pmm_impute
+
+        rng = np.random.default_rng(5)
+        X = torch.tensor(rng.standard_normal((n, 2)), dtype=torch.float32)
+        y = (2.0 + X @ torch.tensor([1.0, -0.5]) +
+             0.1 * torch.tensor(rng.standard_normal(n), dtype=torch.float32))
+        Xm = torch.tensor(rng.standard_normal((n_mis, 2)), dtype=torch.float32)
+        return (gpu_pmm_impute,
+                y.unsqueeze(0).repeat(m, 1),
+                X.unsqueeze(0).repeat(m, 1, 1),
+                Xm.unsqueeze(0).repeat(m, 1, 1))
+
+    def test_poisoned_chain_yields_nan_not_donors(self):
+        impute, y, Xo, Xm = self._inputs()
+        Xo[1, 0, 0] = float("nan")            # poisons chain 1's fit end-to-end
+        gen = torch.Generator()
+        gen.manual_seed(0)
+        out = impute(y, Xo, Xm, gen)
+        assert torch.isnan(out[1]).all(), "poisoned chain silently copied donors"
+        assert torch.isfinite(out[0]).all()
+        # healthy chain still returns genuine observed donor values
+        assert all(float(v) in set(map(float, y[0])) for v in out[0])
+
+    def test_nan_missing_row_masked_row_level(self):
+        impute, y, Xo, Xm = self._inputs()
+        Xm[0, 2, 0] = float("nan")            # chain 0, missing row 2 only
+        gen = torch.Generator()
+        gen.manual_seed(0)
+        out = impute(y, Xo, Xm, gen)
+        assert torch.isnan(out[0, 2])
+        keep = torch.ones(out.shape[1], dtype=torch.bool)
+        keep[2] = False
+        assert torch.isfinite(out[0, keep]).all()
+        assert torch.isfinite(out[1]).all()

@@ -27,8 +27,11 @@ output to within FP32 kernel non-determinism.
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as _np
 
+from pystatistics.core.compute.device import mps_misread_status
 from pystatistics.core.compute.timing import Timer
 from pystatistics.core.compute.torch_interop import to_host_f64
 from pystatistics.core.exceptions import ValidationError
@@ -45,6 +48,46 @@ from pystatistics.mice.solution import MICEParams
 # R mice default donor count for PMM (the design does not carry a per-column
 # donor count, so the GPU path uses the same default as the CPU PMMMethod).
 _PMM_DONORS = 5
+
+# Row-count floor for the MPS misread warning (see _warn_if_mps_misread).
+# The silent corruption is measured at n=50k (~1 wrong chain fit in 20) and
+# absent from every n<=10k audit leg; 20k warns one comfortable step before
+# the measured-failure regime without alarming the small-n users the audits
+# validated.
+_MPS_MISREAD_WARN_N = 20_000
+
+
+def _warn_if_mps_misread(device_type: str, n: int) -> None:
+    """Warn — loudly, once — before a survey-scale MICE run on an MPS build
+    of torch that carries the allocator-state matmul misread (silent wrong
+    fits; docs/GPU_NOTES.md, "MPS strided-matmul buffer corruption").
+
+    A doc note alone would leave the failure silent at the point of use
+    (Rule 1: the wrong thing must be loud); this cannot be an error because
+    moderate-n MPS results are validated and users may knowingly accept the
+    risk. Not raised for 'mitigated' torch builds — installing one (the
+    2.14+ line, or a nightly >= 2.14.0.dev20260624) is the supported opt-in
+    path to silence it.
+    """
+    if device_type != "mps" or n < _MPS_MISREAD_WARN_N:
+        return
+    if mps_misread_status() == "affected":
+        import torch
+
+        warnings.warn(
+            f"backend='gpu' on Apple Silicon (MPS) with torch "
+            f"{torch.__version__} and n={n}: this torch build can return "
+            f"silently wrong GPU results at this scale (an upstream torch "
+            f"bug in MPS memory management, measured as ~1 corrupted chain "
+            f"in 20 at n=50,000). Results may be wrong without any error. "
+            f"Remedies: use backend='cpu', run on CUDA, or install torch "
+            f">= 2.14 (pre-release: a nightly >= 2.14.0.dev20260624), where "
+            f"the corruption no longer reproduces. To test your own "
+            f"machine/torch combination, run "
+            f"pystatistics.mice.diagnostics.mps_matmul_canary().",
+            UserWarning,
+            stacklevel=3,
+        )
 
 
 class GPUMiceBackend:
@@ -86,6 +129,7 @@ class GPUMiceBackend:
 
         dtype = torch.float64 if self.use_fp64 else torch.float32
         dev = torch.device(self.device)
+        _warn_if_mps_misread(dev.type, design.n)
         gen = torch.Generator(device=dev)
         gen.manual_seed(int(seed))
 

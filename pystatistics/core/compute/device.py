@@ -179,3 +179,60 @@ def mps_native_kernels() -> bool:
         # path is correct on every torch, just slower on >=2.13).
         return False
     return (major, minor) >= (2, 13)
+
+
+# First torch build verified free of the MPS allocator-state matmul misread on
+# the production-shaped fixture (docs/GPU_NOTES.md, "MPS strided-matmul buffer
+# corruption"): the 2.14 nightly built the day after pytorch #187441 landed
+# (2026-06-23, "[MPS] Bucket large allocations to bound caching-allocator
+# reserved memory"). Bisected 2026-08-13: 2.14.0.dev20260622 corrupts,
+# 2.14.0.dev20260624 is clean. NOTE #187441 is a memory-footprint change, not
+# a correctness fix — the misreading kernel path was likely never fixed, only
+# starved of the buffer placements that trigger it — so "mitigated", never
+# "fixed", and the mice canary (pystatistics.mice.diagnostics) remains the
+# ground truth for any given torch/macOS combination.
+_MPS_MISREAD_MITIGATED_MINOR = (2, 14)
+_MPS_MISREAD_MITIGATED_NIGHTLY = 20260624
+
+
+def mps_misread_status() -> str:
+    """Classify the installed torch against the MPS allocator-state matmul
+    misread (docs/GPU_NOTES.md, "MPS strided-matmul buffer corruption"):
+    silently wrong strided-matmul results (10-30% of scale) at survey-scale
+    allocations, measured as ~1 wrong-but-finite chain fit in 20 at n=50k.
+
+    Returns ``'affected'`` or ``'mitigated'`` (never "fixed" — see the
+    boundary constants above). Classification, verified per version on the
+    production fixture (2026-08-13, M2 Max):
+
+    * anything up to 2.13.x -> ``'affected'`` (2.7.1-2.12.1 and stable 2.13.0
+      all corrupt; a hypothetical 2.13.x cherry-pick would be misclassified
+      conservatively — run the canary to override by evidence).
+    * 2.14 nightlies -> ``'affected'`` before dev20260624, else mitigated.
+    * 2.14 stable/rc and later -> ``'mitigated'`` (the 2.14 release branch,
+      cut 2026-08-11, contains #187441; nightly 2.15.0.dev20260813 verified).
+    * unparseable -> ``'affected'`` (conservative: the failure this guards is
+      silent wrong numbers, so unknown must warn).
+
+    torch is imported lazily; only GPU paths consult this.
+    """
+    import re
+
+    import torch
+
+    m = re.match(
+        r"^(\d+)\.(\d+)\.(\d+)(?:\.dev(\d{8}))?", str(torch.__version__)
+    )
+    if m is None:
+        return "affected"
+    major_minor = (int(m.group(1)), int(m.group(2)))
+    nightly = m.group(4)
+    if major_minor < _MPS_MISREAD_MITIGATED_MINOR:
+        return "affected"
+    if major_minor == _MPS_MISREAD_MITIGATED_MINOR and nightly is not None:
+        return (
+            "mitigated"
+            if int(nightly) >= _MPS_MISREAD_MITIGATED_NIGHTLY
+            else "affected"
+        )
+    return "mitigated"

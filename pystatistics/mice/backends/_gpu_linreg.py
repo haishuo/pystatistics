@@ -44,6 +44,13 @@ from pystatistics.core.compute.linalg import (
 # the batched Gram matrices invertible under FP32.
 _DEFAULT_RIDGE = 1e-5
 
+# Speculative jitter-escalation budget for _cholesky_ridged: ×100 per try from
+# 1e-8·scale reaches 1e-2·scale — one spare decade past the measured fp32
+# accumulation-error need (~5e-3·scale, the logreg GSS calibration). Fixed
+# unroll (no data-dependent early exit) keeps the hot path sync-free; each try
+# is one tiny (m, p, p) cholesky_ex.
+_JITTER_ESCALATIONS = 3
+
 # MPS dispatch threshold for the matmul-series inverse vs solve_triangular —
 # torch-version-dependent. torch's MPS solve_triangular is a single but
 # ~250x-slower-than-CUDA kernel; the series inverse is ~log2(p) fast matmuls
@@ -186,21 +193,44 @@ def batched_bayes_linreg_draw(
 
 
 def _cholesky_ridged(G):
-    """Lower Cholesky of each ridged Gram in the batch — sync-free.
+    """Lower Cholesky of each ridged Gram in the batch — sync-free, with
+    per-chain jitter escalation and an explicit fail-loud poison.
 
     ``G = X'X + ridge·mean·I`` (ridge > 0) is positive definite in exact
     arithmetic. We symmetrize and add a *tiny* unconditional jitter
     (``1e-8·scale``, three orders below the ridge, so statistically negligible)
     to absorb FP32 rounding, then factor with ``cholesky_ex``.
 
-    Crucially there is **no per-step host sync**: the previous version called
-    ``.item()`` and ``torch.any(info)`` on every sweep step (≈2 GPU↔CPU
-    round-trips × ``maxit·p`` steps), which dominated the small-n sweep. Here we
-    trust the ridge and defer fail-loud to the backend's single end-of-sweep
-    non-finite guard: genuinely degenerate (collinear) predictors yield a
-    non-finite factor that propagates to the imputations and is caught there —
-    one sync per sweep instead of hundreds. (Avoiding ``eigh``/``solve`` also
-    keeps this valid and fast on MPS.)
+    At survey n the base jitter is not always enough — the logreg
+    ``_pd_gram_cholesky`` lesson: the fp32 Gram/Hessian accumulation error can
+    exceed a diluted ridge floor, so numerical PD-ness becomes a per-chain
+    coin flip (logreg measured one chain of 20, every sweep, on GSS n≈44k
+    with a perfectly healthy fit). Chains whose first factor fails are retried
+    at jitter ×100 per try up to ``1e-2·scale`` (the measured need there was
+    ~5e-3·scale; a ~1e-2 relative widening of the posterior draw is
+    negligible). Unlike polr's ``_pd_cholesky`` this escalation is
+    SPECULATIVE — a fixed unroll of ``_JITTER_ESCALATIONS`` extra tiny
+    factorizations selected per chain by ``where`` — because this helper is on
+    the hot numeric-draw path, where the no-sync property below is
+    load-bearing; first-try chains keep their factor bit-identically.
+
+    A chain that fails ALL tries gets an explicitly all-NaN factor. The old
+    code returned ``cholesky_ex``'s output unchecked, and on a failed
+    factorization (``info > 0``) that output can be FINITE garbage — measured
+    on MPS at n=50k: 5 of 10 failed polyreg-Hessian factors were finite — which
+    then flows silently into the Newton step and the posterior draw. Matrices
+    that far from PD are not rounding casualties but genuinely wrong inputs
+    (degenerate designs, or the strided-matmul corruption documented in
+    docs/GPU_NOTES.md); the NaN factor routes them to the backend's
+    end-of-sweep guard (Rule 1) instead.
+
+    Crucially there is still **no per-step host sync**: an earlier version
+    called ``.item()`` and ``torch.any(info)`` on every sweep step (≈2 GPU↔CPU
+    round-trips × ``maxit·p`` steps), which dominated the small-n sweep. All
+    selection here stays on-device; genuinely degenerate chains surface at the
+    backend's single end-of-sweep non-finite guard — one sync per sweep
+    instead of hundreds. (Avoiding ``eigh``/``solve`` also keeps this valid
+    and fast on MPS.)
     """
     import torch
 
@@ -208,5 +238,13 @@ def _cholesky_ridged(G):
     eye = torch.eye(Gs.shape[1], dtype=Gs.dtype, device=Gs.device)
     diag = torch.diagonal(Gs, dim1=1, dim2=2)
     jitter = diag.mean(dim=1).clamp_min(1.0) * 1e-8          # (m,), tensor (no .item())
-    L, _ = torch.linalg.cholesky_ex(Gs + jitter[:, None, None] * eye)
-    return L
+    L, info = torch.linalg.cholesky_ex(Gs + jitter[:, None, None] * eye)
+    ok = (info == 0) & torch.isfinite(L).flatten(1).all(dim=1)
+    for _ in range(_JITTER_ESCALATIONS):
+        jitter = jitter * 100.0
+        L_try, info = torch.linalg.cholesky_ex(Gs + jitter[:, None, None] * eye)
+        ok_try = (info == 0) & torch.isfinite(L_try).flatten(1).all(dim=1)
+        take = ok_try & ~ok                     # first success wins, bit-stable
+        L = torch.where(take[:, None, None], L_try, L)
+        ok = ok | ok_try
+    return torch.where(ok[:, None, None], L, torch.full_like(L, float("nan")))

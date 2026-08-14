@@ -48,6 +48,17 @@ def gpu_pmm_impute(y_obs, X_obs, X_mis, gen, *, donors=5):
     posterior draw ``beta*``. For each missing row in each chain, pick one of
     the ``k`` nearest observed fitted values at random and copy that observed
     value. Returns (m, n_mis).
+
+    Fail loud (Rule 1): a row whose predicted mean is non-finite — a failed
+    Gram factor upstream, or a NaN predictor — yields ``NaN``, never a donor
+    copy. Because donors are copies of OBSERVED values, a NaN-blind match
+    stays finite no matter how degenerate the fit (the sort/argmin under NaN
+    picks an arbitrary donor), so unlike ``norm`` the corruption is invisible
+    to the backend's end-of-sweep non-finite guard — a silently scrambled
+    chain-step. A non-finite ``yhat_obs`` anywhere in a chain invalidates that
+    chain's whole sorted donor ordering, so it masks the entire chain, while a
+    non-finite ``yhat_mis`` masks just that row. Finite rows are unaffected
+    (same donors, same RNG consumption) — the ``_sample_categories`` pattern.
     """
     import torch
 
@@ -59,7 +70,11 @@ def gpu_pmm_impute(y_obs, X_obs, X_mis, gen, *, donors=5):
 
     donor_idx = _match_donors_windowed(yhat_mis, yhat_obs, donors, gen)
     # Copy the observed donor values (gather along the observed-row axis).
-    return torch.gather(y_obs, 1, donor_idx)                   # (m, n_mis)
+    out = torch.gather(y_obs, 1, donor_idx)                    # (m, n_mis)
+    finite_row = torch.isfinite(yhat_mis) & torch.isfinite(yhat_obs).all(
+        dim=1, keepdim=True
+    )
+    return torch.where(finite_row, out, torch.full_like(out, float("nan")))
 
 
 def _match_donors_windowed(yhat_mis, yhat_obs, donors, gen):

@@ -115,6 +115,34 @@ Consumer GPUs (NVIDIA RTX series) execute FP32 at 5-10x the throughput of FP64. 
 
 Metal's dense factor-and-solve kernels (`solve_triangular`, `linalg.solve`, `cholesky_solve`) remain far slower than CUDA's, so PyStatistics routes around them with matrix-multiply-only formulations on MPS. (Earlier guidance also flagged `scatter_add_` and `searchsorted` as pathologically slow on Metal; PyTorch 2.13's native Metal kernels fixed both, and PyStatistics uses the fast paths automatically on PyTorch >= 2.13.) Where a computation is genuinely unreliable in float32 — such as EM for `mvnmle` — the MPS backend fails fast with an explanation rather than returning a slow or wrong result. See [docs/GPU_NOTES.md](docs/GPU_NOTES.md) for measurements and guidance on when GPU helps vs hurts.
 
+### Known issue: Apple-GPU (MPS) results at large n on PyTorch <= 2.13
+
+PyTorch's Apple-GPU backend, up to and including the current stable release
+(2.13.0), has an upstream bug that can make matrix products silently return
+wrong values once a session has made large GPU allocations — no error, no
+NaN, just wrong numbers. In MICE imputation at survey scale (~50,000 rows)
+this corrupted roughly one imputation chain in twenty in our measurements.
+PyStatistics cannot fix PyTorch, so it does three things:
+
+- **Warns** before running `backend='gpu'` MICE on an affected PyTorch at
+  n >= 20,000 (results at smaller n have never shown the corruption).
+- **Refuses loudly where it can detect damage**: a corrupted fit whose
+  curvature matrix becomes inconsistent is now surfaced as an error instead
+  of silently drawn from.
+- **Ships a self-test**: `pystatistics.mice.diagnostics.mps_matmul_canary()`
+  fits a known benchmark on your GPU and your CPU and tells you in a few
+  seconds whether your PyTorch/macOS combination is affected
+  (`'corrupted'`/`'clean'`).
+
+**Remedies:** use `backend='cpu'` or CUDA for survey-scale runs, or install
+PyTorch >= 2.14 (before its stable release: a nightly build,
+`pip install --pre torch --index-url https://download.pytorch.org/whl/nightly/cpu`,
+version 2.14.0.dev20260624 or newer), where the corruption no longer occurs
+in any of our tests and the warning switches off automatically. Note the
+usual caveat for pre-release PyTorch: it may contain other, unrelated bugs —
+run the canary and your own checks. This notice will be removed once a fixed
+stable PyTorch is the required minimum.
+
 ---
 
 ## Quick Start

@@ -308,6 +308,43 @@ a marginal draw is predictor-blind, and a high fallback rate on a column
 means its imputations ignore the conditional structure — but that scenario is
 not the current behaviour.
 
+**2026-08-14 addendum — the full-config probe ran; grind quantified, closed
+as immaterial.** The residual uncertainty above is resolved. After the MPS
+misread re-validation's torch-free CPU reference leg sighted one visible
+"polr fit failed" warning at gss50k FULL config
+(`pystatistics-validation/artifacts/mice/v6.1.2/runs/
+mps_misread_revalidation.json`, side_observations), the exact cell (curated
+gss50k, seed 20260617, m=20, maxit=10, `method='auto'`, `backend='cpu'`,
+PyPI 6.1.2 pin) was rerun with every `fit_polr` call traced and Python's
+warning dedup disabled (`simplefilter("always")`). True count: **1 failure
+in 800 fits (0.125%)** — column 3 (ordered), chain 16, iteration 7 of 10;
+reason `non-PD observed information` (potrf info=22 in `_polish_to_mle`
+after L-BFGS-B terminated at 9 iterations with "CONVERGENCE: RELATIVE
+REDUCTION OF F <= FACTR*EPSMCH"). All 3 exp-overflow RuntimeWarnings from
+`ordinal/_likelihood.py` in the run belong to that single fit. Not
+statistically material, on three independent grounds:
+
+- **The marginal draw was never delivered.** It fired mid-chain; iterations
+  8–10 re-fit the full model successfully, and only the final iteration's
+  draws reach the output (zero final-iteration fallbacks).
+- **The affected chain is indistinguishable.** Chain 16's imputed
+  distribution for column 3 sits at TV 0.006 vs the other chains' pool —
+  rank 11 of 20, against a chain-spread median 0.007 (ordinary Monte-Carlo
+  variation). Even a hypothetical *delivered* fallback would shift the
+  pooled marginal by at most TV(conditional, marginal)/m ≈ 0.048/20 ≈
+  0.0024, at the pooled-stability noise floor (~0.002).
+- **No budget burn.** The §4 worst case (each failure costing L-BFGS-B's
+  full budget) did not materialize: the failed fit took 0.31 s vs 2.52 s for
+  a mean converged fit; polr remains 97.8% of the 2063 s wall for cost
+  reasons unrelated to failures.
+
+The instrumented rerun is bitwise identical to the re-validation's recorded
+CPU reference on every incomplete column, so this census applies verbatim to
+that record (and confirms the CPU@50k path is deterministic in that env).
+Bottom line: the "grind" exists under the full 50k config, but at 1/800,
+visible-by-design, transient, and immaterial — the paper's CPU legs need no
+correction for it.
+
 ## 5. Siblings and follow-ups
 
 - **GPU `polyreg` carries the same latent pattern** (Hessian-only ridge,
