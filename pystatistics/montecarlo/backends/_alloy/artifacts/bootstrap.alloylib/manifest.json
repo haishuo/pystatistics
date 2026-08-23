@@ -1,0 +1,311 @@
+{
+  "artifacts": {
+    "cpu_dylib": {
+      "path": "cpu/libbootstrap.dylib",
+      "sha256": "a1fd600f31d5f4f5217a154368564bd5fc96b7e57f82b46fff4f94d3530dca36"
+    },
+    "metallib": {
+      "path": "metal/bootstrap.metallib",
+      "sha256": "5468ac8d5759ce1eb84686328cd1548de3ff82ef3fdeb08b13a1e766bac65796"
+    }
+  },
+  "compiler_version": "0.7a-dev",
+  "format": "alloylib",
+  "format_version": "0.10.0",
+  "functions": [
+    {
+      "cpu_symbol": "alloy_cpu_bootstrap_resample_means",
+      "execution": "heterogeneous",
+      "exported": true,
+      "gpu_dispatch": {
+        "arg_buffer_index": 2,
+        "arg_buffer_size": 32,
+        "bound_offset": 24
+      },
+      "gpu_kernel": "alloy_gpu_resample_means",
+      "loops": [
+        {
+          "domain_kind": "span_len",
+          "domain_param": "out",
+          "indexed_params": [
+            "out"
+          ]
+        }
+      ],
+      "name": "resample_means",
+      "params": [
+        {
+          "gpu_arg_offset": 0,
+          "kind": "scalar",
+          "name": "seed",
+          "type": "u64"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 0,
+          "gpu_len_offset": 8,
+          "kind": "span",
+          "min_elements": 1,
+          "mutable": false,
+          "name": "data"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 1,
+          "gpu_len_offset": 16,
+          "kind": "span",
+          "mutable": true,
+          "name": "out"
+        }
+      ],
+      "placement_class": "general",
+      "targets": [
+        "cpu",
+        "gpu"
+      ]
+    },
+    {
+      "cpu_symbol": "alloy_cpu_bootstrap_resample_indices",
+      "execution": "heterogeneous",
+      "exported": true,
+      "gpu_dispatch": {
+        "arg_buffer_index": 2,
+        "arg_buffer_size": 40,
+        "bound_offset": 32
+      },
+      "gpu_kernel": "alloy_gpu_resample_indices",
+      "loops": [
+        {
+          "domain_kind": "span_len",
+          "domain_param": "idx",
+          "indexed_params": [
+            "idx"
+          ]
+        }
+      ],
+      "name": "resample_indices",
+      "params": [
+        {
+          "gpu_arg_offset": 0,
+          "kind": "scalar",
+          "name": "seed",
+          "type": "u64"
+        },
+        {
+          "gpu_arg_offset": 8,
+          "kind": "scalar",
+          "name": "b",
+          "type": "usize"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 0,
+          "gpu_len_offset": 16,
+          "kind": "span",
+          "min_elements": 1,
+          "mutable": false,
+          "name": "data"
+        },
+        {
+          "elem": "usize",
+          "gpu_buffer_index": 1,
+          "gpu_len_offset": 24,
+          "kind": "span",
+          "mutable": true,
+          "name": "idx"
+        }
+      ],
+      "placement_class": "general",
+      "targets": [
+        "cpu",
+        "gpu"
+      ]
+    },
+    {
+      "cpu_symbol": "alloy_cpu_bootstrap_resample_partials",
+      "execution": "heterogeneous",
+      "exported": true,
+      "gpu_dispatch": {
+        "arg_buffer_index": 2,
+        "arg_buffer_size": 40,
+        "bound1_offset": 32,
+        "bound_offset": 24
+      },
+      "gpu_kernel": "alloy_gpu_resample_partials",
+      "loops": [
+        {
+          "domain_kind": "view_shape01",
+          "domain_param": "part",
+          "domain_param1": "part",
+          "indexed_spans": []
+        }
+      ],
+      "name": "resample_partials",
+      "params": [
+        {
+          "gpu_arg_offset": 0,
+          "kind": "scalar",
+          "name": "seed",
+          "type": "u64"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 0,
+          "gpu_len_offset": 8,
+          "kind": "span",
+          "min_elements": 1,
+          "mutable": false,
+          "name": "data"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 1,
+          "gpu_shape0_offset": 16,
+          "gpu_shape1_offset": 20,
+          "kind": "view",
+          "mutable": true,
+          "name": "part",
+          "rank": 2
+        }
+      ],
+      "placement_class": "general",
+      "targets": [
+        "cpu",
+        "gpu"
+      ]
+    },
+    {
+      "cpu_symbol": "alloy_cpu_bootstrap_reduce_partials",
+      "execution": "heterogeneous",
+      "exported": true,
+      "gpu_dispatch": {
+        "arg_buffer_index": 2,
+        "arg_buffer_size": 40,
+        "bound_offset": 32
+      },
+      "gpu_kernel": "alloy_gpu_reduce_partials",
+      "loops": [
+        {
+          "domain_kind": "view_shape0",
+          "domain_param": "part",
+          "indexed_spans": [
+            {
+              "axis": 0,
+              "param": "out"
+            }
+          ]
+        }
+      ],
+      "name": "reduce_partials",
+      "params": [
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 0,
+          "gpu_shape0_offset": 0,
+          "gpu_shape1_offset": 4,
+          "gpu_stride0_offset": 8,
+          "gpu_stride1_offset": 12,
+          "kind": "view",
+          "mutable": false,
+          "name": "part",
+          "rank": 2
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 1,
+          "gpu_len_offset": 16,
+          "kind": "span",
+          "mutable": true,
+          "name": "out"
+        },
+        {
+          "gpu_arg_offset": 24,
+          "kind": "scalar",
+          "name": "n",
+          "type": "usize"
+        }
+      ],
+      "placement_class": "general",
+      "targets": [
+        "cpu",
+        "gpu"
+      ]
+    },
+    {
+      "cpu_symbol": "alloy_cpu_bootstrap_tiled_indices",
+      "execution": "heterogeneous",
+      "exported": true,
+      "gpu_dispatch": {
+        "arg_buffer_index": 2,
+        "arg_buffer_size": 40,
+        "bound_offset": 32
+      },
+      "gpu_kernel": "alloy_gpu_tiled_indices",
+      "loops": [
+        {
+          "domain_kind": "span_len",
+          "domain_param": "idx",
+          "indexed_params": [
+            "idx"
+          ]
+        }
+      ],
+      "name": "tiled_indices",
+      "params": [
+        {
+          "gpu_arg_offset": 0,
+          "kind": "scalar",
+          "name": "seed",
+          "type": "u64"
+        },
+        {
+          "gpu_arg_offset": 8,
+          "kind": "scalar",
+          "name": "b",
+          "type": "usize"
+        },
+        {
+          "elem": "f32",
+          "gpu_buffer_index": 0,
+          "gpu_len_offset": 16,
+          "kind": "span",
+          "min_elements": 1,
+          "mutable": false,
+          "name": "data"
+        },
+        {
+          "elem": "usize",
+          "gpu_buffer_index": 1,
+          "gpu_len_offset": 24,
+          "kind": "span",
+          "mutable": true,
+          "name": "idx"
+        }
+      ],
+      "placement_class": "general",
+      "targets": [
+        "cpu",
+        "gpu"
+      ]
+    }
+  ],
+  "gpu": {
+    "f64_supported": false,
+    "max_dispatch_domain": 4294967295,
+    "min_family": "apple7"
+  },
+  "min_macos": "13.0",
+  "module": "bootstrap",
+  "placement_policy": {
+    "general": {
+      "rule": "threshold",
+      "threshold_domain": 2097152
+    },
+    "reduction": {
+      "rule": "prefer_cpu"
+    },
+    "scan": {
+      "rule": "prefer_cpu"
+    }
+  }
+}
