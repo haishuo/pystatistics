@@ -57,6 +57,30 @@ def _boot_gpu_vectorizable(design: BootstrapDesign) -> bool:
     )
 
 
+def _boot_gpu_backend():
+    """The GPU bootstrap implementation for this machine.
+
+    On Apple Silicon the resampling runs in a packaged ALLOY artifact compiled
+    to Metal; on CUDA it runs in PyTorch, exactly as before. The split is by
+    DEVICE and nothing else -- there is no preference flag and no probing of
+    which is faster, because a backend that changes with the weather is not one
+    a numerical result can cite.
+
+    A Metal machine whose packaged artifacts are missing or unusable RAISES.
+    Falling back to PyTorch here would be a silent substitution of one
+    implementation for another, which is the behaviour Guarantee 2 exists to
+    forbid; the caller can still ask for backend='cpu'.
+    """
+    from pystatistics.core.compute import device as _device
+
+    info = _device.detect_gpu()
+    if getattr(info, "device_type", None) == "mps":
+        from pystatistics.montecarlo.backends.alloy import ALLOYBootstrapBackend
+        return ALLOYBootstrapBackend()
+    from pystatistics.montecarlo.backends.gpu import GPUBootstrapBackend
+    return GPUBootstrapBackend()
+
+
 def _select_boot_backend(backend: BackendChoice | None,
                          design: BootstrapDesign):
     """Choose the bootstrap backend, honouring fail-loud fidelity (Guarantee 2).
@@ -73,8 +97,7 @@ def _select_boot_backend(backend: BackendChoice | None,
         return CPUBootstrapBackend()
 
     if _boot_gpu_vectorizable(design):
-        from pystatistics.montecarlo.backends.gpu import GPUBootstrapBackend
-        return GPUBootstrapBackend()
+        return _boot_gpu_backend()
 
     # GPU device requested but the design cannot run on the GPU kernel.
     if backend == "gpu":

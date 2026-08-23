@@ -68,6 +68,14 @@ packages = ["pystatistics"]
 artifacts = [
     "pystatistics/**/*.so",
     "pystatistics/**/*.pyd",
+    # Vendored ALLOY runtime and bundle (macOS arm64 only). See
+    # pystatistics/montecarlo/backends/_alloy/PROVENANCE.md -- including its
+    # LICENSING section, which currently blocks shipping these in a release.
+    "pystatistics/montecarlo/backends/_alloy/artifacts.json",
+    "pystatistics/montecarlo/backends/_alloy/PROVENANCE.md",
+    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.dylib",
+    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.metallib",
+    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.json",
 ]
 # The generated C is build scratch — the .so is what ships. Keep it out of the
 # wheel (it regenerates from the .pyx in an sdist build).
