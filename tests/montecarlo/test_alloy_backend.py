@@ -5,6 +5,7 @@ public call routes through ALLOY, so testing the backend class directly would
 check the wrong thing.
 """
 
+import pathlib
 import platform
 import sys
 
@@ -282,6 +283,75 @@ def test_the_eligible_gpu_path_does_not_import_torch(alloy, monkeypatch):
     r = boot(data, mean_stat, n_resamples=300, seed=42, backend="gpu",
              gpu_statistic="mean")
     assert r.backend_name == "gpu_mps_alloy_bootstrap"
+
+
+@pytest.fixture
+def no_torch(monkeypatch):
+    """Make `import torch` fail, so a path that needs it is caught here."""
+    import builtins
+
+    real_import = builtins.__import__
+
+    def guarded(name, *args, **kwargs):
+        if name == "torch" or name.startswith("torch."):
+            raise ImportError("torch is not installed (simulated)")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", guarded)
+    monkeypatch.delitem(sys.modules, "torch", raising=False)
+    return guarded
+
+
+def test_a_missing_declaration_still_names_the_declaration(alloy, no_torch):
+    """The regression: this answered "No GPU available ... install PyTorch".
+
+    An unsupported CONFIGURATION is not a missing device. The packaged runtime
+    has already established that Metal is here, so falling through to a
+    resolver that asks torch produced a wrong diagnosis, not merely an
+    unhelpful one.
+    """
+    data = np.arange(1.0, 51.0)
+    with pytest.raises(ValidationError, match="requires gpu_statistic='mean'"):
+        boot(data, mean_stat, n_resamples=50, seed=1, backend="gpu")
+
+
+@pytest.mark.parametrize("kwargs", [
+    {"method": "balanced"},
+    {"method": "parametric", "ran_gen": lambda d, m, r: d},
+    {"statistic_type": "frequency"},
+    {"statistic_type": "weight"},
+])
+def test_unsupported_configurations_still_name_the_configuration(alloy, no_torch,
+                                                                 kwargs):
+    data = np.arange(1.0, 21.0)
+    with pytest.raises(ValidationError, match="supports only"):
+        boot(data, mean_stat, n_resamples=50, seed=1, backend="gpu",
+             gpu_statistic="mean", **kwargs)
+
+
+def test_strata_and_2d_still_name_the_configuration(alloy, no_torch):
+    data = np.arange(1.0, 21.0)
+    with pytest.raises(ValidationError, match="supports only"):
+        boot(data, mean_stat, n_resamples=50, seed=1, backend="gpu",
+             gpu_statistic="mean", strata=np.repeat([0, 1], 10))
+    with pytest.raises(ValidationError, match="supports only"):
+        boot(data.reshape(10, 2), mean_stat, n_resamples=50, seed=1,
+             backend="gpu", gpu_statistic="mean")
+
+
+def test_the_refusal_wording_is_one_copy(alloy):
+    """Both callers of the refusal must raise the same words.
+
+    The Apple-Silicon path reaches it without the resolver and every other
+    device reaches it through the resolver; a fork would drift silently,
+    because each side has tests that only ever see its own copy.
+    """
+    from pystatistics.montecarlo import solvers
+
+    src = pathlib.Path(solvers.__file__).read_text()
+    assert src.count("requires gpu_statistic='mean'. The GPU bootstrap") == 1
+    assert src.count("supports only\n        \"method='ordinary'") == 0
+    assert src.count("_refuse_gpu_boot_design(design)") == 2
 
 
 def test_an_unavailable_alloy_fails_loudly_rather_than_substituting(alloy,
