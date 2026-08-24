@@ -10,7 +10,7 @@ from pystatistics.core.exceptions import ValidationError
 
 import platform
 import sys
-from typing import Any, Callable, Literal, Sequence
+from typing import Any, Callable, Literal, NoReturn, Sequence
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -110,6 +110,28 @@ def _boot_gpu_backend():
     return GPUBootstrapBackend()
 
 
+def _refuse_gpu_boot_design(design: BootstrapDesign) -> NoReturn:
+    """Refuse an explicit GPU bootstrap the kernel cannot serve.
+
+    One copy, two callers: the Apple-Silicon path that reaches this without
+    consulting the shared resolver, and the resolver-driven path for every
+    other device. The wording is a public contract -- tests match on it -- so
+    it must not fork.
+    """
+    if design.gpu_statistic != "mean":
+        raise ValidationError(
+            "backend='gpu' requires gpu_statistic='mean'. The GPU bootstrap "
+            "path vectorizes only the sample mean; an arbitrary Python "
+            "statistic cannot execute on the GPU. Pass gpu_statistic='mean' "
+            "if your statistic is the mean, or use backend='cpu'."
+        )
+    raise ValidationError(
+        "backend='gpu' with gpu_statistic='mean' supports only "
+        "method='ordinary', statistic_type='index', strata=None, and 1-D "
+        "data. This configuration cannot run on the GPU; use backend='cpu'."
+    )
+
+
 def _select_boot_backend(backend: BackendChoice | None,
                          design: BootstrapDesign):
     """Choose the bootstrap backend, honouring fail-loud fidelity (Guarantee 2).
@@ -122,22 +144,30 @@ def _select_boot_backend(backend: BackendChoice | None,
     - ``backend='auto'`` that cannot use the GPU → CPU backend (auto expressed
       no preference; the choice is disclosed via ``backend_name``).
     """
-    # THE ALLOY PATH NEEDS NO PYTORCH, and is decided before the shared
-    # resolver so that it does not acquire one. `resolve_backend` learns
-    # whether a GPU exists by asking torch -- reasonable for every other
+    # THE APPLE-SILICON GPU BOOTSTRAP NEEDS NO PYTORCH, and is decided before
+    # the shared resolver so that it does not acquire one. `resolve_backend`
+    # learns whether a GPU exists by asking torch -- reasonable for every other
     # module, since their GPU work IS torch -- but here torch would be imported
     # only to be told that a Metal device is present, which ALLOY's own runtime
     # reports directly. The resolver is left exactly as it is; what changes is
-    # that this one eligible case stops consulting it.
+    # that this one case stops consulting it.
     #
-    # Narrow on purpose: an EXPLICIT 'gpu' request, on the platform the
-    # artifacts are built for, for a design the GPU path already accepts.
-    # Anything else -- 'auto', CUDA, an ineligible design, another platform --
-    # goes through the resolver unchanged, so every existing refusal and its
-    # wording survive.
-    if (backend == "gpu" and _alloy_bootstrap_platform()
-            and _boot_gpu_vectorizable(design)):
-        return _alloy_boot_backend_or_raise()
+    # BOTH OUTCOMES ARE DECIDED HERE, not just the one that succeeds. Gating
+    # this on a vectorizable design sent every OTHER explicit GPU request back
+    # through the resolver, so on a torch-free machine
+    # `boot(.., backend='gpu')` without `gpu_statistic='mean'` answered "No GPU
+    # available ... install PyTorch" instead of naming the missing
+    # declaration. That is a wrong diagnosis, not merely an unhelpful one: the
+    # packaged runtime has already established that Metal is present, and the
+    # fault is in the configuration.
+    #
+    # Narrow on purpose: an EXPLICIT 'gpu' request on the platform the
+    # artifacts are built for. Anything else -- 'auto', CUDA, another platform
+    # -- goes through the resolver unchanged.
+    if backend == "gpu" and _alloy_bootstrap_platform():
+        if _boot_gpu_vectorizable(design):
+            return _alloy_boot_backend_or_raise()
+        _refuse_gpu_boot_design(design)
 
     if not _use_gpu(backend):
         return CPUBootstrapBackend()
@@ -147,18 +177,7 @@ def _select_boot_backend(backend: BackendChoice | None,
 
     # GPU device requested but the design cannot run on the GPU kernel.
     if backend == "gpu":
-        if design.gpu_statistic != "mean":
-            raise ValidationError(
-                "backend='gpu' requires gpu_statistic='mean'. The GPU bootstrap "
-                "path vectorizes only the sample mean; an arbitrary Python "
-                "statistic cannot execute on the GPU. Pass gpu_statistic='mean' "
-                "if your statistic is the mean, or use backend='cpu'."
-            )
-        raise ValidationError(
-            "backend='gpu' with gpu_statistic='mean' supports only "
-            "method='ordinary', statistic_type='index', strata=None, and 1-D "
-            "data. This configuration cannot run on the GPU; use backend='cpu'."
-        )
+        _refuse_gpu_boot_design(design)
     # backend='auto' — disclosed CPU fallback.
     return CPUBootstrapBackend()
 

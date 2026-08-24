@@ -34,11 +34,12 @@
   eligible bootstrap-of-the-mean. That request is now decided before the shared
   backend resolver, which reaches for PyTorch only to learn that a Metal device
   exists -- something ALLOY's own runtime reports directly. The resolver itself
-  is unchanged, so `backend='auto'` still resolves to the CPU on Apple Silicon,
-  CUDA still routes through PyTorch, and every refusal for an unsupported
-  bootstrap configuration is untouched. If the packaged ALLOY backend cannot
-  run, the call fails with that reason rather than quietly using PyTorch or the
-  CPU.
+  is unchanged, so `backend='auto'` still resolves to the CPU on Apple Silicon
+  and CUDA still routes through PyTorch. An unsupported bootstrap configuration
+  keeps its existing `ValidationError` and its existing wording -- on a machine
+  without PyTorch installed as well as on one with it. If the packaged ALLOY
+  backend cannot run, the call fails with that reason rather than quietly using
+  PyTorch or the CPU.
 
 - **New package data: a vendored ALLOY runtime and bootstrap bundle** under
   `pystatistics/montecarlo/backends/_alloy/artifacts/` (macOS arm64 only,
