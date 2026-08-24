@@ -16,6 +16,8 @@
     "resample_partials",
     "tiled_indices"
   ],
+  "license": "Apache-2.0",
+  "license_file": "LICENSE-ALLOY",
   "platform": {
     "machine": "arm64",
     "system": "Darwin"

@@ -68,11 +68,12 @@ packages = ["pystatistics"]
 artifacts = [
     "pystatistics/**/*.so",
     "pystatistics/**/*.pyd",
-    # Vendored ALLOY runtime and bundle (macOS arm64 only). See
-    # pystatistics/montecarlo/backends/_alloy/PROVENANCE.md -- including its
-    # LICENSING section, which currently blocks shipping these in a release.
+    # Vendored ALLOY runtime and bundle (macOS arm64 only), Apache-2.0, with
+    # the notice that Apache-2.0 requires travel with them. PyStatistics itself
+    # stays MIT; see backends/_alloy/PROVENANCE.md.
     "pystatistics/montecarlo/backends/_alloy/artifacts.json",
     "pystatistics/montecarlo/backends/_alloy/PROVENANCE.md",
+    "pystatistics/montecarlo/backends/_alloy/LICENSE-ALLOY",
     "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.dylib",
     "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.metallib",
     "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.json",

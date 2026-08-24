@@ -220,3 +220,78 @@ def test_auto_does_not_reach_for_metal():
              gpu_statistic="mean")
     if APPLE:
         assert "cpu" in r.backend_name
+
+
+# ------------------------------------------------- shared-session lifecycle
+
+def test_closing_a_backend_does_not_disable_the_next_call(alloy):
+    """The regression: `close()` used to shut the process-wide session.
+
+    A backend instance is created per solve, so one caller invoking `close()`
+    left the cache holding a closed context and broke every subsequent
+    `boot(...)` on the machine. Closing must not reach the shared session.
+    """
+    from pystatistics.montecarlo.backends.alloy import ALLOYBootstrapBackend
+
+    data = np.arange(1.0, 41.0)
+    first = boot(data, mean_stat, n_resamples=200, seed=3, backend="gpu",
+                 gpu_statistic="mean")
+
+    be = ALLOYBootstrapBackend()
+    be.close()
+    be.close()          # idempotent, and still not the session's business
+
+    second = boot(data, mean_stat, n_resamples=200, seed=3, backend="gpu",
+                  gpu_statistic="mean")
+    assert second.backend_name == "gpu_mps_alloy_bootstrap"
+    np.testing.assert_array_equal(first.t, second.t)
+
+
+def test_the_session_is_shared_rather_than_rebuilt(alloy):
+    """Two backends hand back the same context and library objects."""
+    from pystatistics.montecarlo.backends.alloy import ALLOYBootstrapBackend
+
+    a, b = ALLOYBootstrapBackend(), ALLOYBootstrapBackend()
+    assert a._ctx is b._ctx
+    assert a._lib is b._lib
+
+
+# --------------------------------------------- routing without PyTorch
+
+def test_the_eligible_gpu_path_does_not_import_torch(alloy, monkeypatch):
+    """Selection must not reach for PyTorch merely to learn Metal exists.
+
+    Simulated by making `import torch` fail: the eligible explicit-GPU request
+    must still select ALLOY. `torchfree_check.py` beside this file is the real
+    proof -- a wheel installed with no torch at all -- and this is the fast
+    check that keeps the selection order from regressing.
+    """
+    import builtins
+
+    real_import = builtins.__import__
+
+    def no_torch(name, *args, **kwargs):
+        if name == "torch" or name.startswith("torch."):
+            raise ImportError("torch is not installed (simulated)")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", no_torch)
+    monkeypatch.delitem(sys.modules, "torch", raising=False)
+
+    data = np.arange(1.0, 51.0)
+    r = boot(data, mean_stat, n_resamples=300, seed=42, backend="gpu",
+             gpu_statistic="mean")
+    assert r.backend_name == "gpu_mps_alloy_bootstrap"
+
+
+def test_an_unavailable_alloy_fails_loudly_rather_than_substituting(alloy,
+                                                                    monkeypatch):
+    """No silent PyTorch, no silent CPU -- the ALLOY reason is what surfaces."""
+    from pystatistics.montecarlo.backends import _alloy as mod
+
+    monkeypatch.setattr(mod, "is_available",
+                        lambda: (False, "no usable Metal device (simulated)."))
+    data = np.arange(1.0, 51.0)
+    with pytest.raises(mod.AlloyUnavailable, match="simulated"):
+        boot(data, mean_stat, n_resamples=100, seed=1, backend="gpu",
+             gpu_statistic="mean")

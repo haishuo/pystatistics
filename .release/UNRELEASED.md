@@ -30,6 +30,16 @@
   the mean still raises, and balanced/parametric bootstrap, frequency and
   weight statistics, strata and 2-D data are still refused on the GPU.
 
+- **`backend='gpu'` no longer requires PyTorch on Apple Silicon** for the
+  eligible bootstrap-of-the-mean. That request is now decided before the shared
+  backend resolver, which reaches for PyTorch only to learn that a Metal device
+  exists -- something ALLOY's own runtime reports directly. The resolver itself
+  is unchanged, so `backend='auto'` still resolves to the CPU on Apple Silicon,
+  CUDA still routes through PyTorch, and every refusal for an unsupported
+  bootstrap configuration is untouched. If the packaged ALLOY backend cannot
+  run, the call fails with that reason rather than quietly using PyTorch or the
+  CPU.
+
 - **New package data: a vendored ALLOY runtime and bootstrap bundle** under
   `pystatistics/montecarlo/backends/_alloy/artifacts/` (macOS arm64 only,
   ~348 KB). They are loaded from the installed package and from nowhere else —
@@ -41,6 +51,8 @@
   On any other platform the loader raises with the reason and nothing else is
   affected.
 
-  **These artifacts are not yet redistributable**: ALLOY's license is
-  undecided, so they must not ship in a released wheel or sdist until that is
-  settled. See the LICENSING section of that `PROVENANCE.md`.
+  **PyStatistics remains MIT-licensed. The vendored ALLOY runtime and
+  generated artifacts are separately identified and distributed under
+  Apache-2.0**, with the notice Apache-2.0 requires shipped beside them as
+  `LICENSE-ALLOY`. The MIT licence at the repository root does not extend to
+  those files, and their terms do not extend to anything else.
