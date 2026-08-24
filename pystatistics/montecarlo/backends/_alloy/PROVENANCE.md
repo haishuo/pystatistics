@@ -45,16 +45,14 @@ Built for **macOS on Apple Silicon (darwin/arm64) only**. On any other platform
 the loader raises with the reason; PyStatistics' CPU and CUDA paths are
 unaffected and do not touch this directory.
 
-## LICENSING — UNRESOLVED, AND IT BLOCKS PUBLISHING
+## Licensing
 
-**ALLOY's README states: "Licensing: not yet decided; all rights reserved."**
+**PyStatistics is MIT-licensed. The vendored ALLOY runtime and the generated
+artifacts beside it are Apache-2.0**, and `LICENSE-ALLOY` in this directory is
+the full text. The two are separately identified: nothing here changes the
+terms of the rest of the package, and the MIT licence at the repository root
+does not extend to these files.
 
-PyStatistics is MIT-licensed and published to PyPI. Binaries under
-all-rights-reserved terms cannot be redistributed inside an MIT-licensed
-distribution, so **these artifacts must not be shipped in a released wheel or
-sdist until ALLOY carries a license compatible with that redistribution.**
-
-Both projects have the same author, so this is a decision to record rather than
-a negotiation — but it has to be recorded, in ALLOY, before a release includes
-this directory. Until then the backend is usable from a source checkout and the
-packaging metadata below is prepared but unreleased.
+Apache-2.0 permits this redistribution as long as the notice travels with the
+binaries, which is what `LICENSE-ALLOY` is doing. It ships in the wheel beside
+the artifacts for that reason and must stay there.

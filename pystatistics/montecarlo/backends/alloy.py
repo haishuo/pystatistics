@@ -156,4 +156,14 @@ class ALLOYBootstrapBackend:
         )
 
     def close(self) -> None:
-        self._ctx.close()
+        """Deliberately a no-op.
+
+        The context and bundle belong to the process-wide session
+        (`_alloy.shared_session`), not to this object. An earlier version
+        closed them here, which left the cache holding a closed handle and
+        broke the NEXT `boot(...)` call on this machine -- a backend instance
+        is created per solve, so one caller invoking `close()` would have
+        disabled the path for everyone. Nothing in the backend protocol calls
+        this; it exists so that a caller who does gets a no-op rather than a
+        latent failure.
+        """

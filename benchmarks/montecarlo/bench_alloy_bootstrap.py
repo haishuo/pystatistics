@@ -45,14 +45,22 @@ def mean_stat(data, indices):
 
 
 def _run_with(backend_cls, data, n_resamples):
-    """One complete public bootstrap, with the GPU backend forced."""
-    original = solvers._boot_gpu_backend
-    solvers._boot_gpu_backend = lambda: backend_cls()
+    """One complete public bootstrap, with the GPU implementation forced.
+
+    The hook is `_alloy_boot_backend_or_raise`, which is what an eligible
+    explicit `backend='gpu'` request reaches on this platform. Patching
+    `_boot_gpu_backend` instead -- the seam before the torch-free routing
+    landed -- silently ran BOTH sides on ALLOY and reported a dead heat.
+    `_assert_distinct` below is the check that would have caught that, and now
+    does.
+    """
+    original = solvers._alloy_boot_backend_or_raise
+    solvers._alloy_boot_backend_or_raise = lambda: backend_cls()
     try:
         return boot(data, mean_stat, n_resamples=n_resamples, seed=SEED,
                     backend="gpu", gpu_statistic="mean")
     finally:
-        solvers._boot_gpu_backend = original
+        solvers._alloy_boot_backend_or_raise = original
 
 
 def timed_pair(a_fn, b_fn, warm: int, rounds: int):
@@ -115,6 +123,12 @@ def main() -> int:
         # Correctness before timing: both must be the same statistic.
         ra = _run_with(ALLOYBootstrapBackend, data, 400)
         rt = _run_with(GPUBootstrapBackend, data, 400)
+        # TWO DIFFERENT IMPLEMENTATIONS, asserted rather than assumed. A
+        # comparison of something against itself reports a dead heat and looks
+        # entirely plausible.
+        assert ra.backend_name == "gpu_mps_alloy_bootstrap", ra.backend_name
+        assert "alloy" not in rt.backend_name, rt.backend_name
+        assert ra.backend_name != rt.backend_name
         assert ra.t0[0] == rt.t0[0], "the two backends disagree on t0"
         se = float(np.std(data, ddof=1)) / np.sqrt(n)
         for label, r in (("alloy", ra), ("torch", rt)):

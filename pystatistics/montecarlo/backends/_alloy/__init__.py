@@ -232,16 +232,32 @@ def shared_session():
 invoke_lock = threading.Lock()
 
 
+_availability: tuple[bool, str] | None = None
+
+
 def is_available() -> tuple[bool, str]:
-    """(usable, reason). Never raises, so a caller may ask before committing."""
+    """(usable, reason). Never raises, so a caller may ask before committing.
+
+    MEMOISED, because the dispatcher asks on every call. Whether this machine
+    has the artifacts and a Metal device is a property of the install and the
+    hardware, neither of which changes inside a process -- and answering it by
+    building and tearing down a context each time cost more than the bootstrap
+    it was gating.
+    """
+    global _availability
+    if _availability is not None:
+        return _availability
     try:
         ctx = Context()
     except AlloyUnavailable as exc:
-        return False, str(exc)
+        _availability = (False, str(exc))
+        return _availability
     try:
         if not ctx.has_gpu:
-            return False, f"no usable Metal device ({ctx.device_name})"
-        return True, ""
+            _availability = (False, f"no usable Metal device ({ctx.device_name})")
+        else:
+            _availability = (True, "")
+        return _availability
     finally:
         ctx.close()
 
