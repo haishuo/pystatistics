@@ -1,8 +1,12 @@
 # Changelog
 
-## 6.1.4
+## 6.1.5
 
-Cosmetic fix release for the mvnmle pattern-inspection output.
+Cosmetic fix release for the mvnmle pattern-inspection output. (Supersedes
+6.1.4, which carried this same fix but shipped with
+``pystatistics.__version__`` still reading "6.1.3" — the module-level version
+string was not bumped alongside the package metadata. 6.1.4 should not be
+used where the self-reported version matters.)
 
 ### Fixed
 
