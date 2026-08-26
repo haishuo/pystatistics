@@ -59,9 +59,12 @@ class PatternSummary:
             f"Total patterns: {self.n_patterns}",
             f"Total cases: {self.total_cases}",
             f"Overall missing rate: {self.overall_missing_rate:.1%}",
-            f"Complete cases: {self.complete_cases} ({self.complete_cases_percent:.1%})",
+            # complete_cases_percent and percent_cases are stored on a 0-100
+            # scale (see analyze_patterns), so format them directly rather
+            # than through ":.1%", which multiplies by 100 again.
+            f"Complete cases: {self.complete_cases} ({self.complete_cases_percent:.1f}%)",
             f"Most common pattern: {self.most_common_pattern.n_cases} cases "
-            f"({self.most_common_pattern.percent_cases:.1%})"
+            f"({self.most_common_pattern.percent_cases:.1f}%)"
         ]
         return "\n".join(lines)
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 6.1.4
+
+Cosmetic fix release for the mvnmle pattern-inspection output.
+
+### Fixed
+
+- **`pattern_summary()` printed its percentages 100x too large.**
+  `PatternInfo.percent_cases` and `PatternSummary.complete_cases_percent`
+  are stored on a 0-100 scale, but the summary string formatted them with
+  Python's `:.1%` (which multiplies by 100 again), so a 66% complete-case
+  share printed as `6600.0%`. The stored values and every other API are
+  unchanged; only the rendered string is corrected, and the format is now
+  pinned by a regression test.
+
 ## 6.1.3
 
 Reliability release for GPU MICE at survey scale, in three parts: float32
