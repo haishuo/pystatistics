@@ -81,7 +81,7 @@ wheel tags do not express x86-64 microarchitecture levels.
   `7c4871bb51894f588773a1142c282dd370dcf5b5eedd374209f01a47db846be2`
 - dense runtime header: `dvebrt/dense/dense_rt.h`
 - dense runtime header SHA-256:
-  `134739c03c91110daf5933cba5a4192c47954b0835f7b12bc00fb1dfbb60ec2d`
+  `1347391466b645fa2132c8621c279944ccf17d262392402d2e52500cac74d071`
 - already qualified Forge-built x86-64-v2 artifact SHA-256:
   `4ceb3800340611eac3d2c3308646fe25787cc423dc5c9c1d48843922e70aad21`
 - qualification authority: `evidence/trunk008/qualification.json`, whose
