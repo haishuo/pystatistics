@@ -25,14 +25,13 @@ class _BlockTorch(importlib.abc.MetaPathFinder):
         return None
 
 
-def _resident(case_id: str, threads: int) -> dict:
+def _resident(data, case_id: str, threads: int) -> dict:  # noqa: ANN001
     import numpy as np
 
     configure_threads(threads)
     from pystatistics.mvnmle._dveb.objective import DVEBDenseObjective
     from pystatistics.mvnmle._objectives.gpu_fp64 import GPUObjectiveFP64
 
-    data = make_case(case_id)
     torch_objective = GPUObjectiveFP64(data, device="cpu")
     dveb_objective = DVEBDenseObjective(data, threads=threads)
     theta = np.ascontiguousarray(torch_objective.get_initial_parameters())
@@ -68,8 +67,7 @@ def _resident(case_id: str, threads: int) -> dict:
     }
 
 
-def _dveb_load_first_answer(case_id: str, threads: int) -> dict:
-    data = make_case(case_id)
+def _dveb_load_first_answer(data, case_id: str, threads: int) -> dict:  # noqa: ANN001
     started = time.perf_counter_ns()
     from pystatistics.mvnmle._dveb.objective import DVEBDenseObjective
 
@@ -88,8 +86,7 @@ def _dveb_load_first_answer(case_id: str, threads: int) -> dict:
     }
 
 
-def _torch_blocked_fit(case_id: str, threads: int) -> dict:
-    data = make_case(case_id)
+def _torch_blocked_fit(data, case_id: str, threads: int) -> dict:  # noqa: ANN001
     sys.meta_path.insert(0, _BlockTorch())
     started = time.perf_counter_ns()
     from pystatistics.mvnmle import mlest
@@ -121,12 +118,13 @@ def main() -> int:
     cpus = affinity()
     if len(cpus) != args.threads:
         raise SystemExit(f"affinity mismatch: requested {args.threads} CPUs, process has {cpus}")
+    data = make_case(args.case)
     if args.mode == "resident":
-        payload = _resident(args.case, args.threads)
+        payload = _resident(data, args.case, args.threads)
     elif args.mode == "dveb-load-first-answer":
-        payload = _dveb_load_first_answer(args.case, args.threads)
+        payload = _dveb_load_first_answer(data, args.case, args.threads)
     else:
-        payload = _torch_blocked_fit(args.case, args.threads)
+        payload = _torch_blocked_fit(data, args.case, args.threads)
     payload.update(
         {
             "schema": "pystatistics.dveb-mvnmle.operational-worker.v1",

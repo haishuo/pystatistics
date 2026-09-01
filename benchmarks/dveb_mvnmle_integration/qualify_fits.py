@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 from common import (  # noqa: E402
     affinity,
+    array_sha256,
     compare_solutions,
     configure_threads,
     make_case,
@@ -29,11 +30,13 @@ def main() -> int:
     cpus = affinity()
     if len(cpus) != args.threads:
         raise SystemExit(f"affinity mismatch: requested {args.threads} CPUs, process has {cpus}")
+    data = make_case(args.case)
+    input_sha256 = array_sha256(data)
     configure_threads(args.threads)
 
     from pystatistics.mvnmle import MVNDesign, mlest
 
-    design = MVNDesign.from_array(make_case(args.case))
+    design = MVNDesign.from_array(data)
     torch_result = solution_record(mlest(design, method="direct", backend="cpu"))
     dveb_result = solution_record(mlest(design, method="direct", solver="dveb"))
     # This admission step is deliberately untimed. The public result carries
@@ -42,15 +45,20 @@ def main() -> int:
     torch_result.pop("timing", None)
     dveb_result.pop("timing", None)
     comparison = compare_solutions(torch_result, dveb_result)
+    input_sha256_after = array_sha256(data)
+    input_unchanged = input_sha256_after == input_sha256
     payload = {
         "schema": "pystatistics.dveb-mvnmle.fit-qualification.v1",
         "case": args.case,
         "threads": args.threads,
         "affinity": cpus,
+        "input_sha256": input_sha256,
+        "input_sha256_after": input_sha256_after,
+        "input_unchanged": input_unchanged,
         "torch": torch_result,
         "dveb": dveb_result,
         "comparison": comparison,
-        "pass": comparison["pass"],
+        "pass": comparison["pass"] and input_unchanged,
     }
     print(json.dumps(payload, sort_keys=True))
     return 0 if payload["pass"] else 1

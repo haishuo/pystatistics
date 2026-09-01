@@ -19,6 +19,7 @@ from common import (  # noqa: E402
     SEED,
     WARMUPS,
     affinity,
+    array_sha256,
     compare_solutions,
     configure_threads,
     make_case,
@@ -45,6 +46,12 @@ def main() -> int:
     cpus = affinity()
     if len(cpus) != args.threads:
         raise SystemExit(f"affinity mismatch: requested {args.threads} CPUs, process has {cpus}")
+    # Generate the frozen input before importing/configuring PyTorch. On this
+    # environment, torch.set_num_threads(12) can change six E2 samples by one
+    # ULP through NumPy's multivariate-normal linear-algebra path. The campaign
+    # contract requires identical input bytes across thread-count lanes.
+    data = make_case(args.case)
+    input_sha256 = array_sha256(data)
     configure_threads(args.threads)
 
     import numpy as np
@@ -54,7 +61,6 @@ def main() -> int:
     from pystatistics import __version__ as pystatistics_version
     from pystatistics.mvnmle import MVNDesign
 
-    data = make_case(args.case)
     design = MVNDesign.from_array(data)
 
     for _ in range(WARMUPS):
@@ -97,6 +103,8 @@ def main() -> int:
         pair["finished_wall_ns"] = time.time_ns()
         observations.append(pair)
 
+    input_sha256_after = array_sha256(data)
+    input_unchanged = input_sha256_after == input_sha256
     payload = {
         "schema": "pystatistics.dveb-mvnmle.lane.v1",
         "case": args.case,
@@ -105,7 +113,9 @@ def main() -> int:
         "lane_seed": lane_seed,
         "warmups": WARMUPS,
         "repetitions": REPETITIONS,
-        "data_sha256": __import__("hashlib").sha256(data.tobytes()).hexdigest(),
+        "data_sha256": input_sha256,
+        "data_sha256_after": input_sha256_after,
+        "input_unchanged": input_unchanged,
         "versions": {
             "pystatistics": pystatistics_version,
             "python": __import__("sys").version,
@@ -115,7 +125,7 @@ def main() -> int:
         },
         "observations": observations,
         "max_rss_kib": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss,
-        "pass": all(pair["comparison"]["pass"] for pair in observations),
+        "pass": input_unchanged and all(pair["comparison"]["pass"] for pair in observations),
     }
     print(json.dumps(payload, sort_keys=True))
     return 0 if payload["pass"] else 1
