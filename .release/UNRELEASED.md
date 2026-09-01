@@ -9,6 +9,21 @@
 
 ## Changes
 
+- **`mvnmle` now warns before a survey-scale MPS fit on a torch build carrying
+  the allocator-state matmul misread.** MICE has been guarded since 6.1.3 and
+  MVNMLE was not, although both run on the same backend against the same torch
+  builds and `mvnmle`'s FP32 objective forms `sigma = L @ L.T`
+  (`mvnmle/_objectives/gpu_fp32.py`) -- a transposed, therefore strided,
+  operand, which is exactly the shape the upstream bug misreads. On an affected
+  build (torch <= 2.13.x, per `core.compute.device.mps_misread_status`), a
+  `DirectMLEBackend.solve` on MPS at n >= 20,000 now raises a `UserWarning`
+  naming the operation and every remedy: `backend='cpu'`, CUDA, or torch >= 2.14.
+  It is a warning rather than an error for the reason MICE gives -- moderate-n
+  MPS results are validated and a user may knowingly accept the risk -- and it
+  is silent on mitigated builds, below the threshold, and on CUDA and CPU. The
+  threshold is asserted equal to MICE's, so the two guards cannot drift apart.
+  No numerical behaviour changes on any path.
+
 - **Apple-Silicon bootstrap of the mean now runs on ALLOY-generated Metal.**
   `boot(data, statistic, backend='gpu', gpu_statistic='mean')` on an
   Apple-Silicon machine routes the eligible design (ordinary method,

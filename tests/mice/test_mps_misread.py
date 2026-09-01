@@ -18,6 +18,15 @@ import warnings
 import numpy as np
 import pytest
 
+# Import scipy's BLAS before torch. Both link an OpenMP runtime, and on a
+# macOS conda install loading torch first aborts the process with OMP error
+# #15 (duplicate libomp). This is an environment property, not a project bug --
+# but it makes the suite unrunnable on such a machine, and the documented
+# workaround (KMP_DUPLICATE_LIB_OK) is disqualified here: it warns that it "may
+# cause crashes or silently produce incorrect results", which is precisely the
+# failure mode this module exists to guard against.
+import scipy.linalg.blas  # noqa: F401  (import order matters; see above)
+
 torch = pytest.importorskip("torch")
 
 from pystatistics.core.compute.device import mps_misread_status

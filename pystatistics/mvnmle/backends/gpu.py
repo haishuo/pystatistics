@@ -5,10 +5,57 @@ Drives CUDA (FP32/FP64), MPS (FP32 only), and a CPU torch device (FP64 — the
 fast default CPU path). Uses PyTorch autodiff for analytical gradients.
 """
 
+import warnings
+
+from pystatistics.core.compute.device import mps_misread_status
 from pystatistics.core.result import Result
 from pystatistics.mvnmle.design import MVNDesign
 from pystatistics.mvnmle.solution import MVNParams
 from pystatistics.mvnmle.backends._direct import run_direct_solve
+
+
+# The same threshold MICE uses (mice/backends/gpu.py). The misread is
+# triggered by caching-allocator state after prior large allocations, not by
+# any one operation's size, so the honest predictor is problem scale rather
+# than a property of the matmul itself.
+_MPS_MISREAD_WARN_N = 20_000
+
+
+def _warn_if_mps_misread(device: str, n: int, p: int) -> None:
+    """Warn -- loudly, once -- before a survey-scale MVN MLE fit on an MPS
+    build of torch carrying the allocator-state matmul misread (silently wrong
+    results; docs/GPU_NOTES.md, "MPS strided-matmul buffer corruption").
+
+    MVNMLE reaches the defect the same way MICE does. The FP32 objective forms
+    ``sigma = L @ L.T`` (``_objectives/gpu_fp32.py``), whose second operand is
+    a transposed -- therefore strided -- view, which is exactly the shape that
+    misreads. Until this existed, MICE was guarded and MVNMLE was not, though
+    both run on the same backend against the same torch builds.
+
+    A warning rather than an error, for the reason MICE gives: moderate-n MPS
+    results are validated and a user may knowingly accept the risk. Not raised
+    for 'mitigated' torch builds -- installing one is the supported opt-in path
+    to silence it.
+    """
+    if device != "mps" or n < _MPS_MISREAD_WARN_N:
+        return
+    if mps_misread_status() != "affected":
+        return
+    import torch
+
+    warnings.warn(
+        f"mvnmle on Apple Silicon (MPS) with torch {torch.__version__} at "
+        f"n={n}, p={p}: this torch build can return silently wrong GPU "
+        f"results at this scale (an upstream torch bug in MPS memory "
+        f"management; the FP32 objective's `L @ L.T` is a strided matmul, the "
+        f"shape that misreads). Results may be wrong without any error. "
+        f"Remedies: use backend='cpu', run on CUDA, or install torch >= 2.14 "
+        f"(pre-release: a nightly >= 2.14.0.dev20260624), where the corruption "
+        f"no longer reproduces. To test your own machine/torch combination, "
+        f"run pystatistics.mice.diagnostics.mps_matmul_canary().",
+        UserWarning,
+        stacklevel=3,
+    )
 
 
 class DirectMLEBackend:
@@ -89,6 +136,8 @@ class DirectMLEBackend:
         -------
         Result[MVNParams]
         """
+        _warn_if_mps_misread(self._device, design.n, design.p)
+
         # Select objective class and defaults based on precision
         if self._use_fp64:
             from pystatistics.mvnmle._objectives.gpu_fp64 import GPUObjectiveFP64
