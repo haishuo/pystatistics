@@ -5,16 +5,14 @@ Public API: mlest(data, ...) -> MVNSolution
 """
 
 import warnings
-from pystatistics.core.exceptions import ValidationError
 from typing import Literal
-import numpy as np
 
-from pystatistics.core.compute.device import select_device
 from pystatistics.core.compute.backend import resolve_backend, unknown_backend_message
+from pystatistics.core.compute.device import select_device
+from pystatistics.core.exceptions import ValidationError
+from pystatistics.mvnmle.backends.cpu import CPUMLEBackend
 from pystatistics.mvnmle.design import MVNDesign
 from pystatistics.mvnmle.solution import MVNSolution
-from pystatistics.mvnmle.backends.cpu import CPUMLEBackend
-
 
 BackendChoice = Literal['auto', 'cpu', 'gpu', 'gpu_fp64']
 AlgorithmChoice = Literal['direct', 'em', 'monotone']
@@ -76,7 +74,9 @@ def mlest(
         Numerical routine for the direct method. If None, auto-selected by
         backend. ``'reference'`` selects the R-exact numpy inverse-Cholesky
         reference (no PyTorch needed; valid only with ``method='direct'``); any
-        other value is passed as the scipy optimizer method. Ignored for EM.
+        ``'dveb'`` selects the research-only, CPU-only qualified DVEB
+        forward-Cholesky artifact on this branch. Any other value is passed as
+        the scipy optimizer method. Ignored for EM.
     tol : float or None
         Convergence tolerance. If None, uses an algorithm- and
         precision-appropriate default: direct = per-observation gradient
@@ -133,6 +133,12 @@ def mlest(
             f"backend argument (or pass backend='cpu') to use the "
             f"reference, or drop solver='reference' to run on the GPU."
         )
+    if solver == 'dveb' and backend not in (None, 'cpu'):
+        raise ValidationError(
+            "solver='dveb' selects the experimental CPU-only DVEB artifact "
+            f"and cannot honor backend={backend!r}. Drop the backend argument "
+            "(or pass backend='cpu'), or choose a different solver."
+        )
     if method == 'monotone' and backend not in (None, 'cpu'):
         raise ValidationError(
             f"method='monotone' is a closed-form CPU solver and cannot "
@@ -152,10 +158,9 @@ def mlest(
     # The numpy inverse-Cholesky reference is a direct-method routine; it has no
     # meaning for EM or the closed-form monotone solver. Fail loud (Rule 1)
     # rather than silently ignoring the request.
-    if solver == 'reference' and method != 'direct':
+    if solver in ('reference', 'dveb') and method != 'direct':
         raise ValidationError(
-            "solver='reference' selects the numpy inverse-Cholesky reference "
-            "and is only valid with method='direct'. "
+            f"solver={solver!r} is only valid with method='direct'. "
             f"Got method={method!r}."
         )
 
@@ -262,8 +267,6 @@ def _solve_monotone(design, verbose):
 
     Raises ``ValidationError`` if the data are not monotone.
     """
-    import numpy as np
-
     from pystatistics.core.compute.timing import Timer
     from pystatistics.core.result import Result
     from pystatistics.mvnmle._monotone import mlest_monotone_closed_form
@@ -323,6 +326,11 @@ def _solve_direct(design, backend, solver, tol, max_iter, verbose):
 
     if solver == 'reference':
         backend_impl = CPUMLEBackend()
+        scipy_method = None
+    elif solver == 'dveb':
+        from pystatistics.mvnmle.backends.dveb import DVEBDenseBackend
+
+        backend_impl = DVEBDenseBackend()
         scipy_method = None
     else:
         backend_impl = _get_backend(backend, verbose=verbose)

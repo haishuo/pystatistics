@@ -1,0 +1,14 @@
+{
+  "abi_version": 1,
+  "artifact": "mvnmle_cpu_abi_v1.so",
+  "artifact_sha256": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f",
+  "bundle_sha256": "61faedbed04e0e882109b25fe3139d0315c6c16e95f6356eefcd74a51fdadfa5",
+  "compiler_repository_commit": "a4b0286",
+  "implementation_commit": "dcfd892564177343cb918efbafaefca2f28291de",
+  "language_source_sha256": "a6ee8e60f6ed52e991ff53b12b1bee5ef6781a0f9506b324db18740e9227dc91",
+  "platform": "linux-x86_64-forge-known-machine",
+  "precision": "IEEE float64; contraction disabled; no fast-math",
+  "schema": "pystatistics-dveb-mvnmle-consumer-artifact-v1",
+  "source_manifest": "DVEB evidence/trunk008/handoff/manifest.json",
+  "status": "research-only; not a portable wheel artifact"
+}
