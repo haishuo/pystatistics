@@ -112,3 +112,20 @@
   `tests/mice/test_mps_misread.py` (classifier version table, warning
   fire/silence matrix including a real threshold-lowered MPS mice run,
   canary verdict sharpness).
+
+---
+
+## Research line: `research/dveb-pystatistics`
+
+This branch is the DVEB research line. It is **not** a release line and must
+never be tagged, released, or merged to `main` as-is.
+
+- Base: `v6.1.5` (`d68f011`), the exact tagged release published to PyPI.
+- Version identity: `6.2.0.dev0+dveb` — deliberately not `6.1.5`, so an
+  installed copy can never be mistaken for the released package.
+- Scope: prospective DVEB backend investigation and separately authorized
+  statistical trunks. No DVEB backend or numerical implementation is present
+  at branch creation.
+- Independence: this line does not contain the ALLOY research implementation;
+  both accelerator lines share the same released base and will be reconciled
+  only through a separately reviewed integration branch.
