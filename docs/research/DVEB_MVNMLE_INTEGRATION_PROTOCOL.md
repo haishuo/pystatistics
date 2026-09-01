@@ -2,7 +2,8 @@
 
 **Frozen:** 2026-09-01, before consumer-adapter implementation or timing
 
-**Status:** PROSPECTIVE RESEARCH-BRANCH PROTOCOL
+**Status:** PROSPECTIVE RESEARCH-BRANCH PROTOCOL; one pre-timing baseline
+qualification correction recorded below
 
 **Branch:** `research/dveb-pystatistics`
 
@@ -149,12 +150,30 @@ NumPy reference when PyTorch is absent.
 ### F5 — regression firewall
 
 - all MVN-MLE tests pass;
-- the complete default non-slow PyStatistics suite passes;
+- the complete default non-slow PyStatistics suite introduces no failure
+  relative to the frozen pre-integration commit;
 - package version remains `6.2.0.dev0+dveb`;
 - `main`, tag `v6.1.5`, and the released behavior are unchanged;
 - no file outside the approved PyStatistics research worktree changes.
 
 No performance lane is timed if an applicable functional gate fails.
+
+#### Pre-timing baseline correction
+
+Before any integration timing, the complete suite selected 4,570 tests and
+reported 4,475 passed, 94 skipped, and one failure:
+`tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud`.
+The same test was then run alone at the exact pre-integration commit
+`a9c7e4d` in a detached temporary worktree and failed identically: the expected
+`NotPositiveDefiniteError` was not raised in this environment. No DVEB or
+MVN-MLE code is imported by that test.
+
+Accordingly, F5 is corrected before performance observations from an absolute
+whole-suite pass to a no-new-failure gate against `a9c7e4d`, while retaining an
+absolute pass for all MVN-MLE tests. The inherited failure remains visible and
+is not waived as a PyStatistics defect, fixed on this branch, or counted as a
+DVEB result. No performance threshold, grid point, repeat count, or decision
+rule changes.
 
 ## Prospective performance campaign
 
