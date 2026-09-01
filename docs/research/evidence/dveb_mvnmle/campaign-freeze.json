@@ -1,0 +1,84 @@
+{
+  "schema": "pystatistics.dveb-mvnmle.campaign-freeze.v2",
+  "status": "frozen-before-timing",
+  "frozen_date": "2026-09-01",
+  "research_branch": "research/dveb-pystatistics",
+  "campaign_code_commit": "73a08f2a1dff66f9379e0f7f1bb2e3791f47e746",
+  "campaign_code_tree": "7da84fcd7b49a7162d988dd6870e7323a5559919",
+  "protocol_commit": "030bea4",
+  "adapter_commit": "84a0535",
+  "pretiming_qualification_commit": "a4a4e13",
+  "v1_invalidation_commit": "8cd02ba",
+  "byte_identical_qualification_commit": "73a08f2",
+  "artifact": {
+    "path": "pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+    "sha256": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f",
+    "dveb_source_commit": "a4b0286",
+    "implementation_commit": "dcfd892564177343cb918efbafaefca2f28291de"
+  },
+  "environment": {
+    "python": "3.11.14",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
+    "torch": "2.11.0.dev20251226+cu128",
+    "pystatistics": "6.2.0.dev0+dveb",
+    "logical_cpus": 12
+  },
+  "evaluation": {
+    "cases": ["E1", "E2", "E3", "E4", "E5", "E6"],
+    "threads": [1, 6, 12],
+    "warmups_per_implementation": 3,
+    "paired_repetitions": 30,
+    "randomization_seed": "0xD0EB1008",
+    "implementations": ["torch", "dveb"],
+    "full_fit_endpoint": true,
+    "slow_observation_exclusion": false,
+    "bootstrap_resamples": 10000
+  },
+  "correctness": {
+    "qualification_path": "docs/research/evidence/dveb_mvnmle/fit-qualification.json",
+    "qualification_pass": true,
+    "qualification_lanes": 18,
+    "identical_input_bytes_across_threads": true,
+    "input_hash_rechecked_after_every_lane": true,
+    "loglik_absolute_tolerance": 1e-5,
+    "parameter_relative_tolerance": 0.001,
+    "parameter_absolute_tolerance": 0.001,
+    "both_solvers_must_converge": true
+  },
+  "decision": {
+    "catastrophic_domination": "any lane median PyTorch/DVEB <= 0.10",
+    "systematic_domination": "PyTorch faster in >=12/18 lanes and geometric mean DVEB/PyTorch >= 2.0",
+    "preferred_nonmandatory_win": "lane median PyTorch/DVEB >= 1.5",
+    "go": "all correctness gates pass and neither domination rule holds"
+  },
+  "input_sha256": {
+    "E1": "945034997bd9ba162e51e0ad56a02b47f805b65e01707debedde428f8f693484",
+    "E2": "1f080b40b4c71d17bcfa414ea7081f2ac967f94373679a42e689705d6c82fcb7",
+    "E3": "509b1ea45735af4e1f0d8326ccffd1263573f34c4f52d485876f97ed5a5de031",
+    "E4": "301970b30f1faad44ccfe66b788ce61e27e80639a0607de6a6dffb5144aee4ba",
+    "E5": "37c711f3222a872fd1930bec7a35d3ce36dd35817199de46c54405dd44991ddc",
+    "E6": "da437360b4068b98651cb47645e238f7f8c7d8c929dbdd9c8aa5ea1e4ee1ba43"
+  },
+  "hashes": {
+    "benchmarks/dveb_mvnmle_integration/common.py": "83638a99f590b8185a2a814a3dd593bbed72250fee4368f1ba6567a01a1c1c7e",
+    "benchmarks/dveb_mvnmle_integration/worker.py": "a343aea814ed5302329cc772f81f9c8bbe50cf05058bbfc5b6d3dd717c33e54c",
+    "benchmarks/dveb_mvnmle_integration/run_campaign.py": "47a292a559e8c367f91429addf254ee0bfc2dd53100ce9d583819d6e94c29924",
+    "benchmarks/dveb_mvnmle_integration/analyze.py": "f4dc65dd0af1b1cc648ac7568e96b113593ecb6680f1924d28c7228f4df7a632",
+    "benchmarks/dveb_mvnmle_integration/operational_worker.py": "2f85988b0e8b805564e4e4641ff3e7066d813856dac7c3f8b2934afe720b8cdc",
+    "benchmarks/dveb_mvnmle_integration/run_operational.py": "1f9b6added3a7de00bf72430c48f6b86d50aedef04cea04fb2ebab2205912ecc",
+    "docs/research/DVEB_MVNMLE_INTEGRATION_PROTOCOL.md": "008f21bb0508e8372921706c5b58163536c9b861214dd85280aa973a315b22db",
+    "docs/research/evidence/dveb_mvnmle/fit-qualification.json": "b6eaf938f1b6e30253bb32434ac9e5345cd0cfeedb3577bc64f93e62c865d6ab",
+    "pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f"
+  },
+  "interpretation": {
+    "v2_runtime_results_seen_before_freeze": false,
+    "v1_results_excluded": true,
+    "v1_exclusion_reason": "E2-T12 input bytes did not match the v1 freeze",
+    "qualification_runtime_used_as_evidence": false,
+    "operational_endpoints_are_nondecision": true,
+    "publication_branch_only": true,
+    "merge_to_main_authorized": false,
+    "push_authorized": false
+  }
+}
