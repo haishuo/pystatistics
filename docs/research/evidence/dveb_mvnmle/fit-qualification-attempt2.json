@@ -1,0 +1,156 @@
+{
+  "complete": false,
+  "failure": {
+    "lane": "E1-T6",
+    "returncode": 1,
+    "stderr": "affinity mismatch: requested 6 CPUs, process has [0]\n",
+    "stdout": ""
+  },
+  "lanes": {
+    "E1-T1": {
+      "affinity": [
+        0
+      ],
+      "case": "E1",
+      "comparison": {
+        "both_converged": true,
+        "loglik_abs": 0.0,
+        "loglik_tolerance": 1e-05,
+        "mu_close": true,
+        "mu_max_abs": 0.0,
+        "parameter_atol": 0.001,
+        "parameter_rtol": 0.001,
+        "pass": true,
+        "sigma_close": true,
+        "sigma_max_abs": 2.220446049250313e-16
+      },
+      "dveb": {
+        "backend": "cpu_dveb_cholesky_fp64",
+        "checksum": "94c25cb2dd603fb985c0612a72619c08baa4593a2d50cc2ae0db74ebde3c01fb",
+        "converged": true,
+        "gradient_norm": 2.5039932189718914e-06,
+        "info": {
+          "device": "cpu",
+          "dveb_abi_version": 1,
+          "dveb_artifact_sha256": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f",
+          "dveb_schedule_override": 0,
+          "dveb_scratch_bytes": 165056,
+          "dveb_selected_schedule": 1,
+          "dveb_threads": 1,
+          "message": "Optimization terminated successfully.",
+          "method": "BFGS",
+          "n_function_evals": 9,
+          "n_gradient_evals": 9,
+          "objective_value": 420.25040783770766,
+          "parameterization": "cholesky",
+          "precision": "fp64"
+        },
+        "loglik": -210.12520391885383,
+        "muhat": [
+          -0.42396146176712385,
+          -0.2420566031642798,
+          0.1326563967116284,
+          0.599081682780613
+        ],
+        "n_iter": 8,
+        "sigmahat": [
+          [
+            0.9478585599955353,
+            0.23453130882335255,
+            0.11220576222724592,
+            0.15055192481345975
+          ],
+          [
+            0.23453130882335255,
+            0.859444883801004,
+            0.23525608718554936,
+            0.04551151563254453
+          ],
+          [
+            0.11220576222724592,
+            0.23525608718554936,
+            0.881015590153324,
+            0.2579937500214711
+          ],
+          [
+            0.15055192481345975,
+            0.04551151563254453,
+            0.2579937500214711,
+            0.8770986245126163
+          ]
+        ],
+        "warnings": []
+      },
+      "pass": true,
+      "schema": "pystatistics.dveb-mvnmle.fit-qualification.v1",
+      "threads": 1,
+      "torch": {
+        "backend": "cpu_cholesky_fp64",
+        "checksum": "6fc94b02f6fbb3360a401d8828a6964d2a29cb4e309c8b613fa8873cedf20710",
+        "converged": true,
+        "gradient_norm": 2.503993218960202e-06,
+        "info": {
+          "device": "cpu",
+          "message": "Optimization terminated successfully.",
+          "method": "BFGS",
+          "n_function_evals": 9,
+          "n_gradient_evals": 9,
+          "objective_value": 420.25040783770777,
+          "parameterization": "cholesky",
+          "precision": "fp64"
+        },
+        "loglik": -210.12520391885383,
+        "muhat": [
+          -0.42396146176712385,
+          -0.2420566031642798,
+          0.1326563967116284,
+          0.599081682780613
+        ],
+        "n_iter": 8,
+        "sigmahat": [
+          [
+            0.9478585599955355,
+            0.23453130882335266,
+            0.11220576222724594,
+            0.15055192481345978
+          ],
+          [
+            0.23453130882335266,
+            0.8594448838010043,
+            0.2352560871855494,
+            0.04551151563254455
+          ],
+          [
+            0.11220576222724594,
+            0.2352560871855494,
+            0.8810155901533242,
+            0.25799375002147124
+          ],
+          [
+            0.15055192481345978,
+            0.04551151563254455,
+            0.25799375002147124,
+            0.8770986245126164
+          ]
+        ],
+        "warnings": []
+      }
+    }
+  },
+  "orchestrator_affinity": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11
+  ],
+  "schema": "pystatistics.dveb-mvnmle.fit-qualification-suite.v1",
+  "started_wall_ns": 1788303404730691330
+}
