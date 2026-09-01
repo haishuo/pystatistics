@@ -1,0 +1,22 @@
+{
+  "abi_header": {
+    "path": "generated/mvnmle_cpu_abi_v1.h",
+    "sha256": "7c4871bb51894f588773a1142c282dd370dcf5b5eedd374209f01a47db846be2"
+  },
+  "compiler_repository": {
+    "commit": "a4b0286",
+    "path": "/mnt/projects/dveb",
+    "source_branch": "codex/trunk-008-dense-cpu"
+  },
+  "generated_source": {
+    "path": "generated/mvnmle_cpu_dense.cpp",
+    "sha256": "407e77b0ad55a92719a3a70139901bdfde0576bb1da74054824e242ec3213879"
+  },
+  "language_source_sha256": "a6ee8e60f6ed52e991ff53b12b1bee5ef6781a0f9506b324db18740e9227dc91",
+  "purpose": "Frozen generated input for the branch-only CPU wheel qualification; not handwritten PyStatistics math",
+  "runtime_header": {
+    "path": "include/dense/dense_rt.h",
+    "sha256": "1347391466b645fa2132c8621c279944ccf17d262392402d2e52500cac74d071"
+  },
+  "schema": "pystatistics-dveb-generated-source-snapshot-v1"
+}

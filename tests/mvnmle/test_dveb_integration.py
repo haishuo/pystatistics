@@ -17,9 +17,11 @@ from pystatistics.mvnmle._dveb.loader import (
     ABI_VERSION,
     LIBRARY_PATH,
     LIBRARY_SHA256,
+    MANIFEST_PATH,
     SCHEDULE_AUTO,
     SCHEDULE_SERIAL,
     SCHEDULE_WORK_ITEM_PARALLEL,
+    _missing_x86_64_v2_features,
 )
 from pystatistics.mvnmle._dveb.objective import DVEBDenseObjective
 
@@ -33,6 +35,12 @@ def _torch_available() -> bool:
 
 
 def test_bundled_artifact_identity_and_dependencies():
+    import json
+
+    manifest = json.loads(MANIFEST_PATH.read_text())
+    assert manifest["abi_version"] == ABI_VERSION
+    assert manifest["cpu_isa"] == "x86-64-v2"
+    assert manifest["artifact_sha256"] == LIBRARY_SHA256
     assert hashlib.sha256(LIBRARY_PATH.read_bytes()).hexdigest() == LIBRARY_SHA256
     output = subprocess.run(
         ["ldd", str(LIBRARY_PATH)],
@@ -52,6 +60,32 @@ def test_bundled_artifact_identity_and_dependencies():
     ).stdout
     assert "RPATH" not in dynamic
     assert "RUNPATH" not in dynamic
+
+
+def test_x86_64_v2_feature_set_and_sse3_alias():
+    complete = frozenset(
+        {"cx16", "lahf_lm", "popcnt", "pni", "ssse3", "sse4_1", "sse4_2"}
+    )
+    assert not _missing_x86_64_v2_features(complete)
+    assert _missing_x86_64_v2_features(complete - {"popcnt"}) == {"popcnt"}
+    assert "cx16" in _missing_x86_64_v2_features(None)
+
+
+def test_x86_64_v2_guard_refuses_before_loading(monkeypatch):
+    import pystatistics.mvnmle._dveb.loader as loader
+
+    called = False
+
+    def forbidden_cdll(*args, **kwargs):
+        nonlocal called
+        called = True
+        raise AssertionError("ctypes.CDLL must not run after an ISA refusal")
+
+    monkeypatch.setattr(loader, "_linux_cpu_flags", lambda: frozenset({"sse3"}))
+    monkeypatch.setattr(loader.ctypes, "CDLL", forbidden_cdll)
+    with pytest.raises(RuntimeError, match="requires x86-64-v2"):
+        loader.DenseLibrary()
+    assert not called
 
 
 @pytest.mark.skipif(not _torch_available(), reason="comparison needs PyTorch")

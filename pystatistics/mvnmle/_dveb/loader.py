@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ctypes
 import hashlib
+import json
 import platform
 import sys
 from contextlib import suppress
@@ -19,8 +20,37 @@ import numpy as np
 from pystatistics.core.exceptions import NumericalError, ValidationError
 
 ABI_VERSION = 1
-LIBRARY_SHA256 = "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f"
-LIBRARY_PATH = Path(__file__).with_name("artifacts") / "mvnmle_cpu_abi_v1.so"
+ARTIFACTS_PATH = Path(__file__).with_name("artifacts")
+MANIFEST_PATH = ARTIFACTS_PATH / "manifest.json"
+
+
+def _read_manifest() -> dict:
+    try:
+        manifest = json.loads(MANIFEST_PATH.read_text())
+    except (OSError, ValueError) as exc:
+        raise RuntimeError(
+            f"The bundled DVEB artifact manifest is unreadable at {MANIFEST_PATH}: {exc}"
+        ) from exc
+    required = {"abi_version", "artifact", "artifact_sha256", "cpu_isa"}
+    missing = sorted(required.difference(manifest))
+    if missing:
+        raise RuntimeError(f"The bundled DVEB artifact manifest is missing {missing}")
+    if manifest["abi_version"] != ABI_VERSION:
+        raise RuntimeError(
+            "The bundled DVEB artifact manifest has ABI version "
+            f"{manifest['abi_version']!r}; expected {ABI_VERSION}."
+        )
+    if manifest["cpu_isa"] != "x86-64-v2":
+        raise RuntimeError(
+            "The bundled DVEB artifact manifest has unsupported CPU ISA "
+            f"{manifest['cpu_isa']!r}; expected 'x86-64-v2'."
+        )
+    return manifest
+
+
+_MANIFEST = _read_manifest()
+LIBRARY_SHA256 = str(_MANIFEST["artifact_sha256"])
+LIBRARY_PATH = ARTIFACTS_PATH / str(_MANIFEST["artifact"])
 
 SCHEDULE_AUTO = 0
 SCHEDULE_SERIAL = 1
@@ -53,13 +83,55 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+_X86_64_V2_FEATURES = frozenset(
+    {"cx16", "lahf_lm", "popcnt", "sse3", "ssse3", "sse4_1", "sse4_2"}
+)
+
+
+def _linux_cpu_flags(path: Path = Path("/proc/cpuinfo")) -> frozenset[str] | None:
+    """Return first-processor Linux flags, or None when they cannot be proven."""
+
+    try:
+        for line in path.read_text().splitlines():
+            name, separator, values = line.partition(":")
+            if separator and name.strip().lower() in {"flags", "features"}:
+                flags = {value.strip().lower() for value in values.split()}
+                if "pni" in flags:
+                    flags.add("sse3")
+                return frozenset(flags)
+    except OSError:
+        return None
+    return None
+
+
+def _missing_x86_64_v2_features(flags: frozenset[str] | None) -> frozenset[str]:
+    if flags is None:
+        return _X86_64_V2_FEATURES
+    normalized = set(flags)
+    if "pni" in normalized:
+        normalized.add("sse3")
+    return _X86_64_V2_FEATURES.difference(normalized)
+
+
 def _require_platform() -> None:
     machine = platform.machine().lower()
     if not sys.platform.startswith("linux") or machine not in {"x86_64", "amd64"}:
         raise RuntimeError(
             "The bundled DVEB MVN-MLE research artifact is qualified only for "
-            f"Linux x86-64 on Forge; got platform={sys.platform!r}, "
+            f"Linux x86-64 with glibc; got platform={sys.platform!r}, "
             f"machine={platform.machine()!r}. No fallback was attempted."
+        )
+    flags = _linux_cpu_flags()
+    if flags is None:
+        raise RuntimeError(
+            "The bundled DVEB artifact requires x86-64-v2, but Linux CPU "
+            "features could not be established before loading. No fallback was attempted."
+        )
+    missing = sorted(_missing_x86_64_v2_features(flags))
+    if missing:
+        raise RuntimeError(
+            "The bundled DVEB artifact requires x86-64-v2; this CPU is missing "
+            f"the required features {missing}. No fallback was attempted."
         )
 
 
