@@ -129,3 +129,6 @@ never be tagged, released, or merged to `main` as-is.
 - Independence: this line does not contain the ALLOY research implementation;
   both accelerator lines share the same released base and will be reconciled
   only through a separately reviewed integration branch.
+- Phase-0 inventory: `docs/research/DVEB_PHASE0.md` records a conditional GO
+  only for a separately approved batched exact-ARMA likelihood suitability
+  screen. It adds no backend, compiler code, numerical behavior, or dependency.
