@@ -163,3 +163,19 @@
   `tests/mice/test_mps_misread.py` (classifier version table, warning
   fire/silence matrix including a real threshold-lowered MPS mice run,
   canary verdict sharpness).
+
+---
+
+## Research line: `research/alloy-pystatistics`
+
+This branch is the ALLOY research line. It is **not** a release line and must
+never be tagged, released, or merged to `main` as-is.
+
+- Base: `v6.1.5` (`d68f011`), the exact tagged release published to PyPI.
+- Version identity `6.2.0.dev0+alloy` — deliberately not `6.1.5`, so an
+  installed copy can never be mistaken for the released package.
+- Carries the vendored ALLOY runtime (Apache-2.0; see
+  `pystatistics/montecarlo/backends/_alloy/PROVENANCE.md`). PyStatistics itself
+  remains MIT.
+- The macOS wheel floor is 13.0 here because the vendored ALLOY dylibs require
+  it. That floor belongs to this branch only.
