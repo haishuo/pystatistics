@@ -490,7 +490,7 @@ package. The public API and every computed result are **unchanged, bit-for-bit**
 — this is a packaging release, marked major only because it narrows which
 platforms install without a compiler.
 
-- **Prebuilt wheels** for Linux (x86_64/glibc), macOS 13+ (Apple Silicon), and
+- **Prebuilt wheels** for Linux (x86_64/glibc), macOS (Apple Silicon), and
   Windows (x64) on CPython 3.11–3.13 — `pip install` needs no compiler there.
 - **No first-use warm-up:** the accelerated internals no longer compile
   themselves on the first call, so time-to-first-result is immediate — a win for

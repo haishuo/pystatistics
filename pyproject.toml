@@ -68,15 +68,6 @@ packages = ["pystatistics"]
 artifacts = [
     "pystatistics/**/*.so",
     "pystatistics/**/*.pyd",
-    # Vendored ALLOY runtime and bundle (macOS arm64 only), Apache-2.0, with
-    # the notice that Apache-2.0 requires travel with them. PyStatistics itself
-    # stays MIT; see backends/_alloy/PROVENANCE.md.
-    "pystatistics/montecarlo/backends/_alloy/artifacts.json",
-    "pystatistics/montecarlo/backends/_alloy/PROVENANCE.md",
-    "pystatistics/montecarlo/backends/_alloy/LICENSE-ALLOY",
-    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.dylib",
-    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.metallib",
-    "pystatistics/montecarlo/backends/_alloy/artifacts/**/*.json",
 ]
 # The generated C is build scratch — the .so is what ships. Keep it out of the
 # wheel (it regenerates from the .pyx in an sdist build).
@@ -114,16 +105,6 @@ build-frontend = "build"
 # wrong — fix the build, never relax the test.
 test-requires = ["pytest", "scipy"]
 test-command = "pytest {project}/tests/timeseries/test_arima_kalman_cython_parity.py {project}/tests/timeseries/test_arima_kalman_r_parity.py {project}/tests/timeseries/test_arima_workspace_fit_regression.py {project}/tests/timeseries/test_ets_kernel_parity.py {project}/tests/timeseries/test_ets_workspace_fit_regression.py {project}/tests/timeseries/test_stl_cython_parity.py {project}/tests/timeseries/test_stl_r_parity.py {project}/tests/survival/test_concordance_cython_parity.py -q"
-
-
-[tool.cibuildwheel.macos.environment]
-# Wheel floor macOS 13 (Ventura). Same policy as the Intel-macOS skip above:
-# no EOL platforms — Apple ended macOS 11 updates in 2023 and macOS 12 in
-# 2024, and every Apple Silicon machine can run 13+. Concretely required
-# because the vendored ALLOY runtime dylibs (montecarlo/backends/_alloy/
-# artifacts/) are built with a 13.0 minimum, and delocate refuses to stamp a
-# macosx_11_0 wheel whose contents need 13.0.
-MACOSX_DEPLOYMENT_TARGET = "13.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
