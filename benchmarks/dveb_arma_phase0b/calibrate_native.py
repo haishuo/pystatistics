@@ -60,9 +60,7 @@ def main() -> int:
                     cuda.synchronize()
                     elapsed = (time.perf_counter_ns() - started) * 1.0e-9
                     observations[str(block)].append(elapsed / repeats)
-        medians = {
-            block: statistics.median(values) for block, values in observations.items()
-        }
+        medians = {block: statistics.median(values) for block, values in observations.items()}
         best = min(medians.values())
         selected = min(int(block) for block, value in medians.items() if value <= 1.01 * best)
         r = phi.shape[1]
