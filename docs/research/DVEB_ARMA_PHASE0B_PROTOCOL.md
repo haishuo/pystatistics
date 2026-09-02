@@ -2,8 +2,11 @@
 
 **Date:** 2026-09-02
 
-**Status:** APPROVED AND FROZEN before implementation or timing; authorizes the
-consumer-side NumPy/Cython/PyTorch workload/null preflight only
+**Status:** APPROVED AND FROZEN before implementation or timing. The initial
+approval authorized the consumer-side NumPy/Cython/PyTorch workload/null
+preflight. A separate approval on 2026-09-02 authorizes the NC/NG diagnostics
+and the prospective native-headroom campaign without changing this protocol's
+grid, endpoints, thresholds, or decision rules.
 
 **Branch:** `research/dveb-pystatistics`
 
@@ -341,11 +344,13 @@ attributed to “DVEB” until those layers are inspected.
 ## 14. Authorization gates
 
 Approval on 2026-09-02 authorizes the consumer-side NumPy/Cython/PyTorch
-workload/null preflight. It does not authorize:
+workload/null preflight. A separate approval later that day authorizes the
+separately authored NC and NG diagnostics, their correctness admission,
+calibration, and the frozen L1--L4 native-headroom campaign. It does not
+authorize:
 
 - a DVEB compiler or runtime change;
 - a DVEB statistical special case;
-- a native CUDA ceiling unless named separately;
 - a PyStatistics exact-batch backend;
 - an end-to-end optimizer;
 - a merge, release, tag, or package upload; or
