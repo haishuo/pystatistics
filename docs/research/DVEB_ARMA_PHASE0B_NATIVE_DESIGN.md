@@ -125,9 +125,14 @@ optimizer and no adaptive proposal generation.
 ## Correctness and tolerance freeze
 
 Before timing, NC and every forced NG block size run all 16 frozen cells and
-all correctness-only edge cases. NC must be bit-identical to Cython for NLL,
-sigma2, and status; failure stops rather than relaxing that requirement. NG
-uses the protocol's independently derived relative bounds and exact status.
+all correctness-only edge cases. NC preserves the scalar recurrence order and
+must agree exactly wherever the operation order and math implementation are
+shared. Final NLL and sigma2 pass through independent C++ reduction and `libm`
+implementations rather than NumPy's pairwise reduction and logarithm, so NC and
+NG both use the protocol's prospectively derived independent-compiler bounds.
+Status must agree exactly. This clarification is frozen before native source or
+native numerical observations exist; it does not relax a result after seeing
+one.
 
 Tolerance derivation uses only newly generated correctness-only inputs absent
 from C01--C04 and E01--E12. The derived NLL and sigma2 bounds, every source and
