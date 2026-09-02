@@ -80,8 +80,11 @@ Forced block sizes are `{32,64,128,256}`. All are qualified first. Calibration
 selects one frozen block size per state dimension `r` by the geometric mean of
 L1 medians on C01--C04 cells having that `r`; when only one calibration cell
 exists for an `r`, that cell alone selects it. Ties within 1% choose the smaller
-block. Evaluation cells never influence selection. The mapping is persisted
-before decision timing.
+block. Calibration uses 10 warmups and 10 observations. A correctness-only
+pilot chooses one shared repetition count per cell as
+`min(10000, ceil(0.1 s / fastest forced-block pilot))`, so each block performs
+identical work and normally exceeds 100 ms per observation. Evaluation cells
+never influence selection. The mapping is persisted before decision timing.
 
 Each likelihood invocation is one kernel launch. No persistent kernel, CUDA
 Graph, custom PTX, tensor core, mixed precision, or cross-proposal fusion is
