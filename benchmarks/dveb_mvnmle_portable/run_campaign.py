@@ -17,7 +17,7 @@ from pathlib import Path
 from portable_common import CASE_IDS, SEED, THREADS
 
 ROOT = Path(__file__).resolve().parents[2]
-FREEZE = ROOT / "docs/research/evidence/dveb_mvnmle_portable/campaign-freeze.json"
+FREEZE = ROOT / "docs/research/evidence/dveb_mvnmle_portable/campaign-freeze-v2.json"
 
 
 def _sha256(path: Path) -> str:
@@ -38,6 +38,10 @@ def _verify_freeze() -> dict:
         actual = _sha256(ROOT / relative)
         if actual != wanted:
             raise SystemExit(f"frozen input drift: {relative}: {actual} != {wanted}")
+    for case_id, fixture in freeze["fixtures"].items():
+        actual = _sha256(ROOT / fixture["path"])
+        if actual != fixture["file_sha256"]:
+            raise SystemExit(f"frozen fixture-file drift: {case_id}: {actual}")
     wheel = Path(freeze["wheel"]["path"])
     if _sha256(wheel) != freeze["wheel"]["sha256"]:
         raise SystemExit("frozen wheel drift")
