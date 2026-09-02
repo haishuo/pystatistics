@@ -51,3 +51,11 @@ entire attempt is invalidated. The only harness change adds the missing no-op
 lifecycle method; no numerical operation, candidate, workload, threshold,
 order seed, warmup, or observation rule changed. A v2 source freeze records
 one invalidated attempt and zero retained decision observations before rerun.
+
+## 2026-09-02 — L3 analysis JSON scalar conversion
+
+The completed v2 timing evidence remained intact, but the first mechanical
+analysis attempt stopped before writing a file or printing a verdict because
+NumPy boolean scalars are not JSON-serializable. The repair adds explicit
+Python `bool(...)` conversions around the already computed comparisons. It
+does not change a ratio, bootstrap sample, threshold, or decision expression.
