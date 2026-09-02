@@ -1,0 +1,39 @@
+{
+  "schema": "pystatistics.dveb-portable.footprint.v1",
+  "portable": {
+    "wheel_size_bytes": 3529467,
+    "installed_site_size_bytes": 16519455,
+    "installed_pystatistics_size_bytes": 14279310,
+    "native_artifact_size_bytes": 47977,
+    "vendored_libgomp_size_bytes": 2114857
+  },
+  "active_comparator_environment": {
+    "torch_version": "2.9.0.dev20250705+cu128",
+    "torch_package_size_bytes": 1636188765,
+    "nvidia_package_tree_size_bytes": 4573076402,
+    "scope": "describes this CUDA-enabled comparator environment, not every PyTorch distribution"
+  },
+  "fresh_process_e1_t1": {
+    "pairs": 30,
+    "torch": {
+      "median_seconds": 1.0874576779999998,
+      "p05_seconds": 1.07132451615,
+      "p95_seconds": 1.0963272076,
+      "mad_seconds": 0.006465202999999975,
+      "median_max_rss_kib": 617260.0
+    },
+    "portable_dveb": {
+      "median_seconds": 0.2357220585,
+      "p05_seconds": 0.23419599255,
+      "p95_seconds": 0.24022955494999998,
+      "mad_seconds": 0.0011431479999999966,
+      "median_max_rss_kib": 101982.0,
+      "torch_imported": false
+    }
+  },
+  "loaded_openmp_runtimes_in_comparator_process": [
+    "/home/haishuo/miniconda3/envs/gradflow/lib/python3.11/site-packages/torch/lib/libgomp.so.1",
+    "pystatistics.libs/libgomp-e985bcbb.so.1.0.0"
+  ],
+  "openmp_interpretation": "The comparison process necessarily loaded both implementations and therefore both OpenMP runtimes. The intended torch-free deployment loads only the wheel-local runtime."
+}

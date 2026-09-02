@@ -1,0 +1,61 @@
+{
+  "schema": "pystatistics.dveb-portable.qualification-summary.v2",
+  "date": "2026-09-02",
+  "protocol": {
+    "path": "docs/research/DVEB_PORTABLE_MVNMLE_PERFORMANCE_PROTOCOL_V2.md",
+    "freeze_commit": "4d79343",
+    "v1_status": "invalid before timing",
+    "v1_timed_observations": 0
+  },
+  "artifact": {
+    "wheel_sha256": "92fa398c2785eac02d824c4bb589cabc2a9a966b4c87ab915a622df5b44caa4a",
+    "portable_native_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+    "abi_version": 1,
+    "cpu_isa": "x86-64-v2"
+  },
+  "correctness": {
+    "qualification_lanes_passed": 18,
+    "timed_pairs_passed": 540,
+    "timed_fits_passed": 1080,
+    "max_loglik_abs": 4.452886059880257e-09,
+    "max_mu_abs": 1.3467532644639846e-11,
+    "max_sigma_abs": 2.6564639377113508e-11,
+    "all_fixture_hashes_match": true,
+    "all_inputs_unchanged": true
+  },
+  "performance": {
+    "portable_faster_lanes": 18,
+    "pytorch_faster_lanes": 0,
+    "preferred_portable_wins_at_least_1_5": 17,
+    "catastrophic_lanes": 0,
+    "geometric_mean_pytorch_over_portable": 2.9750072330459707,
+    "systematic_domination": false,
+    "formal_decision": "STRONG GO"
+  },
+  "operational": {
+    "fresh_process_pairs": 30,
+    "torch_median_seconds": 1.0874576779999998,
+    "portable_dveb_median_seconds": 0.2357220585,
+    "all_dveb_fits_torch_free": true
+  },
+  "historical_native_diagnostic": {
+    "geometric_portable_over_old_native": 2.530881330088372,
+    "decision_role": "none",
+    "interpretation": "cross-campaign environment and input differences prevent attribution to portability"
+  },
+  "evidence_files": {
+    "fit-qualification-v2.json": "f444016b705b472b9773503dfae0b3528d2a093041fca4290f5d41c64c1bc063",
+    "campaign-raw-v2.json": "13e75931b0a98460eb502983ae1fefd05a0365527e02102d4ee40f60ca34892e",
+    "campaign-analysis-v2.json": "d8926659a3e39ac652a07c22950046ae07acbaea6528a1780c7b6cf354d1f74d",
+    "operational-v2.json": "0f710e344054d2ff2c56f0fa8ba93f08fed4457f67e9c09d6e9b42bb1d48a018",
+    "footprint-v2.json": "8d5d5ffe5446b99781c18dd6377921e804078af0e3946404a28355715a1e1b0b",
+    "artifacts/mvnmle_cpu_abi_v1_portable.so": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38"
+  },
+  "nonclaims": [
+    "The result does not make DVEB the default or remove PyTorch from other paths.",
+    "The active PyTorch footprint is not a universal claim about all PyTorch distributions.",
+    "The historical native comparison is not an isolated portability-cost estimate.",
+    "No merge to main, release, publication, or PyPI change is authorized.",
+    "The result applies only to the exact admitted Linux x86-64-v2 wheel and MVN-MLE grid."
+  ]
+}

@@ -1,0 +1,1419 @@
+{
+  "complete": true,
+  "cpu": 0,
+  "finished_wall_ns": 1788311328485224129,
+  "observations": [
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311279001308658,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102108,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.237083133,
+          "started_wall_ns": 1788311278764224225,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311278465665606,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617040,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.096440595,
+          "started_wall_ns": 1788311277369222141,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 0
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311279318841447,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101976,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.23758974,
+          "started_wall_ns": 1788311279081250307,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311280486529556,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617164,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.086741247,
+          "started_wall_ns": 1788311279399785629,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 1
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311282401006998,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102092,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.236414908,
+          "started_wall_ns": 1788311282164590250,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311281866382768,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617176,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.075264421,
+          "started_wall_ns": 1788311280791115537,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 2
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311282725700351,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101980,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.238437365,
+          "started_wall_ns": 1788311282487261366,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311283897170287,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617364,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.091008901,
+          "started_wall_ns": 1788311282806158986,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 3
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311285813236511,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101856,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.23458735,
+          "started_wall_ns": 1788311285578647411,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311285281088154,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617372,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.08019022,
+          "started_wall_ns": 1788311284200895154,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 4
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311286131264817,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101732,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235800442,
+          "started_wall_ns": 1788311285895462785,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311287299254076,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617260,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087463514,
+          "started_wall_ns": 1788311286211787862,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 5
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311287830394769,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101980,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234134262,
+          "started_wall_ns": 1788311287596259057,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311288999295704,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617424,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087656854,
+          "started_wall_ns": 1788311287911636370,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 6
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311289534024914,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101976,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.237498341,
+          "started_wall_ns": 1788311289296524813,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311290696389771,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617268,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.082523617,
+          "started_wall_ns": 1788311289613863674,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 7
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311292616072046,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101984,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234608,
+          "started_wall_ns": 1788311292381462186,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311292085297170,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617416,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.090731616,
+          "started_wall_ns": 1788311290994562514,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 8
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311292931592288,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102240,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234254072,
+          "started_wall_ns": 1788311292697336526,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311294112642877,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617272,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.100271245,
+          "started_wall_ns": 1788311293012368842,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 9
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311294645360501,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101988,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235025047,
+          "started_wall_ns": 1788311294410334094,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311295804098003,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617152,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.079648188,
+          "started_wall_ns": 1788311294724447205,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 10
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311296343982161,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102244,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.238434865,
+          "started_wall_ns": 1788311296105545566,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311297520072733,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617276,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.096188623,
+          "started_wall_ns": 1788311296423881640,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 11
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311298062884623,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101976,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234354942,
+          "started_wall_ns": 1788311297828528431,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311299236655540,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617260,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.094363405,
+          "started_wall_ns": 1788311298142289345,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 12
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311301165990898,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101848,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235551984,
+          "started_wall_ns": 1788311300930437554,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311300606991811,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617296,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.068209452,
+          "started_wall_ns": 1788311299538779679,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 13
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311302861216114,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102120,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.23474756,
+          "started_wall_ns": 1788311302626467224,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311302327183537,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617392,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.081432999,
+          "started_wall_ns": 1788311301245748358,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 14
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311303184023141,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101988,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.240730032,
+          "started_wall_ns": 1788311302943291309,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311304353673926,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617436,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.088927321,
+          "started_wall_ns": 1788311303264744355,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 15
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311306278257827,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102240,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234411412,
+          "started_wall_ns": 1788311306043845055,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311305744235430,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617176,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087568411,
+          "started_wall_ns": 1788311304656664229,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 16
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311306591876383,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101896,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234148473,
+          "started_wall_ns": 1788311306357726570,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311307769529668,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617160,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.094865484,
+          "started_wall_ns": 1788311306674661244,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 17
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311309671338617,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101860,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.234570471,
+          "started_wall_ns": 1788311309436766306,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311309139713054,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617320,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.070245062,
+          "started_wall_ns": 1788311308069465712,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 18
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311309991524582,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102108,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.240256055,
+          "started_wall_ns": 1788311309751266427,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311311161830175,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617132,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087451842,
+          "started_wall_ns": 1788311310074376113,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 19
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311313091056441,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101980,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.236477989,
+          "started_wall_ns": 1788311312854576732,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311312557040522,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617232,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.090456354,
+          "started_wall_ns": 1788311311466581048,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 20
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311314824109711,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101980,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235275347,
+          "started_wall_ns": 1788311314588832374,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311314261541654,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617012,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087686012,
+          "started_wall_ns": 1788311313173852912,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 21
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311316521945797,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101972,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235595916,
+          "started_wall_ns": 1788311316286348711,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311315984664178,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617260,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.077635897,
+          "started_wall_ns": 1788311314907025691,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 22
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311316843991150,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101856,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.240197166,
+          "started_wall_ns": 1788311316603792394,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311318001145949,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617120,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.072643849,
+          "started_wall_ns": 1788311316928499780,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 23
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311318533621799,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102116,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235643675,
+          "started_wall_ns": 1788311318297976674,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311319702554004,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617240,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087642424,
+          "started_wall_ns": 1788311318614908740,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 24
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311320241168374,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102112,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235893653,
+          "started_wall_ns": 1788311320005273121,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311321401569395,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617296,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.079791915,
+          "started_wall_ns": 1788311320321774270,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 25
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311321934546191,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102112,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235990523,
+          "started_wall_ns": 1788311321698554248,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311323093959688,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617260,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.079558767,
+          "started_wall_ns": 1788311322014398931,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 26
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311323634881335,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101980,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.239418702,
+          "started_wall_ns": 1788311323395460923,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311324801536636,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617424,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.08234883,
+          "started_wall_ns": 1788311323719185656,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 27
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311325349688926,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 102128,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.235351947,
+          "started_wall_ns": 1788311325114335049,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311326516847745,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617376,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.087533647,
+          "started_wall_ns": 1788311325429311308,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "dveb",
+        "torch"
+      ],
+      "repetition": 28
+    },
+    {
+      "implementations": {
+        "dveb": {
+          "backend": "cpu_dveb_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311328449536887,
+          "implementation": "dveb",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.1252039188539,
+          "max_rss_kib": 101988,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 0.236038413,
+          "started_wall_ns": 1788311328213496864,
+          "torch_imported": false
+        },
+        "torch": {
+          "backend": "cpu_cholesky_fp64",
+          "converged": true,
+          "finished_wall_ns": 1788311327894707009,
+          "implementation": "torch",
+          "installed_identity": {
+            "abi_version": "1",
+            "artifact_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so",
+            "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+            "package_path": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site/pystatistics/__init__.py",
+            "site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site"
+          },
+          "loglik": -210.12520391885394,
+          "max_rss_kib": 617040,
+          "schema": "pystatistics.dveb-portable.operational-observation.v1",
+          "seconds": 1.077380842,
+          "started_wall_ns": 1788311326817323397,
+          "torch_imported": true
+        }
+      },
+      "order": [
+        "torch",
+        "dveb"
+      ],
+      "repetition": 29
+    }
+  ],
+  "schema": "pystatistics.dveb-portable.operational.v1",
+  "started_wall_ns": 1788311277309035177
+}
