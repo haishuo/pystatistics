@@ -1,0 +1,773 @@
+{
+  "cells": {
+    "C01": {
+      "cell_id": "C01",
+      "family": "F1",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0
+      ],
+      "free_ma_zero_based": [],
+      "minimum_start_ar_root_modulus": 1.3676255809525988,
+      "phase": "calibration",
+      "primary": false,
+      "sha256": {
+        "start_loading": "fe5b7d5309402fa73f02fe2905b3d9eeb69d9c468cf3a1b6cfc35f01f27b43ab",
+        "start_phi": "7884e34f6e559bb80d53d39c36e8c4afc7b741a8b83c71994c17ffe6617906d6",
+        "starts": "7884e34f6e559bb80d53d39c36e8c4afc7b741a8b83c71994c17ffe6617906d6",
+        "truth_loading": "fe5b7d5309402fa73f02fe2905b3d9eeb69d9c468cf3a1b6cfc35f01f27b43ab",
+        "truth_phi": "00d674dcb37fbf917c6caa845b6e407e73441728a735a9f782b761c3eac0a369",
+        "z": "158a32381d9df1f3be0c0329da6b72d9dc1318ee23f58110ade4f3863d582731"
+      },
+      "shape": {
+        "k": 8,
+        "n": 120,
+        "state": 1
+      }
+    },
+    "C02": {
+      "cell_id": "C02",
+      "family": "F3",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0,
+        1,
+        2
+      ],
+      "free_ma_zero_based": [
+        0,
+        1
+      ],
+      "minimum_start_ar_root_modulus": 1.4686906146612133,
+      "phase": "calibration",
+      "primary": false,
+      "sha256": {
+        "start_loading": "f281f22df3afe6583d84c8988422ed8c0dedc6911d12dad19d3c91faca28ae9f",
+        "start_phi": "b4a0f062b2cef07cac6bcce3776de3657b6124419fbaf872adc0369425714692",
+        "starts": "7db73ea1e6bdd9f2442f3ea633abde13336643da6c9b06a2b4190ec34b6d9984",
+        "truth_loading": "b676afdaacbd48b3f63de55959027bd90dbc47c622e1b31a75c910da038c4b31",
+        "truth_phi": "6a284aa08b3f56534ca2c195a3854e83306cea5e245d64c5885c10bcf3267e2c",
+        "z": "a7c4343c724a8b1d12f7a2737892d4071fa65bf82cf1299f680de7f92e44ecc4"
+      },
+      "shape": {
+        "k": 64,
+        "n": 500,
+        "state": 3
+      }
+    },
+    "C03": {
+      "cell_id": "C03",
+      "family": "F13",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "free_ar_zero_based": [
+        0,
+        11,
+        12
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.036264212326886,
+      "phase": "calibration",
+      "primary": false,
+      "sha256": {
+        "start_loading": "8c6aa2d836b55f6f4ceef5b969679de5c10386577c737f2e635af6510addf47c",
+        "start_phi": "1326f2e28cda0dfba79bbefe1f6a925ca36c447c0d5bb2716caff58203061ae5",
+        "starts": "7b10c76359156c77a79bbec18cc3b08ae0d8d84d820f6e631405f7a73d182eea",
+        "truth_loading": "198ea12df8c0ecd194fa999f777597fa98acff75cb7c60c435bf6dfbad62bb53",
+        "truth_phi": "2ce03c565ad3f91a00e04d6789a7432620f33dd134d90c88e955ec6e25359b96",
+        "z": "a502a2a1f9b91ce3954640bf55f503a55f77d6bc45385d7c7b87eb1d5cea1d2b"
+      },
+      "shape": {
+        "k": 256,
+        "n": 2000,
+        "state": 13
+      }
+    },
+    "C04": {
+      "cell_id": "C04",
+      "family": "F25",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "free_ar_zero_based": [
+        0,
+        23,
+        24
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.0414736535898497,
+      "phase": "calibration",
+      "primary": false,
+      "sha256": {
+        "start_loading": "e4b095a74647faf1ac6666630dc4febf3c203e7d2affd968f9f2bd9b2c92b612",
+        "start_phi": "7a18c94a029fd74ee50373af3cbef959df089091eb82d62da4d35e85ab9abeb6",
+        "starts": "dfed36b9719aca0d62a9440c84585eeb89960c32180a521cafd4d8d5f7475c27",
+        "truth_loading": "d2a308c1aa766a02ef356f0069bd058fa0e553ee50154373e0ed75dde72ab65d",
+        "truth_phi": "4a81478dfaf38bee8235cfe984765f9259940f0f20fbb87cd9639d751b7b1b8f",
+        "z": "5c22ca82580de5b8f6bd375cd8ca848bedab0c14804fae01468e2c0e73fc03bd"
+      },
+      "shape": {
+        "k": 1024,
+        "n": 500,
+        "state": 25
+      }
+    },
+    "E01": {
+      "cell_id": "E01",
+      "family": "F1",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0
+      ],
+      "free_ma_zero_based": [],
+      "minimum_start_ar_root_modulus": 1.6050734390632853,
+      "phase": "evaluation",
+      "primary": false,
+      "sha256": {
+        "start_loading": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+        "start_phi": "8fe82c4e95a482f03d1a74a935fd5549c8d341d02e05294591c4a355b30a2a84",
+        "starts": "8fe82c4e95a482f03d1a74a935fd5549c8d341d02e05294591c4a355b30a2a84",
+        "truth_loading": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+        "truth_phi": "b1da31546cd297bcd5da4fbd8be82b3165142193d2474d11c62ff86f9279ad46",
+        "z": "369b474a01efdebbfd6c13ed48d1b48625197360bc0212ed44b8fce1b574b847"
+      },
+      "shape": {
+        "k": 1,
+        "n": 120,
+        "state": 1
+      }
+    },
+    "E02": {
+      "cell_id": "E02",
+      "family": "F13",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "free_ar_zero_based": [
+        0,
+        11,
+        12
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.07288298936573,
+      "phase": "evaluation",
+      "primary": false,
+      "sha256": {
+        "start_loading": "a1ad0355fe027e233557a6bb10ae8351410f988987f54188a2ddbb5dc550a6ab",
+        "start_phi": "e26f0f44cc3c7d7146da7d6178a8944dc60fbd4532a4832cfe9a73eac7f25345",
+        "starts": "c89fa40e6206667c0ea8762071df4ce16df3deb31e469a7b440fd7647e0d9223",
+        "truth_loading": "7026ab0d88a496ca99dcfc19cec63321277d1775f60441a74c0044a8d3b24f44",
+        "truth_phi": "b43e75bd7179048164bbc2b02e71962c61cc17a4ce416d1a6565f0f26f34cebc",
+        "z": "95966139612a865d96ac2711a793a92c31336417c428c23c4d4c6bb20f0b1391"
+      },
+      "shape": {
+        "k": 1,
+        "n": 2000,
+        "state": 13
+      }
+    },
+    "E03": {
+      "cell_id": "E03",
+      "family": "F3",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0,
+        1,
+        2
+      ],
+      "free_ma_zero_based": [
+        0,
+        1
+      ],
+      "minimum_start_ar_root_modulus": 1.509816585819817,
+      "phase": "evaluation",
+      "primary": false,
+      "sha256": {
+        "start_loading": "9f0f2698b92b273a9f5c2e19f6116627ac2ee28c6bc082ace1e42ca2fcfd4c86",
+        "start_phi": "4bfd06597466176fc60477901d97902233b231dff5140c91e99b27aafc09a773",
+        "starts": "4d5496d08790d4027c645e37861d2352345e5fac769e82b23e0047087cf99f18",
+        "truth_loading": "8c54cf0c2c63be4dbc459b271b0b01b8a111cc008b094d8ddb4f7a6b9e1dd753",
+        "truth_phi": "ac308f13064e34e0b2b46ff254cc1645787267107128f642a4b222e482547565",
+        "z": "235ac6953cf607b1e91ef42f9d73316c4eac00d16b3d73e43d3bb0026642b81b"
+      },
+      "shape": {
+        "k": 16,
+        "n": 500,
+        "state": 3
+      }
+    },
+    "E04": {
+      "cell_id": "E04",
+      "family": "F3",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0,
+        1,
+        2
+      ],
+      "free_ma_zero_based": [
+        0,
+        1
+      ],
+      "minimum_start_ar_root_modulus": 1.546808578062433,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "f281f22df3afe6583d84c8988422ed8c0dedc6911d12dad19d3c91faca28ae9f",
+        "start_phi": "1e98b374a761a82fda3c768cbbbe8cf05475b8848dc36d62b388f43d22e35d6a",
+        "starts": "77db2bab2bf16fa75ee046442d60ca208bc2ee92a4ac15845f763c82eb653359",
+        "truth_loading": "b676afdaacbd48b3f63de55959027bd90dbc47c622e1b31a75c910da038c4b31",
+        "truth_phi": "6a284aa08b3f56534ca2c195a3854e83306cea5e245d64c5885c10bcf3267e2c",
+        "z": "fa74886b1a6336d66749f557882ed6db0a6a10b778ec86c6fdd8fc8f0a1ed64e"
+      },
+      "shape": {
+        "k": 64,
+        "n": 2000,
+        "state": 3
+      }
+    },
+    "E05": {
+      "cell_id": "E05",
+      "family": "F13",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "free_ar_zero_based": [
+        0,
+        11,
+        12
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.0198459758017138,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "8c6aa2d836b55f6f4ceef5b969679de5c10386577c737f2e635af6510addf47c",
+        "start_phi": "da960c8273ec69553c796d82b1055e3e36c0e5f731175e30a012b920210a2711",
+        "starts": "fd90bdc20a7e2eceb4fbb89ddfd79dc1940fef74e108333154fe73ab1c5f3c0c",
+        "truth_loading": "198ea12df8c0ecd194fa999f777597fa98acff75cb7c60c435bf6dfbad62bb53",
+        "truth_phi": "2ce03c565ad3f91a00e04d6789a7432620f33dd134d90c88e955ec6e25359b96",
+        "z": "2f71054cb050512987ec93a03f9c72401687e641fcad6efc74affb9769de7105"
+      },
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "state": 13
+      }
+    },
+    "E06": {
+      "cell_id": "E06",
+      "family": "F13",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "free_ar_zero_based": [
+        0,
+        11,
+        12
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.034578269734676,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "8c6aa2d836b55f6f4ceef5b969679de5c10386577c737f2e635af6510addf47c",
+        "start_phi": "a69d96b8037bb6e0ac798d0dead7efe1c780055622a0a0bb8dffd28ad56c4753",
+        "starts": "0fc67fe0af60983260f1cc1e77b676eb2fed5f8622ba567c3ce39f7fdc44f869",
+        "truth_loading": "198ea12df8c0ecd194fa999f777597fa98acff75cb7c60c435bf6dfbad62bb53",
+        "truth_phi": "2ce03c565ad3f91a00e04d6789a7432620f33dd134d90c88e955ec6e25359b96",
+        "z": "be67aef3475db0f26d2f0d88cd46677b62ee00cbf03171934c13b448b84ebe74"
+      },
+      "shape": {
+        "k": 256,
+        "n": 2000,
+        "state": 13
+      }
+    },
+    "E07": {
+      "cell_id": "E07",
+      "family": "F3",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0,
+        1,
+        2
+      ],
+      "free_ma_zero_based": [
+        0,
+        1
+      ],
+      "minimum_start_ar_root_modulus": 1.52801007860753,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "568e74b6ac161e85d4493a79aea674b6467b5a7d7e968e549eb985e2823eb1fc",
+        "start_phi": "8e7c5f07d28cdcb098fabac9f38468794135f1b5265d09f36888fa86b6ff5c3e",
+        "starts": "f279519bf7c18feb08f1a82f5f520a20d922f50b5ce992e1b5dc36a5f75103cb",
+        "truth_loading": "9afc434cf9a27b7b41b114109489f61a7374758d060a210059bb24a85a751a33",
+        "truth_phi": "0ac4098acbb17d6d08749ebf157cfb6d45c93b223cde9fec23e628a43b7345f8",
+        "z": "73c1100a34ad6c551f062df5ddf6ac18ce853642995635a0256a453c454c9fd9"
+      },
+      "shape": {
+        "k": 1024,
+        "n": 2000,
+        "state": 3
+      }
+    },
+    "E08": {
+      "cell_id": "E08",
+      "family": "F13",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "free_ar_zero_based": [
+        0,
+        11,
+        12
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.016769545597503,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "f2f616c50c44774832ad690d094f5d4438918838ef6fc6fa288049d6c8887a74",
+        "start_phi": "d80aecd84d56dbcc48e0b6a20e04e5243bc702a5786dafa5249a7d6566d9ebae",
+        "starts": "bad14d0c90d8e36cf5ae089511f43dc2fd21d362d7c45815ddec977d43281d4a",
+        "truth_loading": "21b8b00a7d4e5f0bf7b40df40777f34d1d669acc6e9253523c745cd102f67e00",
+        "truth_phi": "7c6236749af0d03305e3d1739b19cf3c6e6b5710af7475af994cd698e590db94",
+        "z": "54a8ea69ff3cf48519c0a0dde0bf5882b52016935a99903e97075a05e08426ce"
+      },
+      "shape": {
+        "k": 1024,
+        "n": 500,
+        "state": 13
+      }
+    },
+    "E09": {
+      "cell_id": "E09",
+      "family": "F3",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0,
+        1,
+        2
+      ],
+      "free_ma_zero_based": [
+        0,
+        1
+      ],
+      "minimum_start_ar_root_modulus": 1.6194506755397695,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "f281f22df3afe6583d84c8988422ed8c0dedc6911d12dad19d3c91faca28ae9f",
+        "start_phi": "91898516101abdb4036cf9a71457a15cd42b229454375fa92a762c0f7294b9ff",
+        "starts": "fe0b79960042c0e6a8138ed8f82f233e7f9aea033e9249dcc332f81cfe88fcab",
+        "truth_loading": "b676afdaacbd48b3f63de55959027bd90dbc47c622e1b31a75c910da038c4b31",
+        "truth_phi": "6a284aa08b3f56534ca2c195a3854e83306cea5e245d64c5885c10bcf3267e2c",
+        "z": "96d53b4c00462129d5ac483111a05adfeb2d5e11cb629894012aba6ea76b3cbb"
+      },
+      "shape": {
+        "k": 64,
+        "n": 10000,
+        "state": 3
+      }
+    },
+    "E10": {
+      "cell_id": "E10",
+      "family": "F25",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "free_ar_zero_based": [
+        0,
+        23,
+        24
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.0549898705117247,
+      "phase": "evaluation",
+      "primary": false,
+      "sha256": {
+        "start_loading": "ebf469f1d7357c3586ff8cd5fb90461f2789438dc445d58d3e645425bd865bdb",
+        "start_phi": "2097404b809ffcd60afd17e74dc6e94bb478a973fb2473b524d8343917186b91",
+        "starts": "63af738fda21ba60ca57ae51eeb9362fa33bc6d36a1daa0ac8e4ee0b90b2347a",
+        "truth_loading": "b31b9fbbcb84279fddbfb9a240d14b7a9d516b9afdb2e0c0e588491fc05c0fd5",
+        "truth_phi": "a26a4b39ed216a886bf79a20492080b55cbbd1f5aba15246b3ff63a07b3260f8",
+        "z": "d5d3448af329bd3a028182250f5858c886a430e37d65d0aeba2d8022d905768a"
+      },
+      "shape": {
+        "k": 16,
+        "n": 2000,
+        "state": 25
+      }
+    },
+    "E11": {
+      "cell_id": "E11",
+      "family": "F25",
+      "fixed_ar_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "fixed_ma_zero_based": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "free_ar_zero_based": [
+        0,
+        23,
+        24
+      ],
+      "free_ma_zero_based": [
+        0
+      ],
+      "minimum_start_ar_root_modulus": 1.0431336826294697,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "9586fe782c0384d7aea4cd7157bc0da6072f616d64384b57f0d343196673f5d6",
+        "start_phi": "c1362d03cb842b97d07a68fe333fe5bcfd36e02a5ffac726c427a1da5eae4c7d",
+        "starts": "4ed7c64d7a578692f5b06cdef0404452b034047dba65b6499f65615130abf05f",
+        "truth_loading": "b4eccebbfffe3249d9464b6d03e9d0d2c3b8015b35fe0283c62a990d9f506170",
+        "truth_phi": "74cd3c97cd6289f0fb436c9dd854a30005e94982d2456df670140272479c2f93",
+        "z": "c9b3fbf133619b45055a97ce7e05035b20dfe87837759640fd6a693101c9b1b9"
+      },
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "state": 25
+      }
+    },
+    "E12": {
+      "cell_id": "E12",
+      "family": "F1",
+      "fixed_ar_zero_based": [],
+      "fixed_ma_zero_based": [],
+      "free_ar_zero_based": [
+        0
+      ],
+      "free_ma_zero_based": [],
+      "minimum_start_ar_root_modulus": 1.2916513787611434,
+      "phase": "evaluation",
+      "primary": true,
+      "sha256": {
+        "start_loading": "ffc1f5db1faa7b6402489b6c3c21711ad6cb122faa068ac9410c12ab126aa81e",
+        "start_phi": "5ebd3ab345ef44ad29b478e84491b53a4c67b821612289f1e7ab233c58ed24cf",
+        "starts": "5ebd3ab345ef44ad29b478e84491b53a4c67b821612289f1e7ab233c58ed24cf",
+        "truth_loading": "ffc1f5db1faa7b6402489b6c3c21711ad6cb122faa068ac9410c12ab126aa81e",
+        "truth_phi": "1b9ad98257ae22bd284a487454c0d6c127d79c556bbc362d4600e614e2506625",
+        "z": "128b75f33f798f4b4d9ae4db7037fe71e0830fc73c37ee41931df53a8140cf81"
+      },
+      "shape": {
+        "k": 1024,
+        "n": 120,
+        "state": 1
+      }
+    }
+  },
+  "coordinator": {
+    "coalescing": "all-live-worker barrier only; no timeout or time window",
+    "max_active_optimizers": 256,
+    "optimizer_workers": 12,
+    "ordering": "consecutive-input-order chunks; ascending row within barrier",
+    "thread_stack_bytes": 2097152
+  },
+  "implementation_identities": {
+    "D1": "frozen Phase-I DVEB CPU item-parallel likelihood; selected batched FD",
+    "D2": "frozen Phase-I DVEB cuda-transfer likelihood; selected batched FD",
+    "S0": "Cython exact likelihood; independent SciPy L-BFGS-B; forward FD",
+    "TC1": "public-op eager PyTorch CPU exact recurrence; autograd",
+    "TC2": "fullgraph structured-while PyTorch CPU exact recurrence; autograd",
+    "TG1": "public-op eager PyTorch CUDA exact recurrence; autograd",
+    "TG2": "fullgraph structured-while PyTorch CUDA exact recurrence; autograd"
+  },
+  "phase2_results_exist": false,
+  "public_case": {
+    "batch_sizes": [
+      1,
+      32
+    ],
+    "sha256": "7e5c95f2b6a38077d22a8670e4c04457bc40f1d9267cc7b2d5241afae913b8f6",
+    "shape": [
+      143
+    ],
+    "source": "tests/fixtures/arima_kalman_r_reference.json:series.airpassengers",
+    "timed": false,
+    "transformation": "diff(log(x)); subtract sample mean"
+  },
+  "schema": "pystatistics.dveb-arma-fit-phase2.input-start-freeze.v1",
+  "source": {
+    "branch": "research/dveb-pystatistics",
+    "common_sha256": "58b7f8cf452b191d1a42e6ec15751935ac52d56977f1d12bce319aac41f8b926",
+    "coordinator_model_sha256": "9bf97b6775c8ffca3ce8ca7b9ef6d490182faaa111a61c751a488b7310c60e29",
+    "freeze_script_sha256": "c25813ef206322e5b4538d89ffecbba800c0a084a63338981c7e8df34e30b7f3",
+    "generation_parent_commit": "46e321c24f0672c019226be389055a739de12955",
+    "protocol_sha256": "2a95faeff710c9345e4f3d6515fb11fe0662e5cedb6b22431e7ff86e2b757131"
+  },
+  "status": "frozen-before-fit-implementation"
+}
