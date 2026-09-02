@@ -1,0 +1,44 @@
+{
+  "schema": "pystatistics.dveb-arma-fit-phase2.calibration-selection.v1",
+  "status": "halt-case-2-before-selection",
+  "protocol_commit": "46e321c",
+  "implementation_commits": ["17423d8", "78fa2cf"],
+  "valid_correctness_record": "calibration-correctness.v2.json.gz",
+  "valid_correctness_record_uncompressed_sha256": "67da57674062521374a91dd6aae515615886b17b273e8c522085fbffe807fe1f",
+  "valid_correctness_record_gzip_sha256": "114c6adc7cf36b942a6ecb5095adf80809009ba8508574405a72e36df62596e1",
+  "invalid_attempt_preserved": {
+    "record": "calibration-correctness.invalid-attempt1.json.gz",
+    "uncompressed_sha256": "8300835b019b2ee5bfcf6cc95853340648b43a00b67ceb1d5782f9e0e2a26afd",
+    "gzip_sha256": "57e99dd245604bf8eb9c7287896fb9b15adc814778d81f7dc308fc2e70c1dad0",
+    "reason": "FD-F was incorrectly audited against a central-difference authority; never admissible evidence"
+  },
+  "gradient_admission": {
+    "D1-F": false,
+    "D1-C": true,
+    "D2-F": false,
+    "D2-C": true,
+    "TC1": true,
+    "TC2": false,
+    "TG1": true,
+    "TG2": false
+  },
+  "complete_fit_cells_passed": {
+    "D1-C": ["C01", "C03"],
+    "D2-C": ["C01", "C03"],
+    "TC1": [],
+    "TG1": []
+  },
+  "selection": {
+    "dveb_cpu_fd": null,
+    "dveb_cuda_fd": null,
+    "pytorch_cpu": null,
+    "pytorch_cuda": null
+  },
+  "calibration_timing_performed": false,
+  "evaluation_cells_observed": false,
+  "admitted_campaign_manifest_created": false,
+  "comparative_timing_performed": false,
+  "decision": "HALT / Case 2",
+  "attribution": "The immutable fixed-likelihood ABI emits no derivative. Its forward finite difference is too roundoff-sensitive to pass the frozen cross-implementation gradient gate; its admitted central difference changes complete optimizer outcomes beyond the frozen S0 equivalence bounds. Ordinary PyTorch AD also changes those outcomes, while structured-while AD returns zero gradients.",
+  "next_authority_required": "A new general DVEB compiler/runtime derivative or owned/resident bridge protocol; this Phase-II campaign may not be resumed by changing bounds or candidates."
+}
