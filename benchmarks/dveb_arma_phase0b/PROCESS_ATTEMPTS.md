@@ -31,3 +31,12 @@ view correctly refused it. The parameter bytes and frozen hashes were
 unchanged; the generator was corrected to force owning, writable C-contiguous
 copies for every K, and the input manifest was refreshed before resuming.
 
+## 2026-09-02 — focused regression runner entry point
+
+The first post-preflight regression rerun invoked the environment's standalone
+`pytest` wrapper. It collected zero tests and produced four import errors
+because the research worktree was absent from that wrapper's import path. No
+test or numerical code executed. Re-running the identical four-file selection
+through the environment's `python -m pytest` entry point collected and passed
+all 153 tests. The permanent regression record uses the successful,
+worktree-aware invocation.

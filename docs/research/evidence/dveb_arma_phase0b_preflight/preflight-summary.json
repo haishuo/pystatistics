@@ -1,0 +1,50 @@
+{
+  "case_1": false,
+  "case_2": false,
+  "decision_observations": 0,
+  "dveb_compiler_work_authorized": false,
+  "evidence_files": {
+    "cpu-compile-inspection.json": "91133d245dbb24accdb8137a9bf378b0fefdc7423397dddb872932e8afcb1e8b",
+    "cpu-eager-c01-c02.json": "d40abbaf858e4e06eb149e57c79b753e28a2bba618172136bc2eb9fb41fb0f1c",
+    "cpu-edge-cases.json": "23164b0054d5cac6f3fef4f52f0ce809904dc5d762c4f5aba5383c0526141e96",
+    "cpu-structured-grid.json": "55483976143cd59c0a2f0a9a78bbc1e00640362e416b3af125c9b4fdb4308f75",
+    "cuda-compile-inspection.json": "fbd4abf64a67e288db710329ec4f59678daf66a07ea57dd5a4e50f7070f3dd18",
+    "cuda-eager-c01-c02.json": "67eea54cdf4f9b93748447aa6e3075ef00fb06f0c3798f434620313b7bb0b807",
+    "cuda-edge-cases.json": "f1859a3f735cda187701eaadba65442b7e878a0bdbb49477baff8514fa5d30ff",
+    "cuda-structured-grid.json": "7afb44139bcfa497d9b9121984081dc4e3acc5a8dbdc4ab96477c5e1c7a65a77",
+    "regression-result.json": "751b0df54f63aa9a9737f9799c0a5fd3dddb47ce373df2aba98cec32dd09b4f2"
+  },
+  "environment": {
+    "cpu": "x86_64",
+    "cuda": "NVIDIA GeForce RTX 5070 Ti",
+    "numpy": "2.5.2",
+    "python": "3.12.3",
+    "torch": "2.13.0+cu130",
+    "torch_cuda": "13.0"
+  },
+  "input_freeze_sha256": "0003e49dfffa1389d68798d33711f8cac57ea58a6ab7e586b68a0515b195028f",
+  "maximum_torch_vs_cython_difference": {
+    "cell": "E09",
+    "nll_abs": 3.8198777474462986e-11,
+    "nll_rel": 2.6794973249455973e-15,
+    "sigma2_abs": 7.993605777301127e-15,
+    "sigma2_rel": 7.888478041865127e-15
+  },
+  "native_diagnostic_authorized": false,
+  "outcome": "preflight-pass-phase0b-decision-deferred",
+  "preflight_freeze_sha256": "3f59b36cc8b0872064e29a470c765a6a67a8e0f3b809c09eb21963a9cfc4a7fb",
+  "protocol_commit": "bb8b84cc0b79dc339190779e33044d82a60429cd",
+  "schema": "pystatistics.dveb-arma-phase0b.preflight-summary.v1",
+  "source_commit": "db3ed4b1e28b8f7c1695005dc6dc12c897d59f24",
+  "status": "pass",
+  "verification_counts": {
+    "compile_graph_breaks": 0,
+    "compile_graphs": 2,
+    "eager_device_cells": 4,
+    "edge_device_cases": 8,
+    "existing_tests_passed": 153,
+    "existing_tests_skipped": 0,
+    "structured_device_cells": 32,
+    "structured_while_loops_per_graph": 2
+  }
+}

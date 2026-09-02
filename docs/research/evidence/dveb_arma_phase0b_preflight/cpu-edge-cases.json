@@ -1,0 +1,57 @@
+{
+  "cases": {
+    "diffuse_nonstationary": {
+      "coefficient": 1.1,
+      "comparison": {
+        "finite": true,
+        "nll_abs": 5.684341886080802e-14,
+        "nll_rel": 2.387498948932704e-16,
+        "preflight_pass": true,
+        "sigma2_abs": 1.7763568394002505e-15,
+        "sigma2_rel": 6.436772458970978e-16,
+        "status_equal": true
+      },
+      "expected_status": true,
+      "pass": true,
+      "status_contract": true
+    },
+    "invalid_nonfinite": {
+      "coefficient": "nan",
+      "comparison": {
+        "finite": true,
+        "nll_abs": 0.0,
+        "nll_rel": 0.0,
+        "preflight_pass": true,
+        "sigma2_abs": 0.0,
+        "sigma2_rel": 0.0,
+        "status_equal": true
+      },
+      "expected_status": false,
+      "pass": true,
+      "status_contract": true
+    },
+    "persistent_stationary": {
+      "coefficient": 0.9999,
+      "comparison": {
+        "finite": true,
+        "nll_abs": 2.842170943040401e-14,
+        "nll_rel": 1.4017556307515928e-16,
+        "preflight_pass": true,
+        "sigma2_abs": 8.881784197001252e-16,
+        "sigma2_rel": 4.064725926799763e-16,
+        "status_equal": true
+      },
+      "expected_status": true,
+      "pass": true,
+      "status_contract": true
+    },
+    "wrong_shape": {
+      "pass": true,
+      "refused": true
+    }
+  },
+  "device": "cpu",
+  "schema": "pystatistics.dveb-arma-phase0b.edge-preflight.v1",
+  "status": "pass",
+  "torch": "2.13.0+cu130"
+}

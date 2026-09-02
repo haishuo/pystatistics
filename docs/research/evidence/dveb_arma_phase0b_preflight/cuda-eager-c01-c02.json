@@ -1,0 +1,89 @@
+{
+  "cells": {
+    "C01": {
+      "input_sha256": {
+        "noise_loading": "fe5b7d5309402fa73f02fe2905b3d9eeb69d9c468cf3a1b6cfc35f01f27b43ab",
+        "phi": "00d674dcb37fbf917c6caa845b6e407e73441728a735a9f782b761c3eac0a369",
+        "z": "158a32381d9df1f3be0c0329da6b72d9dc1318ee23f58110ade4f3863d582731"
+      },
+      "input_unchanged": true,
+      "numpy_vs_cython_sample": {
+        "finite": true,
+        "nll_abs": 0.0,
+        "nll_rel": 0.0,
+        "preflight_pass": true,
+        "sigma2_abs": 0.0,
+        "sigma2_rel": 0.0,
+        "status_equal": true
+      },
+      "pass": true,
+      "shape": {
+        "k": 8,
+        "n": 120,
+        "r": 1
+      },
+      "torch_vs_cython": {
+        "finite": true,
+        "nll_abs": 5.684341886080802e-14,
+        "nll_rel": 3.3922688306598523e-16,
+        "preflight_pass": true,
+        "sigma2_abs": 6.661338147750939e-16,
+        "sigma2_rel": 5.877843384823907e-16,
+        "status_equal": true
+      }
+    },
+    "C02": {
+      "input_sha256": {
+        "noise_loading": "b676afdaacbd48b3f63de55959027bd90dbc47c622e1b31a75c910da038c4b31",
+        "phi": "6a284aa08b3f56534ca2c195a3854e83306cea5e245d64c5885c10bcf3267e2c",
+        "z": "a7c4343c724a8b1d12f7a2737892d4071fa65bf82cf1299f680de7f92e44ecc4"
+      },
+      "input_unchanged": true,
+      "numpy_vs_cython_sample": {
+        "finite": true,
+        "nll_abs": 0.0,
+        "nll_rel": 0.0,
+        "preflight_pass": true,
+        "sigma2_abs": 0.0,
+        "sigma2_rel": 0.0,
+        "status_equal": true
+      },
+      "pass": true,
+      "shape": {
+        "k": 64,
+        "n": 500,
+        "r": 3
+      },
+      "torch_vs_cython": {
+        "finite": true,
+        "nll_abs": 2.2737367544323206e-13,
+        "nll_rel": 3.2907557119677173e-16,
+        "preflight_pass": true,
+        "sigma2_abs": 1.1102230246251565e-15,
+        "sigma2_rel": 1.077576089756966e-15,
+        "status_equal": true
+      }
+    }
+  },
+  "decision_role": "correctness/expressibility preflight; no performance timing",
+  "environment": {
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 5070 Ti",
+    "numpy": "2.5.2",
+    "python": "3.12.3",
+    "torch": "2.13.0+cu130",
+    "torch_cuda": "13.0",
+    "variant": "eager"
+  },
+  "schema": "pystatistics.dveb-arma-phase0b.preflight.v1",
+  "source": {
+    "commit": "eae19235f481c2270205b63f489f1762fcaac9a2",
+    "common_sha256": "bc68226b25203075808ffb3053a27f5205a990a5ce5557e21d1050ba5e2949b6",
+    "input_freeze_sha256": "0003e49dfffa1389d68798d33711f8cac57ea58a6ab7e586b68a0515b195028f",
+    "reference_impl_sha256": "7ca09413814065a63abc79674c37cdae920ff9b923dbf2ad46cd763666569a6e",
+    "runner_sha256": "72bfe9b8357cdd870b2561e06c96d65178c2b297acb28e862c3bfbc04fcd03af",
+    "torch_impl_sha256": "2e3610888f42d074f82940262f64e9bf35605d27c46b9228f344949191fbeda2",
+    "tree": "bf044875aecdb7f9a204038697c65e1a4b7ae5af"
+  },
+  "status": "pass"
+}
