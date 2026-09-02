@@ -2,8 +2,8 @@
 
 **Date:** 2026-09-02
 
-**Status:** PROPOSED FOR REVIEW — not frozen; no implementation or timing is
-authorized by this document
+**Status:** APPROVED AND FROZEN before implementation or timing; authorizes the
+consumer-side NumPy/Cython/PyTorch workload/null preflight only
 
 **Branch:** `research/dveb-pystatistics`
 
@@ -340,9 +340,8 @@ attributed to “DVEB” until those layers are inspected.
 
 ## 14. Authorization gates
 
-Approval of this draft would authorize only protocol freeze and the
-consumer-side NumPy/Cython/PyTorch workload/null preflight. It would not
-authorize:
+Approval on 2026-09-02 authorizes the consumer-side NumPy/Cython/PyTorch
+workload/null preflight. It does not authorize:
 
 - a DVEB compiler or runtime change;
 - a DVEB statistical special case;
@@ -351,4 +350,3 @@ authorize:
 - an end-to-end optimizer;
 - a merge, release, tag, or package upload; or
 - any modification to GradFlow, ALLOY, PyStatsBio, or `main`.
-
