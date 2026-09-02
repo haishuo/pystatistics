@@ -22,7 +22,27 @@ WARMUPS = 10
 OBSERVATIONS = 30
 ORDER_SEED = 0x41524D415F4C3132
 TARGET_SECONDS = 0.1
+MAX_REPEATS = 64
 EVALUATION = tuple(f"E{number:02d}" for number in range(1, 13))
+
+
+def write_result(
+    output: Path, cells: dict[str, object], all_pass: bool, status: str
+) -> None:
+    result = {
+        "schema": "pystatistics.dveb-arma-phase0b.cuda-ancillary.v1",
+        "status": status if all_pass else "fail",
+        "warmups": WARMUPS,
+        "observations": OBSERVATIONS,
+        "order_seed": ORDER_SEED,
+        "repetition_policy": {
+            "target_seconds": TARGET_SECONDS,
+            "maximum_repeats": MAX_REPEATS,
+            "scope": "descriptive CUDA L1/L2 endpoints only",
+        },
+        "cells": cells,
+    }
+    output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
 
 
 class TorchSingle:
@@ -114,7 +134,7 @@ def main() -> int:
         base_time = calibration_cell["medians_seconds_per_call"][str(block)]
         base_work = calibration_cell["shape"]["k"] * calibration_cell["shape"]["n"]
         estimated_time = base_time * (cell.k * cell.n) / base_work
-        repeats = max(1, math.ceil(TARGET_SECONDS / estimated_time))
+        repeats = min(MAX_REPEATS, max(1, math.ceil(TARGET_SECONDS / estimated_time)))
         expected = cython_batch(z, phi, loading)
         torch.cuda.reset_peak_memory_stats()
         implementations = {
@@ -168,17 +188,10 @@ def main() -> int:
             ),
             "endpoints": endpoint_records,
         }
+        write_result(args.output, cells, all_pass, "running")
         print(cell_id, "complete", "repeats", repeats)
 
-    result = {
-        "schema": "pystatistics.dveb-arma-phase0b.cuda-ancillary.v1",
-        "status": "pass" if all_pass else "fail",
-        "warmups": WARMUPS,
-        "observations": OBSERVATIONS,
-        "order_seed": ORDER_SEED,
-        "cells": cells,
-    }
-    args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    write_result(args.output, cells, all_pass, "pass")
     return 0 if all_pass else 1
 
 

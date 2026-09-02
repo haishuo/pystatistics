@@ -59,3 +59,19 @@ analysis attempt stopped before writing a file or printing a verdict because
 NumPy boolean scalars are not JSON-serializable. The repair adds explicit
 Python `bool(...)` conversions around the already computed comparisons. It
 does not change a ratio, bootstrap sample, threshold, or decision expression.
+
+## 2026-09-02 — ancillary CUDA L1/L2 repetition projection
+
+After the complete L3 campaign had established Case 2, the first descriptive
+CUDA L1/L2 attempt sized repetitions from the fastest native calibration path.
+At E01 this selected 3,369 shared repeats. The transfer-inclusive PyTorch path
+made the cell take about 15 minutes, more than 10x beyond the planning model,
+and projected an unreasonable duration for the remaining non-decision cells.
+The attempt was interrupted after E01 completed in memory. It wrote no result
+file, printed no endpoint comparison, and retains zero observations.
+
+The authorized duration review caps the fresh ancillary campaign at 64 shared
+repeats per cell while preserving 10 warmups, 30 paired randomized
+observations, identical work between implementations, all correctness checks,
+the fixed grid, and the already completed L3 decision. This is a duration-only
+repair; it does not revise or rerun decision evidence.

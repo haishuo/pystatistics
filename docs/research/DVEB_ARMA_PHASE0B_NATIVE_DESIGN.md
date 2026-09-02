@@ -160,6 +160,29 @@ The mechanical Case-1/Case-2 rule is exactly section 12.1 of the protocol. No
 threshold, grid cell, proposal, implementation source, or selected CUDA block
 may change after evaluation results are visible.
 
+## Ancillary L1/L2 duration amendment
+
+The completed L3 decision campaign is immutable and unaffected by this
+amendment. The first descriptive CUDA L1/L2 attempt used the fastest native
+calibration estimate to target 100 ms and therefore selected 3,369 repeats at
+E01. Transfer-inclusive PyTorch was more than 10x slower than that planning
+model; E01 alone took about 15 minutes and the projected remaining campaign
+was disproportionate to these non-decision endpoints. The attempt was stopped
+under section 10's predeclared duration-review rule. It wrote no result file,
+and no observation is retained.
+
+For the fresh ancillary run only, the shared repetition count remains derived
+from the frozen native calibration but is capped at 64. Both implementations
+still perform the same repeat count at each cell. Every configuration retains
+10 warmups and 30 randomized paired observations, with actual region duration
+and dispersion reported. Small native regions may therefore be shorter than
+100 ms; this is disclosed rather than padded with an impractical number of
+framework transfers. The harness checkpoints complete cells so an operational
+failure cannot silently discard completed descriptive evidence.
+
+This duration-only correction changes no source under test, input, grid cell,
+correctness gate, selected block, L3 observation, threshold, or decision rule.
+
 ## Intended files
 
 - `benchmarks/dveb_arma_phase0b/native/arma_native.h`;
