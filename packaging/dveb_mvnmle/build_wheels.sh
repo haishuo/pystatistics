@@ -17,17 +17,18 @@ for tag in "${builder[@]}"; do
     build hatchling 'cython>=3.0' 'numpy>=1.24' 'setuptools>=64' wheel \
     >"$output/logs/${tag}-build-dependencies.txt"
 
-  # Cython extensions are build scratch. Never let one interpreter's ABI
-  # object leak into the next wheel.
-  find "$root/pystatistics" -type f -name '*.cpython-*.so' -delete
-  rm -rf "$root/build"
+  # Each ABI builds from a fresh committed-tree snapshot. This prevents one
+  # interpreter's Cython objects from leaking into another wheel and avoids
+  # deleting or overwriting unrelated build products in the source checkout.
+  staging=$(mktemp -d -p /tmp "pystatistics-${tag}-XXXXXXXX")
+  git -C "$root" archive HEAD | tar -x -C "$staging"
 
   raw_dir="$output/raw/$tag"
   repaired_dir="$output/repaired/$tag"
   final_dir="$output/final/$tag"
   mkdir -p "$raw_dir" "$repaired_dir" "$final_dir"
 
-  "$python" -m build --wheel --no-isolation --outdir "$raw_dir" "$root" \
+  "$python" -m build --wheel --no-isolation --outdir "$raw_dir" "$staging" \
     2>&1 | tee "$output/logs/${tag}-build.txt"
   raw_wheel=$(find "$raw_dir" -maxdepth 1 -type f -name '*.whl' -print -quit)
   auditwheel repair --plat manylinux_2_28_x86_64 \

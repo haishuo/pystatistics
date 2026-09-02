@@ -23,6 +23,7 @@ def sha256(path: Path) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--reference", type=Path, required=True)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
 
     if importlib.util.find_spec("torch") is not None or "torch" in sys.modules:
@@ -48,6 +49,7 @@ def main() -> int:
         item
         for item in requirements
         if any(word in item.lower() for word in ("torch", "cuda", "nvidia"))
+        and "extra ==" not in item.lower()
     ]
     if forbidden_requirements:
         raise SystemExit(f"forbidden required dependencies: {forbidden_requirements}")
@@ -169,7 +171,11 @@ def main() -> int:
         },
         "missvals": {"converged": second.converged, "loglik": second.loglik},
     }
-    print(json.dumps(report, indent=2, sort_keys=True))
+    rendered = json.dumps(report, indent=2, sort_keys=True) + "\n"
+    if args.output is not None:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered)
+    print(rendered, end="")
     return 0
 
 

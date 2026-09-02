@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import platform
+import re
 import shutil
 import subprocess
 import tempfile
@@ -100,6 +101,7 @@ def main() -> int:
 
     artifact_hash = sha256(args.output)
     ldd = checked_output(["ldd", str(args.output)])
+    normalized_ldd = [re.sub(r"0x[0-9a-fA-F]+", "0xADDR", line) for line in ldd.splitlines()]
     dynamic = checked_output(["readelf", "-d", str(args.output)])
     version_info = checked_output(["readelf", "--version-info", str(args.output)])
     manifest = {
@@ -117,7 +119,7 @@ def main() -> int:
         "precision": "IEEE float64; contraction disabled; no fast-math",
         "compiler": compiler_version,
         "build_command": command[:-2] + ["-o", args.output.name],
-        "dynamic_dependencies": ldd.splitlines(),
+        "dynamic_dependencies": normalized_ldd,
         "dynamic_section": dynamic.splitlines(),
         "version_info": version_info.splitlines(),
     }

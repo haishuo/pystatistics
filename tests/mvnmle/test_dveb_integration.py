@@ -88,6 +88,29 @@ def test_x86_64_v2_guard_refuses_before_loading(monkeypatch):
     assert not called
 
 
+def test_unsupported_platform_refuses_before_loading(monkeypatch):
+    import pystatistics.mvnmle._dveb.loader as loader
+
+    called = False
+
+    def forbidden_cdll(*args, **kwargs):
+        nonlocal called
+        called = True
+        raise AssertionError("ctypes.CDLL must not run after a platform refusal")
+
+    monkeypatch.setattr(loader.sys, "platform", "darwin")
+    monkeypatch.setattr(loader.ctypes, "CDLL", forbidden_cdll)
+    with pytest.raises(RuntimeError, match="Linux x86-64"):
+        loader.DenseLibrary()
+    assert not called
+
+
+def test_missing_artifact_refuses_without_fallback(tmp_path):
+    missing = tmp_path / "missing.so"
+    with pytest.raises(RuntimeError, match="missing.*no fallback"):
+        DVEBDenseObjective(datasets.apple, library_path=missing)
+
+
 @pytest.mark.skipif(not _torch_available(), reason="comparison needs PyTorch")
 @pytest.mark.parametrize("data", [datasets.apple, datasets.missvals])
 def test_objective_matches_incumbent_forward_cholesky(data):
