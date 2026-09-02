@@ -13,6 +13,11 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "docs/research/evidence/dveb_mvnmle"
 EXPECTED_LANES = {f"E{case}-T{threads}" for case in range(1, 7) for threads in (1, 6, 12)}
+FROZEN_ARTIFACT_ARCHIVE = {
+    "pystatistics/mvnmle/_dveb/artifacts/mvnmle_cpu_abi_v1.so": (
+        EVIDENCE / "baseline_artifacts/mvnmle_cpu_abi_v1_forge_native.elf"
+    )
+}
 
 
 def _sha256(path: Path) -> str:
@@ -22,9 +27,14 @@ def _sha256(path: Path) -> str:
 def main() -> int:
     freeze = json.loads((EVIDENCE / "campaign-freeze.json").read_text())
     for relative, wanted in freeze["hashes"].items():
-        actual = _sha256(ROOT / relative)
+        current = ROOT / relative
+        archived = FROZEN_ARTIFACT_ARCHIVE.get(relative)
+        candidate = archived if archived is not None and archived.is_file() else current
+        actual = _sha256(candidate)
         if actual != wanted:
-            raise SystemExit(f"frozen input drift: {relative}: {actual} != {wanted}")
+            raise SystemExit(
+                f"frozen input drift: {relative} via {candidate}: {actual} != {wanted}"
+            )
 
     raw = json.loads((EVIDENCE / "campaign-raw.json").read_text())
     analysis = json.loads((EVIDENCE / "campaign-analysis.json").read_text())
