@@ -418,8 +418,9 @@
   "schema": "pystatistics.dveb-arma-phase0b.input-freeze.v1",
   "source": {
     "branch": "research/dveb-pystatistics",
-    "common_sha256": "739bddd396607932915b8badce72b4a97bf549d9cb7a37691ffd7adab660231c",
-    "freeze_script_sha256": "cf07f37362c1483ddf0ef80b4bf112308daa0caa4af6b853293b76555f4bf69c",
+    "common_sha256": "bc68226b25203075808ffb3053a27f5205a990a5ce5557e21d1050ba5e2949b6",
+    "freeze_script_sha256": "a6adff1872e45a7078f7f2df96981375b16884bd0af5579245292a5198624b04",
+    "generation_parent_commit": "cde85a787c65c5777818cc7710f298268aeca8d8",
     "protocol_commit": "bb8b84cc0b79dc339190779e33044d82a60429cd",
     "protocol_sha256": "51ea09c6c6d70d0ba08e950f35f6edf2f7cc849dde9eb0f9717101a160ed0c1b"
   },

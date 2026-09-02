@@ -10,12 +10,12 @@ import subprocess
 from pathlib import Path
 
 import numpy as np
-
 from common import BURN_IN, CELLS, FAMILIES, MASTER_SEED, input_record
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 OUTPUT = HERE / "input-freeze.json"
+PROTOCOL_COMMIT = "bb8b84cc0b79dc339190779e33044d82a60429cd"
 
 
 def sha256(path: Path) -> str:
@@ -23,9 +23,7 @@ def sha256(path: Path) -> str:
 
 
 def git_value(*arguments: str) -> str:
-    return subprocess.check_output(
-        ["git", "-C", str(ROOT), *arguments], text=True
-    ).strip()
+    return subprocess.check_output(["git", "-C", str(ROOT), *arguments], text=True).strip()
 
 
 def main() -> int:
@@ -53,10 +51,9 @@ def main() -> int:
         "burn_in": BURN_IN,
         "source": {
             "branch": git_value("branch", "--show-current"),
-            "protocol_commit": git_value("rev-parse", "HEAD"),
-            "protocol_sha256": sha256(
-                ROOT / "docs/research/DVEB_ARMA_PHASE0B_PROTOCOL.md"
-            ),
+            "protocol_commit": PROTOCOL_COMMIT,
+            "generation_parent_commit": git_value("rev-parse", "HEAD"),
+            "protocol_sha256": sha256(ROOT / "docs/research/DVEB_ARMA_PHASE0B_PROTOCOL.md"),
             "common_sha256": sha256(HERE / "common.py"),
             "freeze_script_sha256": sha256(Path(__file__)),
         },
@@ -75,4 +72,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

@@ -117,10 +117,11 @@ def generate_cell(cell_id: str) -> tuple[NDArray, NDArray, NDArray]:
         y[:, t] = ar_value + ma_value
 
     z = np.ascontiguousarray(y[:, -cell.n :], dtype=np.float64)
-    phi = np.ascontiguousarray(np.broadcast_to(phi_one, (cell.k, family.r)))
-    loading = np.ascontiguousarray(
-        np.broadcast_to(loading_one, (cell.k, family.r))
-    )
+    # ``ascontiguousarray`` may preserve the read-only flag of a broadcast view
+    # when K=1 because no layout copy is necessary.  The consumer contract is
+    # caller-owned, writable C storage at every K, so force an owning copy.
+    phi = np.array(np.broadcast_to(phi_one, (cell.k, family.r)), copy=True, order="C")
+    loading = np.array(np.broadcast_to(loading_one, (cell.k, family.r)), copy=True, order="C")
     return z, phi, loading
 
 
@@ -143,4 +144,3 @@ def input_record(cell_id: str) -> dict[str, object]:
         },
         "minimum_ar_root_modulus": float(roots.min()),
     }
-
