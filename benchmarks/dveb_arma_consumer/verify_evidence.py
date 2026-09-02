@@ -17,6 +17,7 @@ def sha256(path: Path) -> str:
 
 def main() -> int:
     result = json.loads((EVIDENCE / "qualification.json").read_text())
+    regression = json.loads((EVIDENCE / "regression.json").read_text())
     manifest = json.loads((EVIDENCE / "handoff-manifest.json").read_text())
     assert result["status"] == "pass"
     assert len(result["cells"]) == 16
@@ -41,7 +42,23 @@ def main() -> int:
         manifest["files"]["exact_arma_cpu_abi_v1.so"]["sha256"]
     assert sha256(EVIDENCE / "handoff-manifest.json") == \
         "dcff39c98c6d3442ff3a255e55ba2fa90a705dbfc028e2739abcbe53d18e07bb"
-    print("DVEB exact-ARMA consumer qualification evidence: PASS")
+    assert regression["status"] == "pass"
+    assert regression["timeseries_suite"] == "PASS"
+    assert regression["phase0b_archived_evidence"] == "PASS"
+    assert regression["consumer_evidence"] == "PASS"
+    assert regression["complete_suite"]["no_new_failure"] is True
+    assert set(regression["complete_suite"]["known_baseline_failures"]) == {
+        "tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis",
+        (
+            "tests/multinomial/test_multinom.py::TestFailureCases::"
+            "test_complete_separation_vcov_fails_loud"
+        ),
+    }
+    assert regression["version"] == "6.2.0.dev0+dveb"
+    assert regression["main_modified"] is False
+    assert regression["public_arima_batch_modified"] is False
+    assert (ROOT / "docs/research/DVEB_ARMA_CONSUMER_INTEGRATION_RESULTS.md").is_file()
+    print("DVEB exact-ARMA consumer Phase-I evidence: PASS")
     return 0
 
 

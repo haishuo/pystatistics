@@ -1,8 +1,10 @@
 # DVEB exact-ARMA consumer evidence
 
-This directory preserves the immutable DVEB handoff identity and the Phase-I
-PyStatistics adapter qualification. The combined CUDA library remains in the
-external handoff and is not bundled into the CPU package.
+This directory preserves the immutable DVEB handoff identity, Phase-I
+PyStatistics adapter qualification, and regression result. The combined CUDA
+library remains in the external handoff and is not bundled into the CPU
+package. The completed interpretation is in
+`docs/research/DVEB_ARMA_CONSUMER_INTEGRATION_RESULTS.md`.
 
 Run the offline verifier from the repository root:
 

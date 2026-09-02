@@ -1,0 +1,144 @@
+{
+  "complete_suite": {
+    "baseline_reproduced_at": {
+      "tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis": "f156ee5 (isolated exact-value reproduction before corrected restart)",
+      "tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud": "a9c7e4d (existing committed evidence)"
+    },
+    "known_baseline_failures": [
+      "tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis",
+      "tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud"
+    ],
+    "no_new_failure": true
+  },
+  "consumer_evidence": "PASS",
+  "generated_wall_ns": 1788368546739174271,
+  "main_modified": false,
+  "phase0b_archived_evidence": "PASS",
+  "public_arima_batch_modified": false,
+  "records": [
+    {
+      "command": [
+        "/home/haishuo/miniconda3/envs/gradflow/bin/python",
+        "-m",
+        "pytest",
+        "tests/timeseries",
+        "-q"
+      ],
+      "elapsed_seconds": 43.780738830566406,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": [],
+      "stdout_sha256": "d733336222db4141355e6abca791d15de15d8cda9fc79ea449a4ee3fc0d5a017",
+      "stdout_tail": [
+        "tests/timeseries/test_ets.py ........................................... [ 40%]",
+        "..................................                                       [ 43%]",
+        "tests/timeseries/test_ets_kernel_parity.py ............................. [ 45%]",
+        "...........................                                              [ 48%]",
+        "tests/timeseries/test_ets_selection.py ................................. [ 51%]",
+        "......................................                                   [ 54%]",
+        "tests/timeseries/test_ets_workspace_fit_regression.py .....              [ 54%]",
+        "tests/timeseries/test_loess.py ................                          [ 56%]",
+        "tests/timeseries/test_stationarity_mackinnon.py ........................ [ 58%]",
+        "....                                                                     [ 58%]",
+        "tests/timeseries/test_stl_cython_parity.py ............................. [ 60%]",
+        "........................................................................ [ 66%]",
+        "........................................................................ [ 73%]",
+        "........................................................................ [ 79%]",
+        "........................................................................ [ 85%]",
+        "........................................................................ [ 91%]",
+        ".......................................                                  [ 94%]",
+        "tests/timeseries/test_stl_r_parity.py .................................. [ 97%]",
+        "..............                                                           [ 98%]",
+        "tests/timeseries/test_stl_robust.py ..........                           [ 99%]",
+        "tests/timeseries/test_whittle_batch_compile.py ....                      [ 99%]",
+        "tests/timeseries/test_whittle_gpu_rfft.py ..                             [100%]",
+        "",
+        "=============================== warnings summary ===============================",
+        "tests/timeseries/test_arima.py::TestArimaBatchGPU::test_gpu_matches_serial_whittle_on_phi",
+        "  /home/haishuo/miniconda3/envs/gradflow/lib/python3.11/site-packages/torch/backends/cuda/__init__.py:131: UserWarning: This API is going to be deprecated, please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:78.)",
+        "    return torch._C._get_cublas_allow_tf32()",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=============== 1182 passed, 13 deselected, 1 warning in 42.14s ================"
+      ]
+    },
+    {
+      "command": [
+        "/home/haishuo/miniconda3/envs/gradflow/bin/python",
+        "benchmarks/dveb_arma_phase0b/verify_campaign.py"
+      ],
+      "elapsed_seconds": 0.02741694450378418,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": [],
+      "stdout_sha256": "31045ba21129039d98537d6d8fef091a944ddc1af331e05476e4b93e2862a775",
+      "stdout_tail": [
+        "PASS: Phase-0B CASE 2; L3 wins=8/8, geomean=7.949711x, L4=15.427147x"
+      ]
+    },
+    {
+      "command": [
+        "/home/haishuo/miniconda3/envs/gradflow/bin/python",
+        "benchmarks/dveb_arma_consumer/verify_evidence.py"
+      ],
+      "elapsed_seconds": 0.015921592712402344,
+      "returncode": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": [],
+      "stdout_sha256": "df15491fd13437d703785b147111955485ffaeb8b7609f251bf8e6a4337e8645",
+      "stdout_tail": [
+        "DVEB exact-ARMA consumer qualification evidence: PASS"
+      ]
+    },
+    {
+      "command": [
+        "/home/haishuo/miniconda3/envs/gradflow/bin/python",
+        "-m",
+        "pytest",
+        "tests",
+        "-q"
+      ],
+      "elapsed_seconds": 133.04345202445984,
+      "returncode": 1,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_tail": [],
+      "stdout_sha256": "8c641fe542d85088caf74eb5d7f3a9858ac47fbc02e4928af39db895af9fe373",
+      "stdout_tail": [
+        "",
+        "tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]",
+        "  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.26e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.",
+        "    result = little_mcar_test(X)",
+        "",
+        "tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]",
+        "  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.12e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.",
+        "    result = little_mcar_test(X)",
+        "",
+        "tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]",
+        "  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.18e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.",
+        "    result = little_mcar_test(X)",
+        "",
+        "tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]",
+        "  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.17e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.",
+        "    result = little_mcar_test(X)",
+        "",
+        "tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]",
+        "  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.23e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.",
+        "    result = little_mcar_test(X)",
+        "",
+        "tests/timeseries/test_arima.py::TestArimaBatchGPU::test_gpu_matches_serial_whittle_on_phi",
+        "  /home/haishuo/miniconda3/envs/gradflow/lib/python3.11/site-packages/torch/backends/cuda/__init__.py:131: UserWarning: This API is going to be deprecated, please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:78.)",
+        "    return torch._C._get_cublas_allow_tf32()",
+        "",
+        "-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html",
+        "=========================== short test summary info ============================",
+        "FAILED tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis - ...",
+        "FAILED tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud",
+        "= 2 failed, 4485 passed, 94 skipped, 27 deselected, 94 warnings in 130.92s (0:02:10) ="
+      ]
+    }
+  ],
+  "schema": "pystatistics-dveb-arma-consumer-regression-v1",
+  "status": "pass",
+  "timeseries_suite": "PASS",
+  "version": "6.2.0.dev0+dveb"
+}
