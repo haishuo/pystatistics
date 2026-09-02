@@ -21,7 +21,7 @@ for tag in "${builder[@]}"; do
   # interpreter's Cython objects from leaking into another wheel and avoids
   # deleting or overwriting unrelated build products in the source checkout.
   staging=$(mktemp -d -p /tmp "pystatistics-${tag}-XXXXXXXX")
-  git -C "$root" archive HEAD | tar -x -C "$staging"
+  git -c safe.directory="$root" -C "$root" archive HEAD | tar -x -C "$staging"
 
   raw_dir="$output/raw/$tag"
   repaired_dir="$output/repaired/$tag"
