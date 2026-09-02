@@ -1,0 +1,624 @@
+{
+  "cells": {
+    "E01": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 13.334688702643735,
+          "ng-auto": {
+            "mad": 8.368749999999631e-08,
+            "median_seconds_per_likelihood": 0.00023662062500000002,
+            "p05_p95": [
+              0.000236142,
+              0.00023711131250000003
+            ]
+          },
+          "t3-cuda": {
+            "mad": 9.76487499999997e-06,
+            "median_seconds_per_likelihood": 0.003155262375,
+            "p05_p95": [
+              0.0031209115625000002,
+              0.0032842477124999997
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 11.988831118637004,
+          "ng-auto": {
+            "mad": 9.200625000000057e-07,
+            "median_seconds_per_likelihood": 0.000272319125,
+            "p05_p95": [
+              0.00026948662500000004,
+              0.00027717125625
+            ]
+          },
+          "t3-cuda": {
+            "mad": 1.8046750000000117e-05,
+            "median_seconds_per_likelihood": 0.0032647880000000002,
+            "p05_p95": [
+              0.00322493875,
+              0.003321426
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 993,
+      "repeats": 8,
+      "shape": {
+        "k": 1,
+        "n": 120,
+        "r": 1
+      },
+      "torch_peak_allocated_bytes": 14848
+    },
+    "E02": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 16.179472077390034,
+          "ng-auto": {
+            "mad": 4.355000000001892e-07,
+            "median_seconds_per_likelihood": 0.004658144875000001,
+            "p05_p95": [
+              0.00465750686875,
+              0.00465950411875
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00010151893750000307,
+            "median_seconds_per_likelihood": 0.0753663249375,
+            "p05_p95": [
+              0.07509976050625,
+              0.07568551176875
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 15.977746460606506,
+          "ng-auto": {
+            "mad": 3.053687499999895e-06,
+            "median_seconds_per_likelihood": 0.004698567187500001,
+            "p05_p95": [
+              0.00469359219375,
+              0.0047058924375
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00019127399999999128,
+            "median_seconds_per_likelihood": 0.07507251525,
+            "p05_p95": [
+              0.074762743125,
+              0.07569438901875
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 16225,
+      "repeats": 8,
+      "shape": {
+        "k": 1,
+        "n": 2000,
+        "r": 13
+      },
+      "torch_peak_allocated_bytes": 33606656
+    },
+    "E03": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 16.398915825993903,
+          "ng-auto": {
+            "mad": 3.5437500000006384e-07,
+            "median_seconds_per_likelihood": 0.0010575793125000002,
+            "p05_p95": [
+              0.0010570033125000002,
+              0.00105872675
+            ]
+          },
+          "t3-cuda": {
+            "mad": 7.189706250000302e-05,
+            "median_seconds_per_likelihood": 0.017343154125000003,
+            "p05_p95": [
+              0.0172337340125,
+              0.01757013180625
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 15.650652961002242,
+          "ng-auto": {
+            "mad": 2.1694375000002025e-06,
+            "median_seconds_per_likelihood": 0.001101989625,
+            "p05_p95": [
+              0.001096236,
+              0.0011086678687500001
+            ]
+          },
+          "t3-cuda": {
+            "mad": 4.948224999999813e-05,
+            "median_seconds_per_likelihood": 0.0172468571875,
+            "p05_p95": [
+              0.017155135631250002,
+              0.01739912811875
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 65040,
+      "repeats": 8,
+      "shape": {
+        "k": 16,
+        "n": 500,
+        "r": 3
+      },
+      "torch_peak_allocated_bytes": 83977216
+    },
+    "E04": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 16.296364200682753,
+          "ng-auto": {
+            "mad": 7.711875000000062e-07,
+            "median_seconds_per_likelihood": 0.0041876692500000005,
+            "p05_p95": [
+              0.00416595981875,
+              0.00418875081875
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00019391462499999262,
+            "median_seconds_per_likelihood": 0.06824378325,
+            "p05_p95": [
+              0.06796936661875,
+              0.06874715336875001
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 15.830441669920349,
+          "ng-auto": {
+            "mad": 1.9731874999996332e-06,
+            "median_seconds_per_likelihood": 0.0043330704375,
+            "p05_p95": [
+              0.0043308006875,
+              0.00434206649375
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00017747718749999697,
+            "median_seconds_per_likelihood": 0.0685944188125,
+            "p05_p95": [
+              0.0683704915,
+              0.06937321971875
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 1028160,
+      "repeats": 8,
+      "shape": {
+        "k": 64,
+        "n": 2000,
+        "r": 3
+      },
+      "torch_peak_allocated_bytes": 36700672
+    },
+    "E05": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 10.169163578853167,
+          "ng-auto": {
+            "mad": 4.2118750000013326e-07,
+            "median_seconds_per_likelihood": 0.0018531013125,
+            "p05_p95": [
+              0.001851807125,
+              0.0018540324937500001
+            ]
+          },
+          "t3-cuda": {
+            "mad": 9.822262499999991e-05,
+            "median_seconds_per_likelihood": 0.018844490375000002,
+            "p05_p95": [
+              0.0186803827625,
+              0.01918512055625
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 9.59127277102952,
+          "ng-auto": {
+            "mad": 1.0450625000000494e-06,
+            "median_seconds_per_likelihood": 0.0020038448125,
+            "p05_p95": [
+              0.0020024630625000003,
+              0.00201395236875
+            ]
+          },
+          "t3-cuda": {
+            "mad": 6.587649999999917e-05,
+            "median_seconds_per_likelihood": 0.0192194221875,
+            "p05_p95": [
+              0.01908746594375,
+              0.019515240993750002
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 1081600,
+      "repeats": 8,
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "r": 13
+      },
+      "torch_peak_allocated_bytes": 38547456
+    },
+    "E06": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 10.768821500117117,
+          "ng-auto": {
+            "mad": 5.580624999998625e-07,
+            "median_seconds_per_likelihood": 0.0068669905000000005,
+            "p05_p95": [
+              0.0068659021937500005,
+              0.0068685921875000005
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00020289206249999442,
+            "median_seconds_per_likelihood": 0.0739493949375,
+            "p05_p95": [
+              0.07333932488750002,
+              0.07450876718125
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 10.340046970748118,
+          "ng-auto": {
+            "mad": 2.191874999999885e-06,
+            "median_seconds_per_likelihood": 0.007129117875,
+            "p05_p95": [
+              0.00712436143125,
+              0.007141480056250001
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00020310637500000478,
+            "median_seconds_per_likelihood": 0.07371541368750001,
+            "p05_p95": [
+              0.07342748645000001,
+              0.07438173954375
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 4153600,
+      "repeats": 8,
+      "shape": {
+        "k": 256,
+        "n": 2000,
+        "r": 13
+      },
+      "torch_peak_allocated_bytes": 46067200
+    },
+    "E07": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 5.90879154295516,
+          "ng-auto": {
+            "mad": 9.547500000005316e-07,
+            "median_seconds_per_likelihood": 0.011856718500000002,
+            "p05_p95": [
+              0.011853274475,
+              0.01186153325
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00023174150000000032,
+            "median_seconds_per_likelihood": 0.070058878,
+            "p05_p95": [
+              0.06967709502500001,
+              0.07098089085
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 5.629578867069123,
+          "ng-auto": {
+            "mad": 7.909999999999862e-06,
+            "median_seconds_per_likelihood": 0.0125550025,
+            "p05_p95": [
+              0.012545067525,
+              0.01273815875
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00014720199999999212,
+            "median_seconds_per_likelihood": 0.07067937675000001,
+            "p05_p95": [
+              0.070319320025,
+              0.07189327570000001
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 16450560,
+      "repeats": 2,
+      "shape": {
+        "k": 1024,
+        "n": 2000,
+        "r": 3
+      },
+      "torch_peak_allocated_bytes": 83312128
+    },
+    "E08": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 3.947308085989026,
+          "ng-auto": {
+            "mad": 2.8734812500000317e-05,
+            "median_seconds_per_likelihood": 0.0064284104375000005,
+            "p05_p95": [
+              0.0063693814937500004,
+              0.0064846296187500005
+            ]
+          },
+          "t3-cuda": {
+            "mad": 2.943362500000199e-05,
+            "median_seconds_per_likelihood": 0.025374916500000004,
+            "p05_p95": [
+              0.025278517875,
+              0.025578170437500002
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 3.8217459465622268,
+          "ng-auto": {
+            "mad": 3.2607937499999975e-05,
+            "median_seconds_per_likelihood": 0.0067136569375000005,
+            "p05_p95": [
+              0.006657550187500001,
+              0.006787278250000001
+            ]
+          },
+          "t3-cuda": {
+            "mad": 3.1659749999997724e-05,
+            "median_seconds_per_likelihood": 0.0256578911875,
+            "p05_p95": [
+              0.025595754556250003,
+              0.0258365444875
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 4326400,
+      "repeats": 8,
+      "shape": {
+        "k": 1024,
+        "n": 500,
+        "r": 13
+      },
+      "torch_peak_allocated_bytes": 65444864
+    },
+    "E09": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 16.455436316932015,
+          "ng-auto": {
+            "mad": 2.3419000000010626e-06,
+            "median_seconds_per_likelihood": 0.020886278600000002,
+            "p05_p95": [
+              0.0208828187,
+              0.020889868590000003
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.0007101002999999884,
+            "median_seconds_per_likelihood": 0.3436928274,
+            "p05_p95": [
+              0.34196250527000005,
+              0.34483914838
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 16.068331204524988,
+          "ng-auto": {
+            "mad": 1.1391900000001093e-05,
+            "median_seconds_per_likelihood": 0.021194799800000004,
+            "p05_p95": [
+              0.021177036890000004,
+              0.021226559000000002
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.000562759100000032,
+            "median_seconds_per_likelihood": 0.340565063,
+            "p05_p95": [
+              0.33921466597,
+              0.34152981432
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 5124160,
+      "repeats": 5,
+      "shape": {
+        "k": 64,
+        "n": 10000,
+        "r": 3
+      },
+      "torch_peak_allocated_bytes": 48988672
+    },
+    "E10": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 13.012025238502495,
+          "ng-auto": {
+            "mad": 5.662500000007571e-07,
+            "median_seconds_per_likelihood": 0.007365056625,
+            "p05_p95": [
+              0.007363670500000001,
+              0.0073662209312500004
+            ]
+          },
+          "t3-cuda": {
+            "mad": 9.803081250000373e-05,
+            "median_seconds_per_likelihood": 0.09583430268750001,
+            "p05_p95": [
+              0.0957012425,
+              0.09613599735
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 12.952523538181826,
+          "ng-auto": {
+            "mad": 2.2512500000002912e-06,
+            "median_seconds_per_likelihood": 0.00742583375,
+            "p05_p95": [
+              0.007419644193750001,
+              0.007434259
+            ]
+          },
+          "t3-cuda": {
+            "mad": 9.103637500001288e-05,
+            "median_seconds_per_likelihood": 0.09618328643750002,
+            "p05_p95": [
+              0.09601032864375,
+              0.096507339925
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 262672,
+      "repeats": 8,
+      "shape": {
+        "k": 16,
+        "n": 2000,
+        "r": 25
+      },
+      "torch_peak_allocated_bytes": 39653376
+    },
+    "E11": {
+      "block": 256,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 4.429086437132531,
+          "ng-auto": {
+            "mad": 5.387500000000531e-07,
+            "median_seconds_per_likelihood": 0.006219920875,
+            "p05_p95": [
+              0.0062189795,
+              0.0062215570625
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00017917975000000114,
+            "median_seconds_per_likelihood": 0.0275485671875,
+            "p05_p95": [
+              0.027119068675,
+              0.027967217775
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 4.407428994579846,
+          "ng-auto": {
+            "mad": 6.980624999998984e-07,
+            "median_seconds_per_likelihood": 0.006372847562500001,
+            "p05_p95": [
+              0.00637166468125,
+              0.0063848565625
+            ]
+          },
+          "t3-cuda": {
+            "mad": 0.00014011425000000008,
+            "median_seconds_per_likelihood": 0.028087873125000003,
+            "p05_p95": [
+              0.027773710125,
+              0.028453654050000003
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 1130752,
+      "repeats": 8,
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "r": 25
+      },
+      "torch_peak_allocated_bytes": 46116864
+    },
+    "E12": {
+      "block": 32,
+      "endpoints": {
+        "L1": {
+          "existing_over_native": 4.801641964576117,
+          "ng-auto": {
+            "mad": 3.4762499999998467e-07,
+            "median_seconds_per_likelihood": 0.000646040125,
+            "p05_p95": [
+              0.00064514875,
+              0.0006467216250000001
+            ]
+          },
+          "t3-cuda": {
+            "mad": 1.0461250000000106e-05,
+            "median_seconds_per_likelihood": 0.0031020533750000003,
+            "p05_p95": [
+              0.0030831675125000003,
+              0.0032043381125000004
+            ]
+          }
+        },
+        "L2": {
+          "existing_over_native": 4.293855511285814,
+          "ng-auto": {
+            "mad": 1.3012500000000242e-06,
+            "median_seconds_per_likelihood": 0.0007859645000000001,
+            "p05_p95": [
+              0.0007826817500000001,
+              0.000789685875
+            ]
+          },
+          "t3-cuda": {
+            "mad": 1.0502374999999927e-05,
+            "median_seconds_per_likelihood": 0.003374818,
+            "p05_p95": [
+              0.003339077875,
+              0.003441546
+            ]
+          }
+        }
+      },
+      "native_payload_bytes": 1016832,
+      "repeats": 4,
+      "shape": {
+        "k": 1024,
+        "n": 120,
+        "r": 1
+      },
+      "torch_peak_allocated_bytes": 36552704
+    }
+  },
+  "repetition_policy": {
+    "maximum_repeats": 8,
+    "scope": "descriptive CUDA L1/L2 endpoints only",
+    "target_seconds": 0.1
+  },
+  "role": "descriptive only; does not revise the completed L3 Case-2 decision",
+  "schema": "pystatistics.dveb-arma-phase0b.cuda-ancillary-analysis.v1",
+  "status": "complete"
+}

@@ -1,0 +1,39 @@
+{
+  "cell": "E07",
+  "existing_over_native": 15.427146985885129,
+  "existing_over_native_peak_rss": 1.6307213218938672,
+  "ng-auto": {
+    "mad_seconds": 0.001369972499999983,
+    "median_peak_rss_kib": 629400.0,
+    "median_seconds": 0.3161642525,
+    "p05_p95_peak_rss_kib": [
+      629400.0,
+      629400.0
+    ],
+    "p05_p95_seconds": [
+      0.31330658055000005,
+      0.34074655725
+    ]
+  },
+  "role": "descriptive only; does not revise the completed L3 Case-2 decision",
+  "schema": "pystatistics.dveb-arma-phase0b.l4-analysis.v1",
+  "shape": {
+    "k": 1024,
+    "n": 2000,
+    "r": 3
+  },
+  "status": "complete",
+  "t3-cuda": {
+    "mad_seconds": 0.01510148400000011,
+    "median_peak_rss_kib": 1026376.0,
+    "median_seconds": 4.877512395,
+    "p05_p95_peak_rss_kib": [
+      1026134.4,
+      1026618.2
+    ],
+    "p05_p95_seconds": [
+      4.8339837337,
+      4.926796296500001
+    ]
+  }
+}

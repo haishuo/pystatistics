@@ -1,0 +1,15 @@
+{
+  "command": "/home/haishuo/miniconda3/envs/gradflow/bin/python -m pytest tests/timeseries/test_arima_kalman_cython_parity.py tests/timeseries/test_arima_kalman_r_parity.py tests/timeseries/test_arima_workspace_fit_regression.py tests/timeseries/test_arima_batch_contract.py -q",
+  "environment": {
+    "platform": "linux",
+    "python": "3.11.13",
+    "pytest": "8.4.1"
+  },
+  "errors": 0,
+  "failed": 0,
+  "passed": 153,
+  "schema": "pystatistics.dveb-arma-phase0b.campaign-regression.v1",
+  "skipped": 0,
+  "status": "pass",
+  "warnings": 1
+}

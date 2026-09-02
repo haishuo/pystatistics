@@ -1,0 +1,215 @@
+{
+  "bootstrap": {
+    "generator": "numpy.random.PCG64DXSM",
+    "resamples": 10000,
+    "seed": 4706909503721983823
+  },
+  "case_1": false,
+  "case_2": true,
+  "cells": {
+    "E04": {
+      "existing_median_seconds": 6.7767482195,
+      "existing_over_native": 16.18373550859003,
+      "existing_p05_p95": [
+        6.7514614321,
+        6.8058542463
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.41873819650000005,
+      "native_p05_p95": [
+        0.41864151795000004,
+        0.41973455715
+      ],
+      "paired_bootstrap_95": [
+        16.16572271298865,
+        16.193616396938573
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 64,
+        "n": 2000,
+        "r": 3
+      }
+    },
+    "E05": {
+      "existing_median_seconds": 1.8417726280000002,
+      "existing_over_native": 9.942427817868936,
+      "existing_p05_p95": [
+        1.8325967517500001,
+        1.8489663466500001
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.1852437515,
+      "native_p05_p95": [
+        0.1852230105,
+        0.1852615991
+      ],
+      "paired_bootstrap_95": [
+        9.92681432997954,
+        9.953983559653432
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "r": 13
+      }
+    },
+    "E06": {
+      "existing_median_seconds": 7.0829056005,
+      "existing_over_native": 10.287235707980832,
+      "existing_p05_p95": [
+        7.055072997650001,
+        7.1049122516
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.68851398,
+      "native_p05_p95": [
+        0.6880379469500001,
+        0.68888314985
+      ],
+      "paired_bootstrap_95": [
+        10.273842718653093,
+        10.300369901074234
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 256,
+        "n": 2000,
+        "r": 13
+      }
+    },
+    "E07": {
+      "existing_median_seconds": 9.3128717275,
+      "existing_over_native": 7.833918320644132,
+      "existing_p05_p95": [
+        9.29081602115,
+        9.3407208063
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 1.1887884640000002,
+      "native_p05_p95": [
+        1.1883612384500002,
+        1.18928117605
+      ],
+      "paired_bootstrap_95": [
+        7.829460118689878,
+        7.8387196401918775
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 1024,
+        "n": 2000,
+        "r": 3
+      }
+    },
+    "E08": {
+      "existing_median_seconds": 2.5511206525000003,
+      "existing_over_native": 3.9275233938771668,
+      "existing_p05_p95": [
+        2.54460180155,
+        2.55878981665
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.649549448,
+      "native_p05_p95": [
+        0.6480141660500001,
+        0.6518141456000001
+      ],
+      "paired_bootstrap_95": [
+        3.9226433189626957,
+        3.931841405579335
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 1024,
+        "n": 500,
+        "r": 13
+      }
+    },
+    "E09": {
+      "existing_median_seconds": 34.8355795745,
+      "existing_over_native": 16.67971904964803,
+      "existing_p05_p95": [
+        34.661232554250006,
+        34.9517795268
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 2.088499181,
+      "native_p05_p95": [
+        2.0883197498,
+        2.0887112184
+      ],
+      "paired_bootstrap_95": [
+        16.6633868337629,
+        16.690392305838092
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 64,
+        "n": 10000,
+        "r": 3
+      }
+    },
+    "E11": {
+      "existing_median_seconds": 2.3698420685,
+      "existing_over_native": 3.7994755279320658,
+      "existing_p05_p95": [
+        2.36389967925,
+        2.3738975669
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.623728736,
+      "native_p05_p95": [
+        0.62201140175,
+        0.62385854885
+      ],
+      "paired_bootstrap_95": [
+        3.7981196382071665,
+        3.8023340816280813
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 256,
+        "n": 500,
+        "r": 25
+      }
+    },
+    "E12": {
+      "existing_median_seconds": 0.31828750100000003,
+      "existing_over_native": 4.94231896283561,
+      "existing_p05_p95": [
+        0.31530656650000005,
+        0.31966200895
+      ],
+      "floor_pass": true,
+      "native_median_seconds": 0.064400437,
+      "native_p05_p95": [
+        0.06438511895,
+        0.064413017
+      ],
+      "paired_bootstrap_95": [
+        4.937331345397053,
+        4.949520386292287
+      ],
+      "qualifying_1_5x_win": true,
+      "shape": {
+        "k": 1024,
+        "n": 120,
+        "r": 1
+      }
+    }
+  },
+  "decision": "CASE 2",
+  "decision_rule": {
+    "floor": 0.8,
+    "floor_pass": true,
+    "ratio": "best ordinary existing median / native median",
+    "required_wins": 6,
+    "win_threshold": 1.5,
+    "wins": 8
+  },
+  "geometric_mean_existing_over_native": 7.949711356162878,
+  "schema": "pystatistics.dveb-arma-phase0b.l3-analysis.v1",
+  "status": "complete"
+}
