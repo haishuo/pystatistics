@@ -129,9 +129,7 @@ def main() -> int:
         "native_diagnostic_authorized": True,
         "dveb_compiler_work_authorized": False,
     }
-    (EVIDENCE / args.freeze_name).write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n"
-    )
+    (EVIDENCE / args.freeze_name).write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print(json.dumps({"evidence": str(EVIDENCE), "artifacts": result["artifacts"]}, indent=2))
     return 0
 

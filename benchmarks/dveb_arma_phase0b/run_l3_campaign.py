@@ -103,7 +103,6 @@ class TorchTrace:
         """Match the native/context adapter lifecycle; tensors need no explicit close."""
 
 
-
 class NativeCUDATrace:
     def __init__(
         self,
