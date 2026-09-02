@@ -1,0 +1,23 @@
+Frozen baseline reproduction: GPU kurtosis test
+================================================
+
+Repository commit: f156ee5
+Test:
+  tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis
+Python:
+  /home/haishuo/miniconda3/envs/gradflow/bin/python (3.11.13)
+Result:
+  FAIL (inherited baseline behavior)
+
+Assertion:
+  rtol=0.0001, atol=0
+  mismatched elements: 1 / 5
+  maximum absolute difference: 6.79605395e-07
+  maximum relative difference: 0.00017979
+  actual:  [-0.003779, 0.239676, -0.294634, -0.261414, 0.312806]
+  desired: [-0.003780, 0.239676, -0.294634, -0.261414, 0.312806]
+
+The isolated test at the current adapter commit produced the same values and
+differences.  The temporary detached worktree needed existing ABI-compatible
+Cython extension binaries for package import; no source from the current
+branch was used in the descriptive calculation.

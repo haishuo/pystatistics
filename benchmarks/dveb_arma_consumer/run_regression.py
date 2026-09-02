@@ -14,10 +14,16 @@ import time
 ROOT = Path(__file__).resolve().parents[2]
 OUTPUT = ROOT / "docs/research/evidence/dveb_arma_consumer/regression.json"
 PYTHON = "/home/haishuo/miniconda3/envs/gradflow/bin/python"
-KNOWN_BASELINE_FAILURE = (
-    "tests/multinomial/test_multinom.py::TestFailureCases::"
-    "test_complete_separation_vcov_fails_loud"
-)
+KNOWN_BASELINE_FAILURES = {
+    (
+        "tests/descriptive/test_gpu.py::TestGPUvsCPU::"
+        "test_describe_kurtosis"
+    ),
+    (
+        "tests/multinomial/test_multinom.py::TestFailureCases::"
+        "test_complete_separation_vcov_fails_loud"
+    ),
+}
 
 
 def run(command, *, require_success=True):
@@ -60,7 +66,7 @@ def main() -> int:
 
     full, output = run([PYTHON, "-m", "pytest", "tests", "-q"], require_success=False)
     failures = sorted(set(re.findall(r"^FAILED\s+([^\s]+)", output, flags=re.MULTILINE)))
-    no_new_failure = full["returncode"] == 1 and failures == [KNOWN_BASELINE_FAILURE]
+    no_new_failure = full["returncode"] == 1 and set(failures) == KNOWN_BASELINE_FAILURES
     if not no_new_failure:
         raise RuntimeError(json.dumps({"full_suite": full, "failures": failures}, indent=2))
     records.append(full)
@@ -82,8 +88,16 @@ def main() -> int:
         "consumer_evidence": "PASS",
         "complete_suite": {
             "no_new_failure": True,
-            "known_baseline_failure": KNOWN_BASELINE_FAILURE,
-            "baseline_reproduced_at": "a9c7e4d (existing committed evidence)",
+            "known_baseline_failures": sorted(KNOWN_BASELINE_FAILURES),
+            "baseline_reproduced_at": {
+                "tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis": (
+                    "f156ee5 (isolated exact-value reproduction before corrected restart)"
+                ),
+                "tests/multinomial/test_multinom.py::TestFailureCases::"
+                "test_complete_separation_vcov_fails_loud": (
+                    "a9c7e4d (existing committed evidence)"
+                ),
+            },
         },
         "version": version,
         "main_modified": False,
