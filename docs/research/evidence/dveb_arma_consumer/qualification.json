@@ -1,0 +1,2767 @@
+{
+  "adapter_commit": "b82041f677f839a26c6d726365cef8690dc15a2f",
+  "artifacts": {
+    "combined_library_sha256": "328893657d4688a703b2661f1bb9facfc141b95369a02f5fc62e93e889c984f6",
+    "consumer_manifest_sha256": "03279fe4a5ed10b008b27c019d8e7d5520bd7d890a388fb22a3d9fbe49379eee",
+    "cpu_library_expected_sha256": "3349732f1dc3e9d3f65ca32581028c49e7e870d4369b072f1f05b6ce46fdd428",
+    "cpu_library_sha256": "3349732f1dc3e9d3f65ca32581028c49e7e870d4369b072f1f05b6ce46fdd428"
+  },
+  "cells": {
+    "C01": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.3922688306598523e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 6.661338147750939e-16,
+          "sigma2_rel": 5.877843384823907e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 8,
+        "state": 1,
+        "steps": 120
+      }
+    },
+    "C02": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.2930913077083591e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.2930913077083591e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.2930913077083591e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.077576089756966e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.077576089756966e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.077576089756966e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.077576089756966e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 2.2737367544323206e-13,
+          "nll_rel": 3.2907557119677173e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.077576089756966e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 64,
+        "state": 3,
+        "steps": 500
+      }
+    },
+    "C03": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1112264199393967e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.031290909791206e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1112264199393967e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.031290909791206e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1112264199393967e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.031290909791206e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 2.7284841053187847e-12,
+          "nll_rel": 9.563526185865186e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 2.886579864025407e-15,
+          "sigma2_rel": 2.847612949834593e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 2.7284841053187847e-12,
+          "nll_rel": 9.563526185865186e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.886579864025407e-15,
+          "sigma2_rel": 2.847612949834593e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 2.7284841053187847e-12,
+          "nll_rel": 9.563526185865186e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.886579864025407e-15,
+          "sigma2_rel": 2.847612949834593e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 2.7284841053187847e-12,
+          "nll_rel": 9.563526185865186e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 2.886579864025407e-15,
+          "sigma2_rel": 2.847612949834593e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 2.7284841053187847e-12,
+          "nll_rel": 9.563526185865186e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.886579864025407e-15,
+          "sigma2_rel": 2.847612949834593e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 256,
+        "state": 13,
+        "steps": 2000
+      }
+    },
+    "C04": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080801e-13,
+          "nll_rel": 8.097901747300462e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080801e-13,
+          "nll_rel": 8.097901747300462e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080801e-13,
+          "nll_rel": 8.097901747300462e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.717482096760554e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.717482096760554e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.717482096760554e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.717482096760554e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.717482096760554e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 2.078751143605377e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1024,
+        "state": 25,
+        "steps": 500
+      }
+    },
+    "E01": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1,
+        "state": 1,
+        "steps": 120
+      }
+    },
+    "E02": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 9.094947017729282e-13,
+          "nll_rel": 3.258511876382514e-16,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 4.440892098500626e-16,
+          "sigma2_rel": 4.440892098500626e-16,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1,
+        "state": 13,
+        "steps": 2000
+      }
+    },
+    "E03": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 3.410605131648481e-13,
+          "nll_rel": 4.717403812726452e-16,
+          "nll_tolerance": 1.0658141036401503e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.3322676295501878e-15,
+          "sigma2_rel": 1.078566565266708e-15,
+          "sigma2_tolerance": 1.0658141036401503e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 16,
+        "state": 3,
+        "steps": 500
+      }
+    },
+    "E04": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3075093592664778e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.1086244689504383e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3075093592664778e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.1086244689504383e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3075093592664778e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 3.1086244689504383e-15,
+          "sigma2_rel": 3.1086244689504383e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1440706893581681e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 2.9976021664879227e-15,
+          "sigma2_rel": 2.9976021664879227e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1440706893581681e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.9976021664879227e-15,
+          "sigma2_rel": 2.9976021664879227e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1440706893581681e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.9976021664879227e-15,
+          "sigma2_rel": 2.9976021664879227e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1440706893581681e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 2.9976021664879227e-15,
+          "sigma2_rel": 2.9976021664879227e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 3.183231456205249e-12,
+          "nll_rel": 1.1440706893581681e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.9976021664879227e-15,
+          "sigma2_rel": 2.9976021664879227e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 64,
+        "state": 3,
+        "steps": 2000
+      }
+    },
+    "E05": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.667885138434221e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.4733446756996081e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 256,
+        "state": 13,
+        "steps": 500
+      }
+    },
+    "E06": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.2368286490717825e-15,
+          "nll_tolerance": 1.8474111129762605e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 4.440892098500626e-15,
+          "sigma2_rel": 4.010428023450314e-15,
+          "sigma2_tolerance": 1.8474111129762605e-10,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 256,
+        "state": 13,
+        "steps": 2000
+      }
+    },
+    "E07": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 3.637978807091713e-12,
+          "nll_rel": 1.3032431538164569e-15,
+          "nll_tolerance": 4.263256414560601e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 3.3306690738754696e-15,
+          "sigma2_rel": 3.3306690738754696e-15,
+          "sigma2_tolerance": 4.263256414560601e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1024,
+        "state": 3,
+        "steps": 2000
+      }
+    },
+    "E08": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 6.821210263296962e-13,
+          "nll_rel": 9.896127364181603e-16,
+          "nll_tolerance": 4.618527782440651e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.6645352591003757e-15,
+          "sigma2_rel": 2.4447172855697198e-15,
+          "sigma2_tolerance": 4.618527782440651e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1024,
+        "state": 13,
+        "steps": 500
+      }
+    },
+    "E09": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 3.8198777474462986e-11,
+          "nll_rel": 2.6794973249455973e-15,
+          "nll_tolerance": 2.1316282072803006e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 7.993605777301127e-15,
+          "sigma2_rel": 7.888478041865127e-15,
+          "sigma2_tolerance": 2.1316282072803006e-10,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 64,
+        "state": 3,
+        "steps": 10000
+      }
+    },
+    "E10": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 1.8189894035458565e-12,
+          "nll_rel": 6.476964282205734e-16,
+          "nll_tolerance": 3.552713678800501e-10,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.5543122344752192e-15,
+          "sigma2_rel": 1.5543122344752192e-15,
+          "sigma2_tolerance": 3.552713678800501e-10,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 16,
+        "state": 25,
+        "steps": 2000
+      }
+    },
+    "E11": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.402214954187651e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.402214954187651e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.402214954187651e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.341085830195792e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.341085830195792e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.341085830195792e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.341085830195792e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 4.547473508864641e-13,
+          "nll_rel": 6.341085830195792e-16,
+          "nll_tolerance": 8.881784197001252e-11,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 2.220446049250313e-15,
+          "sigma2_rel": 1.8547580245358494e-15,
+          "sigma2_tolerance": 8.881784197001252e-11,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 256,
+        "state": 25,
+        "steps": 500
+      }
+    },
+    "E12": {
+      "inputs_unchanged": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 3.694650775245597e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.1102230246251565e-15,
+          "sigma2_rel": 1.0270236600835203e-15,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "shape": {
+        "items": 1024,
+        "state": 1,
+        "steps": 120
+      }
+    }
+  },
+  "edge_cases": {
+    "diffuse_nonstationary": {
+      "expected_status": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 5.684341886080802e-14,
+          "nll_rel": 2.387498948932704e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 1.7763568394002505e-15,
+          "sigma2_rel": 6.436772458970978e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "status_contract": true
+    },
+    "invalid_nonfinite": {
+      "expected_status": false,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 0.0,
+          "nll_rel": 0.0,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 0.0,
+          "sigma2_rel": 0.0,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "status_contract": true
+    },
+    "persistent_stationary": {
+      "expected_status": true,
+      "pass": true,
+      "schedules": {
+        "cpu-parallel-12": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-parallel-6": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 2,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cpu-serial-1": {
+          "bitwise_with_cpu_serial": true,
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_schedule": 1,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-128": {
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 128,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-256": {
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 256,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-32": {
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-64": {
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 64,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        },
+        "cuda-auto": {
+          "finite": true,
+          "nll_abs": 2.842170943040401e-14,
+          "nll_rel": 1.4017556307515928e-16,
+          "nll_tolerance": 8.526512829121202e-13,
+          "pass": true,
+          "preflight_pass": true,
+          "selected_block": 32,
+          "sigma2_abs": 8.881784197001252e-16,
+          "sigma2_rel": 4.064725926799763e-16,
+          "sigma2_tolerance": 8.526512829121202e-13,
+          "status_equal": true
+        }
+      },
+      "status_contract": true
+    }
+  },
+  "frozen_authority_commit": "f156ee5a305238583a4b7b332462ab6740cadc23",
+  "proposal_traces": {
+    "E04": {
+      "minimum_ar_root_modulus": 2.616162816136229,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.3298697960381105e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.3298697960381105e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.3298697960381105e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.551914400963142e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.551914400963142e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.551914400963142e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.551914400963142e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 1.6279779566410682e-15,
+          "max_sigma2_rel": 4.551914400963142e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E05": {
+      "minimum_ar_root_modulus": 1.068744628716005,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 9.74420051099648e-16,
+          "max_sigma2_rel": 2.741710675283291e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 9.74420051099648e-16,
+          "max_sigma2_rel": 2.741710675283291e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 9.74420051099648e-16,
+          "max_sigma2_rel": 2.741710675283291e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 9.787212119321793e-16,
+          "max_sigma2_rel": 2.9526114964589286e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 9.787212119321793e-16,
+          "max_sigma2_rel": 2.9526114964589286e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 9.787212119321793e-16,
+          "max_sigma2_rel": 2.9526114964589286e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 9.787212119321793e-16,
+          "max_sigma2_rel": 2.9526114964589286e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 9.787212119321793e-16,
+          "max_sigma2_rel": 2.9526114964589286e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E06": {
+      "minimum_ar_root_modulus": 1.0687414731938043,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 2.254122150828106e-15,
+          "max_sigma2_rel": 6.106226635438361e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E07": {
+      "minimum_ar_root_modulus": 2.6161708250314084,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.10702591327572e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.10702591327572e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.10702591327572e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.059475037650206e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.059475037650206e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.059475037650206e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.059475037650206e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 1.8031853555761127e-15,
+          "max_sigma2_rel": 5.059475037650206e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E08": {
+      "minimum_ar_root_modulus": 1.0687418116516187,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 1.0079525787603698e-15,
+          "max_sigma2_rel": 2.8461794693096676e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E09": {
+      "minimum_ar_root_modulus": 2.6161771446994897,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 4.239584344587835e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 4.239584344587835e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 4.239584344587835e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 4.111112091721537e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 4.111112091721537e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 4.111112091721537e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 4.111112091721537e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 4.111112091721537e-15,
+          "max_sigma2_rel": 1.1542645010098784e-14,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E11": {
+      "minimum_ar_root_modulus": 1.0693285054523716,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 9.508019916133074e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 9.508019916133074e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 9.508019916133074e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 9.3393050495006e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 9.3393050495006e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 9.3393050495006e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 9.3393050495006e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 9.3393050495006e-16,
+          "max_sigma2_rel": 2.455094981031303e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    },
+    "E12": {
+      "minimum_ar_root_modulus": 1.66630580615033,
+      "pass": true,
+      "proposal_count": 100,
+      "schedules": {
+        "cpu-parallel-12": {
+          "failures": 0,
+          "max_nll_rel": 8.1257464798911e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-parallel-6": {
+          "failures": 0,
+          "max_nll_rel": 8.1257464798911e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cpu-serial-1": {
+          "failures": 0,
+          "max_nll_rel": 8.1257464798911e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-128": {
+          "failures": 0,
+          "max_nll_rel": 7.2511815496593775e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-256": {
+          "failures": 0,
+          "max_nll_rel": 7.2511815496593775e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-32": {
+          "failures": 0,
+          "max_nll_rel": 7.2511815496593775e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-64": {
+          "failures": 0,
+          "max_nll_rel": 7.2511815496593775e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        },
+        "cuda-auto": {
+          "failures": 0,
+          "max_nll_rel": 7.2511815496593775e-16,
+          "max_sigma2_rel": 1.4595025099843751e-15,
+          "proposals": 100,
+          "status_mismatches": 0
+        }
+      },
+      "z_unchanged": true
+    }
+  },
+  "repository": {
+    "branch": "research/dveb-pystatistics",
+    "clean_before": true,
+    "commit": "b82041f677f839a26c6d726365cef8690dc15a2f",
+    "tree": "55f865b19f7046b14d63429f5548bf6f1c2b966c"
+  },
+  "schema": "pystatistics-dveb-arma-consumer-qualification-v1",
+  "status": "pass",
+  "tolerance": "max(32*eps*steps*max(1,state), frozen derived floor), scale-relative"
+}
