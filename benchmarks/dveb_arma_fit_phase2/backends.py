@@ -97,6 +97,10 @@ class DVEBFiniteDifferenceBackend:
             return self.evaluator.evaluate(z, phi, loading, threads=self.threads)
         return self.evaluator.evaluate(z, phi, loading, block=0)
 
+    def final_values(self, rows, parameters):
+        row_index = np.asarray(rows, dtype=np.intp)
+        return self._evaluate(self.z[row_index], np.ascontiguousarray(parameters))
+
     def value_and_gradient(self, rows, parameters):
         row_index = np.asarray(rows, dtype=np.intp)
         source = self.z[row_index]
@@ -195,3 +199,26 @@ class TorchAutogradBackend:
             torch.cuda.synchronize(self.device)
         self.last_likelihood_rows = len(rows)
         return nll.detach().cpu().numpy(), gradient.detach().cpu().numpy()
+
+    def final_values(self, rows, parameters):
+        torch = self.torch
+        index = torch.as_tensor(rows, dtype=torch.int64, device=self.device)
+        z = torch.index_select(self.z, 0, index)
+        values = torch.as_tensor(parameters, dtype=torch.float64, device=self.device)
+        shape_phi, shape_loading = expand_fit_parameters(parameters, self.family_id)
+        phi = torch.zeros(shape_phi.shape, dtype=torch.float64, device=self.device)
+        loading = torch.zeros(shape_loading.shape, dtype=torch.float64, device=self.device)
+        loading[:, 0] = 1.0
+        _state, ar_free, ma_free = fit_layout(self.family_id)
+        split = len(ar_free)
+        for column, lag in enumerate(ar_free):
+            phi[:, lag] = values[:, column]
+        for column, lag in enumerate(ma_free, start=split):
+            loading[:, lag + 1] = values[:, column]
+        nll, sigma2, status = self.function(z, phi, loading)
+        if self.device.type == "cuda":
+            torch.cuda.synchronize(self.device)
+        return (
+            nll.detach().cpu().numpy(), sigma2.detach().cpu().numpy(),
+            status.detach().cpu().numpy(),
+        )

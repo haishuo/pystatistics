@@ -26,6 +26,9 @@ class FitRow:
     parameters: tuple[float, ...]
     nll: float
     sigma2: float
+    reported_nll: float
+    reported_sigma2: float
+    reported_status: bool
     optimizer_success: bool
     optimizer_status: int
     optimizer_message: str
@@ -120,18 +123,24 @@ def _finalize_row(
     z: NDArray[np.float64],
     family_id: str,
     result: OptimizeResult,
+    reported: tuple[float, float, bool] | None = None,
 ) -> FitRow:
     parameters = _canonical(np.asarray(result.x, dtype=np.float64), family_id)
     authority = CythonRowObjective(z, family_id)
     nll, sigma2, status = authority.evaluate(parameters)
     stationary = bool(np.isfinite(parameters).all() and _minimum_root(parameters, family_id) > 1.0)
     success = bool(result.success and status and stationary and np.isfinite(nll))
+    if reported is None:
+        reported = (float(result.fun), sigma2, status)
     return FitRow(
         row=row,
         success=success,
         parameters=tuple(map(float, parameters)),
         nll=float(nll),
         sigma2=float(sigma2),
+        reported_nll=float(reported[0]),
+        reported_sigma2=float(reported[1]),
+        reported_status=bool(reported[2]),
         optimizer_success=bool(result.success),
         optimizer_status=int(result.status),
         optimizer_message=str(result.message),
@@ -173,8 +182,17 @@ def fit_coordinated(
 ) -> FitBatch:
     coordinator = DeterministicCoordinator(backend)
     results, accounting = coordinator.fit(starts)
+    canonical = np.stack(
+        [_canonical(np.asarray(result.x, dtype=np.float64), family_id) for result in results]
+    )
+    reported_nll, reported_sigma2, reported_status = backend.final_values(
+        tuple(range(z.shape[0])), canonical
+    )
     rows = tuple(
-        _finalize_row(row, z[row], family_id, result)
+        _finalize_row(
+            row, z[row], family_id, result,
+            (reported_nll[row], reported_sigma2[row], reported_status[row]),
+        )
         for row, result in enumerate(results)
     )
     return FitBatch(route, family_id, rows, accounting)
