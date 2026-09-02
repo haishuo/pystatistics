@@ -1,0 +1,42 @@
+{
+  "schema": "pystatistics.dveb-arma-fit-phase2.protocol-freeze.v1",
+  "status": "approved-and-frozen",
+  "approval_date": "2026-09-02",
+  "research_branch": "research/dveb-pystatistics",
+  "base_commit": "4212ef161e354e4aa3406bd9619eaaffc7d6c31f",
+  "protocol_path": "docs/research/DVEB_ARMA_FIT_PHASE2_PROTOCOL.md",
+  "protocol_sha256": "2a95faeff710c9345e4f3d6515fb11fe0662e5cedb6b22431e7ff86e2b757131",
+  "phase2_state_at_freeze": {
+    "fit_implementation_exists": false,
+    "calibration_results_exist": false,
+    "evaluation_results_exist": false,
+    "timing_results_exist": false
+  },
+  "calibration_cells": ["C01", "C02", "C03", "C04"],
+  "evaluation_cells": [
+    "E01", "E02", "E03", "E04", "E05", "E06",
+    "E07", "E08", "E09", "E10", "E11", "E12"
+  ],
+  "primary_cells": ["E04", "E05", "E06", "E07", "E08", "E09", "E11", "E12"],
+  "secondary_cells": ["E01", "E02", "E03", "E10"],
+  "decision_thresholds": {
+    "catastrophic_ratio_floor": 0.10,
+    "systematic_no_go_min_cells": 6,
+    "systematic_no_go_geomean_slowdown": 2.0,
+    "strong_go_min_cells": 6,
+    "strong_go_geomean_speedup": 1.25
+  },
+  "authorization": {
+    "private_phase2_implementation": true,
+    "correctness_qualification": true,
+    "calibration_selection": true,
+    "campaign_after_separate_admission_freeze": true,
+    "public_api": false,
+    "dveb_compiler_changes": false,
+    "merge": false,
+    "release": false,
+    "tag": false,
+    "package_upload": false,
+    "push": false
+  }
+}
