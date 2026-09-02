@@ -75,3 +75,9 @@ repeats per cell while preserving 10 warmups, 30 paired randomized
 observations, identical work between implementations, all correctness checks,
 the fixed grid, and the already completed L3 decision. This is a duration-only
 repair; it does not revise or rerun decision evidence.
+
+The 64-repeat correction remained too large: E02 was still running after six
+minutes. The attempt was interrupted under the same duration rule. Its
+checkpoint contains only E01; it was not inspected and is invalidated in full.
+No E02 result completed. A second prospective duration-only correction reduces
+the shared cap to 8 repeats. All other controls listed above remain unchanged.

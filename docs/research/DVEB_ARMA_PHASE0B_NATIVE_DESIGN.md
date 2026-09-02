@@ -183,6 +183,14 @@ failure cannot silently discard completed descriptive evidence.
 This duration-only correction changes no source under test, input, grid cell,
 correctness gate, selected block, L3 observation, threshold, or decision rule.
 
+The first corrected attempt showed that 64 repeats remained disproportionate:
+E02 did not complete after six minutes. That attempt was stopped, and its E01-
+only checkpoint is invalidated without inspection or retention as evidence.
+The final ancillary cap is therefore 8 repeats. The paired-observation count,
+warmups, implementation order, identical-work rule, correctness checks, cells,
+and decision boundaries remain unchanged. This second correction is likewise
+limited to duration for descriptive L1/L2 evidence.
+
 ## Intended files
 
 - `benchmarks/dveb_arma_phase0b/native/arma_native.h`;
