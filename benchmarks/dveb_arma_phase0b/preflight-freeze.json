@@ -1,0 +1,19 @@
+{
+  "authorized_scope": "NumPy/Cython/PyTorch workload/null preflight only",
+  "decision_observations": 0,
+  "dveb_compiler_work_authorized": false,
+  "input_freeze_sha256": "0003e49dfffa1389d68798d33711f8cac57ea58a6ab7e586b68a0515b195028f",
+  "native_diagnostic_authorized": false,
+  "protocol_commit": "bb8b84cc0b79dc339190779e33044d82a60429cd",
+  "schema": "pystatistics.dveb-arma-phase0b.preflight-freeze.v1",
+  "source_commit": "db3ed4b1e28b8f7c1695005dc6dc12c897d59f24",
+  "sources": {
+    "common.py": "bc68226b25203075808ffb3053a27f5205a990a5ce5557e21d1050ba5e2949b6",
+    "inspect_compile.py": "b849c218f4e296c51d862358ae96cf3129e28477e61e8e5d6213817f82db956e",
+    "reference_impl.py": "7ca09413814065a63abc79674c37cdae920ff9b923dbf2ad46cd763666569a6e",
+    "run_edge_cases.py": "c471fd036e06fb7b625e7923ebf38c70c646988824dad5b3ebd87c280238e4cc",
+    "run_preflight.py": "72bfe9b8357cdd870b2561e06c96d65178c2b297acb28e862c3bfbc04fcd03af",
+    "torch_impl.py": "2e3610888f42d074f82940262f64e9bf35605d27c46b9228f344949191fbeda2"
+  },
+  "status": "frozen-before-formal-preflight"
+}
