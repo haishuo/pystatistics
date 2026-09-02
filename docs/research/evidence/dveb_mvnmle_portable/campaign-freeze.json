@@ -1,0 +1,92 @@
+{
+  "schema": "pystatistics.dveb-portable.campaign-freeze.v1",
+  "status": "frozen-before-timing",
+  "frozen_date": "2026-09-02",
+  "research_branch": "research/dveb-pystatistics",
+  "pre_freeze_head": "746e846",
+  "protocol": "docs/research/DVEB_PORTABLE_MVNMLE_PERFORMANCE_PROTOCOL.md",
+  "wheel": {
+    "path": "/tmp/pystatistics-dveb-cpu-wheel-v2-2639f19-attempt2/final/cp311-cp311/pystatistics-6.2.0.dev0+dveb-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+    "sha256": "92fa398c2785eac02d824c4bb589cabc2a9a966b4c87ab915a622df5b44caa4a",
+    "size_bytes": 3529467,
+    "installed_site": "/tmp/pystatistics-dveb-portable-perf-92fa398c/site",
+    "artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+    "abi_version": 1
+  },
+  "environment": {
+    "python_executable": "/home/haishuo/miniconda3/envs/gradflow/bin/python",
+    "python": "3.11.13",
+    "numpy": "2.2.6",
+    "scipy": "1.16.0",
+    "torch": "2.9.0.dev20250705+cu128",
+    "torch_cuda_bundle": "12.8",
+    "torch_device_for_campaign": "cpu",
+    "machine": "AMD Ryzen 5 7600X 6-Core Processor",
+    "physical_cores": 6,
+    "logical_cpus": 12,
+    "glibc": "2.39"
+  },
+  "evaluation": {
+    "cases": ["E1", "E2", "E3", "E4", "E5", "E6"],
+    "threads": [1, 6, 12],
+    "warmups_per_implementation": 3,
+    "paired_repetitions": 30,
+    "randomization_seed": "0xD0EB1009",
+    "implementations": ["torch", "portable_dveb"],
+    "full_fit_endpoint": true,
+    "slow_observation_exclusion": false,
+    "bootstrap_resamples": 10000
+  },
+  "correctness": {
+    "qualification_lanes": 18,
+    "loglik_absolute_tolerance": 1e-05,
+    "parameter_relative_tolerance": 0.001,
+    "parameter_absolute_tolerance": 0.001,
+    "both_solvers_must_converge": true,
+    "input_bytes_must_match_prior_freeze": true,
+    "input_must_remain_unchanged": true,
+    "wheel_v2_verifier_must_pass": true
+  },
+  "decision": {
+    "catastrophic_domination": "any lane median PyTorch/portable-DVEB <= 0.10",
+    "systematic_domination": "PyTorch faster in >=12/18 lanes and geometric mean portable-DVEB/PyTorch >= 2.0",
+    "go": "all correctness gates pass and neither domination rule holds",
+    "strong_go": "GO plus portable DVEB faster in >=12/18 lanes and geometric mean PyTorch/portable-DVEB >= 1.25",
+    "preferred_nonmandatory_win": "lane median PyTorch/portable-DVEB >= 1.5"
+  },
+  "input_sha256": {
+    "E1": "945034997bd9ba162e51e0ad56a02b47f805b65e01707debedde428f8f693484",
+    "E2": "1f080b40b4c71d17bcfa414ea7081f2ac967f94373679a42e689705d6c82fcb7",
+    "E3": "509b1ea45735af4e1f0d8326ccffd1263573f34c4f52d485876f97ed5a5de031",
+    "E4": "301970b30f1faad44ccfe66b788ce61e27e80639a0607de6a6dffb5144aee4ba",
+    "E5": "37c711f3222a872fd1930bec7a35d3ce36dd35817199de46c54405dd44991ddc",
+    "E6": "da437360b4068b98651cb47645e238f7f8c7d8c929dbdd9c8aa5ea1e4ee1ba43"
+  },
+  "historical_native": {
+    "analysis": "docs/research/evidence/dveb_mvnmle/campaign-analysis.json",
+    "analysis_sha256": "6f8c900781bc2e18318e133f7aa68db14cb74c308473ded120c7da828fd9dfa6",
+    "artifact_sha256": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f",
+    "decision_role": "descriptive cross-campaign diagnostic only"
+  },
+  "hashes": {
+    "docs/research/DVEB_PORTABLE_MVNMLE_PERFORMANCE_PROTOCOL.md": "5d3f9cad7fb8a7332685d9c23214724661c34ce27245434bca4d28e4ca1c8c6d",
+    "benchmarks/dveb_mvnmle_integration/common.py": "83638a99f590b8185a2a814a3dd593bbed72250fee4368f1ba6567a01a1c1c7e",
+    "benchmarks/dveb_mvnmle_portable/portable_common.py": "1be9b8fb315781ab72b554b8e16c82068ea8a3c1287032414ec0bd9c23d58502",
+    "benchmarks/dveb_mvnmle_portable/qualify_worker.py": "d232ff14fca7133c521c5317ff22ce5dfb24505d63603fe0296f5b8e9bb61e79",
+    "benchmarks/dveb_mvnmle_portable/run_qualification.py": "1c342fbd360eee74ca88dc66dc343f4e7a0ca34b65e2a23f2d6a2bb6605bfa0d",
+    "benchmarks/dveb_mvnmle_portable/worker.py": "087538b3cfd4c6748423d4a8fb516d7d2ea74d54bccce274b7acaf53f92095a4",
+    "benchmarks/dveb_mvnmle_portable/run_campaign.py": "d90acffb7415071c07bcc897aa8c6607f34976c755981b535fb3a2cfa90492c9",
+    "benchmarks/dveb_mvnmle_portable/analyze.py": "6a081ddad2d8a3f86f881cc824d8c2594325466e1815f80b9879c68c9d1da6f8",
+    "benchmarks/dveb_mvnmle_portable/operational_worker.py": "9b653a2b68590096ca74f7792a8bc5cf5acb276ddc475f471afbdc25dc39d615",
+    "benchmarks/dveb_mvnmle_portable/run_operational.py": "fb3d7dac0795bf6fdacbe5c600f6d9e48c4c820476789cad494a279a32637da7",
+    "docs/research/evidence/dveb_mvnmle/campaign-analysis.json": "6f8c900781bc2e18318e133f7aa68db14cb74c308473ded120c7da828fd9dfa6"
+  },
+  "interpretation": {
+    "portable_performance_results_seen_before_freeze": false,
+    "historical_native_results_decide_campaign": false,
+    "operational_endpoints_are_nondecision": true,
+    "publication_branch_only": true,
+    "merge_to_main_authorized": false,
+    "push_after_campaign_authorized": false
+  }
+}
