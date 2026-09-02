@@ -1,0 +1,56 @@
+{
+  "artifacts": {
+    "cpu": {
+      "bytes": 25432,
+      "path": "/tmp/pystatistics_dveb_arma_admitted.n613GW/libarma_native_cpu.so",
+      "sha256": "7afb2b4441834b459edceee4cc7937a7db1d4e59eda1d05844e392ee00b37d25"
+    },
+    "cuda": {
+      "bytes": 1059352,
+      "path": "/tmp/pystatistics_dveb_arma_admitted.n613GW/libarma_native_cuda.so",
+      "sha256": "f33c84c0295427714f8e40afaa7aa426ab27401703d21782fbc2b869efcc3417"
+    }
+  },
+  "commands": {
+    "cpu": [
+      "g++",
+      "-std=c++17",
+      "-O3",
+      "-march=native",
+      "-fopenmp",
+      "-ffp-contract=off",
+      "-fPIC",
+      "-shared",
+      "/home/haishuo/worktrees/pystatistics-dveb/benchmarks/dveb_arma_phase0b/native/arma_cpu.cpp",
+      "-o",
+      "/tmp/pystatistics_dveb_arma_admitted.n613GW/libarma_native_cpu.so"
+    ],
+    "cuda": [
+      "/home/haishuo/cuda-13.0/bin/nvcc",
+      "-std=c++17",
+      "-O3",
+      "-arch=sm_120",
+      "--fmad=true",
+      "-Xcompiler=-fPIC",
+      "-shared",
+      "/home/haishuo/worktrees/pystatistics-dveb/benchmarks/dveb_arma_phase0b/native/arma_cuda.cu",
+      "-o",
+      "/tmp/pystatistics_dveb_arma_admitted.n613GW/libarma_native_cuda.so"
+    ]
+  },
+  "compiler_output": {
+    "cpu": "",
+    "cuda": ""
+  },
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "schema": "pystatistics.dveb-arma-phase0b.native-build.v1",
+  "seconds": {
+    "cpu": 0.34707694401731715,
+    "cuda": 0.6559314329642802
+  },
+  "sources": {
+    "arma_cpu.cpp": "a05d29ba8515e244176ed9f9f34c6b611f1d2e14839a7e15d298c50259e018da",
+    "arma_cuda.cu": "eec9d5ecd7afb60abcde0ca460f14080c8ece32b247c3f98d0cc6e683741a3f5",
+    "arma_native.h": "61a19b2674a26dc87128bac782cf369a30c0d6f265db3754ddc8ced927fac18a"
+  }
+}
