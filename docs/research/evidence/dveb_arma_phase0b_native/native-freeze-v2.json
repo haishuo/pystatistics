@@ -1,0 +1,70 @@
+{
+  "artifacts": {
+    "cpu": {
+      "bytes": 25432,
+      "dependencies": "linux-vdso.so.1 (0x00007fffbed5f000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x0000793b0b600000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x0000793b0b517000)\n\tlibgomp.so.1 => /lib/x86_64-linux-gnu/libgomp.so.1 (0x0000793b0b8cd000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000793b0b89f000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x0000793b0b200000)\n\t/lib64/ld-linux-x86-64.so.2 (0x0000793b0b939000)",
+      "path": "libarma_native_cpu.so",
+      "sha256": "7afb2b4441834b459edceee4cc7937a7db1d4e59eda1d05844e392ee00b37d25"
+    },
+    "cuda": {
+      "bytes": 1059352,
+      "dependencies": "linux-vdso.so.1 (0x00007ffdd98bb000)\n\tlibstdc++.so.6 => /lib/x86_64-linux-gnu/libstdc++.so.6 (0x000075e8af000000)\n\tlibgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x000075e8af330000)\n\tlibc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x000075e8aec00000)\n\t/lib64/ld-linux-x86-64.so.2 (0x000075e8af42a000)\n\tlibm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x000075e8aef17000)",
+      "path": "libarma_native_cuda.so",
+      "resource_usage": "Fatbin elf code:\n================\narch = sm_120\ncode version = [1,8]\nhost = linux\ncompile_size = 64bit\n\nResource usage:\n Common:\n  GLOBAL:0\n\nFatbin elf code:\n================\narch = sm_120\ncode version = [1,8]\nhost = linux\ncompile_size = 64bit\n\nResource usage:\n Common:\n  GLOBAL:0\n Function _ZN45_GLOBAL__N__876b25f1_12_arma_cuda_cu_5cf413c411arma_kernelEPKdS1_S1_lliPdS2_Ph:\n  REG:39 STACK:0 SHARED:1072 LOCAL:0 CONSTANT[0]:968 TEXTURE:0 SURFACE:0 SAMPLER:0\n\nFatbin ptx code:\n================\narch = sm_120\ncode version = [9,0]\nhost = linux\ncompile_size = 64bit\ncompressed\nptxasOptions =",
+      "sha256": "f33c84c0295427714f8e40afaa7aa426ab27401703d21782fbc2b869efcc3417"
+    }
+  },
+  "branch": "research/dveb-pystatistics",
+  "decision_observations": 0,
+  "derived_floor_relative": {
+    "nll_rel": 1e-14,
+    "sigma2_rel": 1e-14
+  },
+  "design_sha256": "cd49f9109df204dec51fd7a4e33bfc5619f1c139763b3368f085b2af6f37235c",
+  "dveb_compiler_work_authorized": false,
+  "environment": {
+    "gpu": "NVIDIA GeForce RTX 5070 Ti, 12.0, 16303 MiB, 580.173.02",
+    "gxx": "g++ (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0",
+    "nvcc": "Build cuda_13.0.r13.0/compiler.36424714_0",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39"
+  },
+  "evidence": {
+    "build.json": "e236e8db3f7d036bcb3f4f1a8ca77243d1871fd41dec231e88aca8e7dcc3dac9",
+    "calibration.json": "1d2c9465ded95161177e46646108cd54d87d181451d48c28310884b9d33bd31e",
+    "qualification.json": "e2c4cb317e206a678ad18fba1fd95fc7eceacaec8e6fc72864cd678d9fe593d3",
+    "tolerance-derivation.json": "d07d2cb980eb7f39bca771c4f9adb29889fa0f5191eaff85d5cd077ce733ba31"
+  },
+  "input_freeze_sha256": "0003e49dfffa1389d68798d33711f8cac57ea58a6ab7e586b68a0515b195028f",
+  "invalidated_attempts": 1,
+  "invalidated_reason": "first CUDA L3 attempt wrote no result and exposed no timings; missing TorchTrace no-op close method",
+  "native_diagnostic_authorized": true,
+  "proposal_freeze_sha256": "5839271dc60be4e40ca38ae52590766fb7909d4616f405138e45dc17e3f9cd36",
+  "protocol_sha256": "274eaac546a512985cbf49fbb4130d6de24d3c68d9dde4f0d5468f5bb7affe3d",
+  "schema": "pystatistics.dveb-arma-phase0b.native-freeze.v1",
+  "selected_cuda_blocks": {
+    "1": 32,
+    "13": 256,
+    "25": 256,
+    "3": 32
+  },
+  "source_commit": "d566e8c2f3338d79f6ec628450258f72d7332dbe",
+  "source_tree": "52ef9b36d6b9e0051abb82ea5accbe4af7cb4d8f",
+  "sources": {
+    "build_native.py": "fdc171464528354fe37e7dcaf34f9c55624e3bfb103cf383de2b480b8e550a64",
+    "calibrate_native.py": "515fd1a2976608fb28c72bc1461eaae8444d9428c21b7c005c3b1dcc077eed91",
+    "campaign_existing.py": "2680b82fe3383c718015278548d73a9f53fb9c067703a0a415df631af5b7f1a1",
+    "common.py": "bc68226b25203075808ffb3053a27f5205a990a5ce5557e21d1050ba5e2949b6",
+    "derive_native_tolerances.py": "81aea3a067c0d74d19c8846d4cc98526d920960e81047085004ed28254c88c18",
+    "freeze_proposals.py": "a6a069d2e18df24badc510000b4e12534f85cae775d44406754b4835cffa6c91",
+    "native/arma_cpu.cpp": "a05d29ba8515e244176ed9f9f34c6b611f1d2e14839a7e15d298c50259e018da",
+    "native/arma_cuda.cu": "eec9d5ecd7afb60abcde0ca460f14080c8ece32b247c3f98d0cc6e683741a3f5",
+    "native/arma_native.h": "61a19b2674a26dc87128bac782cf369a30c0d6f265db3754ddc8ced927fac18a",
+    "native_runtime.py": "2190c71d272c8e5463861702ea3d8051225fd8037fea83895e515c84250c2268",
+    "proposal_trace.py": "19190d63ecae7cc32cf2c27e27004d20ebeed81137852bf29ac040184abe1007",
+    "qualify_native.py": "a4a9340c4ed1af672912bbee6662170277c939b2547f66c21096038a08541b72",
+    "reference_impl.py": "7ca09413814065a63abc79674c37cdae920ff9b923dbf2ad46cd763666569a6e",
+    "run_l3_campaign.py": "43d70ed6ce3fed619a29cb291a639c03fe4141b51f0e195ae317e87bc53e46c2",
+    "torch_impl.py": "2e3610888f42d074f82940262f64e9bf35605d27c46b9228f344949191fbeda2"
+  },
+  "status": "frozen-before-decision-timing"
+}
