@@ -1,0 +1,162 @@
+{
+  "abi": {
+    "combined_library": "exact_arma_abi_v1.so",
+    "cpu_entry": "dveb_recurrence_cpu_run",
+    "cpu_only_cuda_dependency": false,
+    "cpu_only_isa": "x86-64-v2",
+    "cpu_only_library": "exact_arma_cpu_abi_v1.so",
+    "header": "exact_arma_abi_v1.h",
+    "resident_cuda_entry": "dveb_recurrence_cuda_run_device",
+    "transfer_cuda_entry": "dveb_recurrence_cuda_run_host",
+    "version": 1
+  },
+  "bundle": {
+    "name": "trunk009_exact_arma_20260902"
+  },
+  "compiler_artifact": {
+    "compiler": {
+      "commit": "613050ded3ed2a84dd4f3219f782d9b445381443",
+      "dirty": false,
+      "tree": "a4eda25d5955a1d46131d4c5a84665bdf6e9216d"
+    },
+    "library_sha256": "328893657d4688a703b2661f1bb9facfc141b95369a02f5fc62e93e889c984f6",
+    "manifest_sha256": "f3b4c6a98a332e81832e19c7133ba5a053fc7dee198fe5856f7d2956a3e2b2ec",
+    "source_sha256": "faf72d2a406decbd65b68d1d404a90cbffebf98594b8bc93b132f71cd66b0ea9"
+  },
+  "contract": {
+    "cpu_workers": [
+      1,
+      6,
+      12
+    ],
+    "cuda": "CUDA 13.0 runtime, compute capability exactly 12.0",
+    "cuda_auto_calibrated_states": {
+      "1": 32,
+      "13": 256,
+      "25": 256,
+      "3": 32
+    },
+    "cuda_forced_blocks": [
+      32,
+      64,
+      128,
+      256
+    ],
+    "dtype": "float64 inputs/outputs; int64 status",
+    "mathematics": "concentrated exact Gaussian ARMA likelihood; stationary doubling or diffuse fallback",
+    "rank": "caller-owned contiguous row-major matrices and vectors",
+    "shape": "items>=1, steps>=1, 1<=state<=25"
+  },
+  "evidence": {
+    "calibration": "cuda-calibration.json",
+    "correctness": "qualification.json",
+    "cpu_only_correctness": "cpu-only-qualification.json",
+    "performance": "campaign-analysis.json",
+    "regression": "regression.json",
+    "report": "009-results.md"
+  },
+  "files": {
+    "009-results.md": {
+      "bytes": 4946,
+      "sha256": "7ab97ea89b1dc3d3ad55b30b9154965143db787617ffa4b18b653ad493855cf0",
+      "source": "docs/trunks/009-results.md"
+    },
+    "campaign-analysis.json": {
+      "bytes": 20861,
+      "sha256": "4fc809e30aca98d934d42852397b56c7f41e29672af77306619d30e4d93ed0f6",
+      "source": "evidence/trunk009/campaign-analysis.json"
+    },
+    "cpu-only-qualification.json": {
+      "bytes": 29346,
+      "sha256": "d276c2d793b2c41610ea53c9362827d98c7197c7d47b2cf0f9d4692a73b09c25",
+      "source": "evidence/trunk009/cpu-only-qualification.json"
+    },
+    "cuda-calibration.json": {
+      "bytes": 10199,
+      "sha256": "066a81895ec62d89909e583fe2fafae19c111466c612a81f4f615976002cd8d6",
+      "source": "evidence/trunk009/cuda-calibration.json"
+    },
+    "exact_arma.cuda.tsv": {
+      "bytes": 378,
+      "sha256": "f91609fba431e349a44ca5afd50e4b431fea02df34f7626d7deaf9523c7c77ef",
+      "source": "evidence/trunk009/exact_arma.cuda.tsv"
+    },
+    "exact_arma.dveb": {
+      "bytes": 8310,
+      "sha256": "faf72d2a406decbd65b68d1d404a90cbffebf98594b8bc93b132f71cd66b0ea9",
+      "source": "examples/arma/exact_arma.dveb"
+    },
+    "exact_arma_abi_v1.h": {
+      "bytes": 3141,
+      "sha256": "d28cad243f07991f2feca2e6576fc1d587cdaaf72223f1902cc487ca17d695bb",
+      "source": "build/exact_arma/exact_arma_abi_v1.h"
+    },
+    "exact_arma_abi_v1.so": {
+      "bytes": 127224,
+      "sha256": "328893657d4688a703b2661f1bb9facfc141b95369a02f5fc62e93e889c984f6",
+      "source": "build/exact_arma/exact_arma_abi_v1.so"
+    },
+    "exact_arma_build_commands.json": {
+      "bytes": 1748,
+      "sha256": "0207b4b1bcd590dd2f4212ed0218e3c53caf5ac1225d2ef2b4ad6f69ca19b916",
+      "source": "build/exact_arma/exact_arma_build_commands.json"
+    },
+    "exact_arma_cpu_abi_v1.so": {
+      "bytes": 37824,
+      "sha256": "3349732f1dc3e9d3f65ca32581028c49e7e870d4369b072f1f05b6ce46fdd428",
+      "source": "build/exact_arma/exact_arma_cpu_abi_v1.so"
+    },
+    "exact_arma_cuda.cu": {
+      "bytes": 28931,
+      "sha256": "6fbc97847d8ac37e42bfd1424bf66c39fbaf459a1232c5ca7d90fcad36c818aa",
+      "source": "build/exact_arma/exact_arma_cuda.cu"
+    },
+    "exact_arma_host.cpp": {
+      "bytes": 30383,
+      "sha256": "fd4fe5b63cbb6bc06e2a76c7da608e1cec6c23ab6f7aff57a70df22ed98457fd",
+      "source": "build/exact_arma/exact_arma_host.cpp"
+    },
+    "exact_arma_manifest.json": {
+      "bytes": 7659,
+      "sha256": "f3b4c6a98a332e81832e19c7133ba5a053fc7dee198fe5856f7d2956a3e2b2ec",
+      "source": "build/exact_arma/exact_arma_manifest.json"
+    },
+    "exact_arma_structure.json": {
+      "bytes": 1357,
+      "sha256": "42146bc11fcc3741339235b96eed7331e44d355deb402c68d87112b262a05bc1",
+      "source": "build/exact_arma/exact_arma_structure.json"
+    },
+    "qualification.json": {
+      "bytes": 92167,
+      "sha256": "702eebce58a6d853e7edd35e428c0126b9bf25846154f2dd2747bae9e2b6a73f",
+      "source": "evidence/trunk009/qualification.json"
+    },
+    "regression.json": {
+      "bytes": 9069,
+      "sha256": "9b4351b3f5b03291381065ed5dd149a257c7a97bc1b64a83b381f2894e95cfc2",
+      "source": "evidence/trunk009/regression.json"
+    }
+  },
+  "nonclaims": [
+    "not merged into or released by PyStatistics",
+    "not qualified beyond Linux x86-64 or NVIDIA sm_120",
+    "not a general tensor, autodiff, sparse, or multi-GPU runtime",
+    "does not qualify the current CPU automatic selector",
+    "does not claim every statistical workload should leave PyTorch"
+  ],
+  "ownership": {
+    "cpu": "caller owns all arrays; context owns preallocated per-worker scratch",
+    "cuda_resident": "caller owns device arrays and stream; call launches asynchronously; no allocation, transfer, or synchronization",
+    "cuda_transfer": "context owns reusable staging arena; helper performs explicit H2D, launch, synchronization, and D2H"
+  },
+  "policy": {
+    "cpu": "not production-qualified; use legal forced schedule pending next selector trunk",
+    "cuda": "qualified; one 8.52% held-out miss at E08"
+  },
+  "repository": {
+    "branch": "codex/trunk-009-batched-recurrence",
+    "commit": "7955be7c3c6f0c6ed976d963d669a8823a17de4a",
+    "tree": "2295a6172a7055d38547db055056da5b82e7c627"
+  },
+  "schema": "dveb-pystatistics-recurrence-handoff-v1"
+}

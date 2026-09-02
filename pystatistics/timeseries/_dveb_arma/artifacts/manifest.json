@@ -1,0 +1,17 @@
+{
+  "schema": "pystatistics-dveb-exact-arma-consumer-v1",
+  "status": "research-only",
+  "abi_version": 1,
+  "cpu_artifact": "exact_arma_cpu_abi_v1.so",
+  "cpu_artifact_sha256": "3349732f1dc3e9d3f65ca32581028c49e7e870d4369b072f1f05b6ce46fdd428",
+  "combined_artifact_sha256": "328893657d4688a703b2661f1bb9facfc141b95369a02f5fc62e93e889c984f6",
+  "combined_artifact_bundled": false,
+  "cpu_isa": "x86-64-v2",
+  "cpu_cuda_runtime_dependency": false,
+  "dveb_source_commit": "7955be7c3c6f0c6ed976d963d669a8823a17de4a",
+  "dveb_source_tree": "2295a6172a7055d38547db055056da5b82e7c627",
+  "language_source_sha256": "faf72d2a406decbd65b68d1d404a90cbffebf98594b8bc93b132f71cd66b0ea9",
+  "handoff_manifest_sha256": "dcff39c98c6d3442ff3a255e55ba2fa90a705dbfc028e2739abcbe53d18e07bb",
+  "cuda_contract": "CUDA 13.0; compute capability exactly 12.0",
+  "shape_contract": "items>=1, steps>=1, 1<=state<=25"
+}
