@@ -13,7 +13,7 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
 PHASE0 = ROOT / "benchmarks/dveb_arma_phase0b"
-sys.path.insert(0, str(PHASE0))
+sys.path[:0] = [str(ROOT), str(PHASE0)]
 
 from common import CELLS, generate_cell, sha256_array  # noqa: E402
 from proposal_trace import proposal_trace  # noqa: E402
