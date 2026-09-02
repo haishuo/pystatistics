@@ -1,0 +1,10 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.13, pytest-8.4.1, pluggy-1.6.0
+rootdir: /home/haishuo/worktrees/pystatistics-dveb
+configfile: pyproject.toml
+plugins: anyio-4.10.0, hydra-core-1.3.2, cov-6.2.1
+collected 18 items
+
+tests/mvnmle/test_dveb_integration.py ..................                 [100%]
+
+============================== 18 passed in 1.59s ==============================

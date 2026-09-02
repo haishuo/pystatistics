@@ -1,0 +1,19 @@
+
+pystatistics-6.2.0.dev0+dveb-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl
+is consistent with the following platform tag:
+"manylinux_2_24_x86_64".
+
+The wheel references external versioned symbols in these
+system-provided shared libraries: libgcc_s.so.1 with versions
+{'GCC_3.0'}, libgomp-e985bcbb.so.1.0.0 with versions {'OMP_1.0',
+'GOMP_4.0'}, libc.so.6 with versions {'GLIBC_2.3', 'GLIBC_2.2.5',
+'GLIBC_2.6', 'GLIBC_2.16', 'GLIBC_2.14', 'GLIBC_2.4', 'GLIBC_2.17'},
+libstdc++.so.6 with versions {'CXXABI_1.3', 'GLIBCXX_3.4',
+'CXXABI_1.3.9'}, libm.so.6 with versions {'GLIBC_2.2.5'}, libdl.so.2
+with versions {'GLIBC_2.2.5'}, libpthread.so.0 with versions
+{'GLIBC_2.2.5', 'GLIBC_2.3.4'}
+
+This constrains the platform tag to "manylinux_2_24_x86_64". In order
+to achieve a more compatible tag, you would need to recompile a new
+wheel from source on a system with earlier versions of these
+libraries, such as a recent manylinux image.

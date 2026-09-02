@@ -1,0 +1,22 @@
+DVEB CPU-only wheel qualification v2 process record
+
+1. The first fresh builder invocation mounted the research worktree read-only.
+   It stopped before wheel production when build_portable_artifact.py attempted
+   to refresh the tracked source-tree artifact and received EROFS. Its empty
+   artifact-build.json remains under the uncommitted scratch directory
+   /tmp/pystatistics-dveb-cpu-wheel-v2-2639f19/. The second invocation used a
+   separate clean output directory and the existing build script's required
+   writable worktree mount. The refreshed artifact was byte-identical to the
+   tracked artifact; git remained clean.
+
+2. All three R3 numerical and dependency checks passed and wrote their JSON
+   report. The compound host command then exited 1 only because the deliberately
+   --without-pip virtual environment could not execute `python -m pip freeze`.
+   Package inventory was subsequently collected with the same host pip
+   `--python` mechanism that installed the environment. No numerical check was
+   rerun or substituted.
+
+3. The full branch suite exited 1 because it reproduced exactly the two
+   failures frozen in the v2 allowlist. Under v2 this is an expected process
+   exit and not itself the decision; the complete node-ID and qualitative
+   comparison is recorded in qualification.json and full-suite.txt.

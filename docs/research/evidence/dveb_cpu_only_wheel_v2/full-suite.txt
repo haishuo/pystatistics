@@ -1,0 +1,505 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.13, pytest-8.4.1, pluggy-1.6.0
+rootdir: /home/haishuo/worktrees/pystatistics-dveb
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.10.0, hydra-core-1.3.2, cov-6.2.1
+collected 4601 items / 27 deselected / 4574 selected
+
+tests/anova/test_contrasts.py ..........................                 [  0%]
+tests/anova/test_design.py .................                             [  0%]
+tests/anova/test_effectsizes_gameshowell.py .........                    [  1%]
+tests/anova/test_factorial.py ...............                            [  1%]
+tests/anova/test_levene.py ...........                                   [  1%]
+tests/anova/test_oneway.py .........................                     [  2%]
+tests/anova/test_posthoc.py ...................                          [  2%]
+tests/anova/test_r_validation.py ....................................... [  3%]
+.......                                                                  [  3%]
+tests/anova/test_repeated_measures.py .......................            [  4%]
+tests/core/test_backend.py .................                             [  4%]
+tests/core/test_datasource.py .........                                  [  4%]
+tests/core/test_exceptions.py ...........................                [  5%]
+tests/core/test_qr_solve.py .............                                [  5%]
+tests/core/test_repr_html.py ....                                        [  5%]
+tests/core/test_result.py ......................                         [  6%]
+tests/core/test_torch_interop.py ....s                                   [  6%]
+tests/core/test_validation.py .......................................... [  7%]
+....................                                                     [  7%]
+tests/descriptive/test_backend_convention.py ...                         [  7%]
+tests/descriptive/test_cor.py .............................              [  8%]
+tests/descriptive/test_cov.py ...........                                [  8%]
+tests/descriptive/test_describe.py ........................              [  9%]
+tests/descriptive/test_gpu.py ....F..........                            [  9%]
+tests/descriptive/test_missing.py ............                           [  9%]
+tests/descriptive/test_moments.py ................                       [ 10%]
+tests/descriptive/test_quantile.py ..................................... [ 10%]
+..............................                                           [ 11%]
+tests/descriptive/test_r_validation.py ................................. [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 15%]
+.............                                                            [ 15%]
+tests/gam/test_basis_ccps.py ...........                                 [ 15%]
+tests/gam/test_by_smooths.py ......                                      [ 16%]
+tests/gam/test_factor_by.py ...................                          [ 16%]
+tests/gam/test_gam.py .................................................. [ 17%]
+........                                                                 [ 17%]
+tests/gam/test_nb_theta.py .......                                       [ 17%]
+tests/gam/test_penalty_group.py ...                                      [ 17%]
+tests/gam/test_sp_gradient.py ......................................     [ 18%]
+tests/gam/test_tensor_basis.py ..                                        [ 18%]
+tests/gam/test_tensor_fit.py .............                               [ 19%]
+tests/hypothesis/test_backend_convention.py ...                          [ 19%]
+tests/hypothesis/test_chisq_test.py .....................                [ 19%]
+tests/hypothesis/test_design_split.py ................                   [ 19%]
+tests/hypothesis/test_fisher_test.py ....................                [ 20%]
+tests/hypothesis/test_gpu.py .........                                   [ 20%]
+tests/hypothesis/test_ks_test.py ....................                    [ 21%]
+tests/hypothesis/test_p_adjust.py .........................              [ 21%]
+tests/hypothesis/test_prop_test.py .......................               [ 22%]
+tests/hypothesis/test_r_validation.py ....sss........................... [ 22%]
+..ssss..sss.......ssssss..sss...........................                 [ 24%]
+tests/hypothesis/test_t_test.py ......................                   [ 24%]
+tests/hypothesis/test_var_test.py .................                      [ 24%]
+tests/hypothesis/test_wilcox_ci.py .........                             [ 25%]
+tests/hypothesis/test_wilcox_test.py ..............                      [ 25%]
+tests/mice/test_categorical.py ............................              [ 26%]
+tests/mice/test_datasets.py ..............                               [ 26%]
+tests/mice/test_design.py ..........................                     [ 26%]
+tests/mice/test_gpu.py .......................                           [ 27%]
+tests/mice/test_gpu_glm_separation.py ......................             [ 27%]
+tests/mice/test_gpu_mps.py ssssssssssssssssssssssssssssssssssssssssss    [ 28%]
+tests/mice/test_gpu_polr_draw.py ....                                    [ 28%]
+tests/mice/test_gpu_polr_separation.py ...............                   [ 29%]
+tests/mice/test_methods.py ....................                          [ 29%]
+tests/mice/test_mice.py ......................                           [ 30%]
+tests/mice/test_mps_misread.py ....................ss.                   [ 30%]
+tests/mice/test_polr_ridge_characterization.py ......                    [ 30%]
+tests/mice/test_polyreg_ridge_characterization.py .......                [ 30%]
+tests/mice/test_pooling.py ........................                      [ 31%]
+tests/mice/test_r_validation.py ...........                              [ 31%]
+tests/mice/test_r_validation_categorical.py ....                         [ 31%]
+tests/mice/test_rng.py ...............                                   [ 32%]
+tests/mice/test_visit.py .......                                         [ 32%]
+tests/mixed/test_compute_se.py ....                                      [ 32%]
+tests/mixed/test_conf_int.py ....                                        [ 32%]
+tests/mixed/test_glmm.py .......................                         [ 32%]
+tests/mixed/test_glmm_offset_weights.py ......                           [ 33%]
+tests/mixed/test_glmm_uncorrelated.py .....                              [ 33%]
+tests/mixed/test_grm.py ................s..                              [ 33%]
+tests/mixed/test_lmm_crossed.py .......                                  [ 33%]
+tests/mixed/test_lmm_extreme_ratio.py ..........................         [ 34%]
+tests/mixed/test_lmm_intercept.py ................                       [ 34%]
+tests/mixed/test_lmm_nested.py .....                                     [ 34%]
+tests/mixed/test_lmm_slope.py .......                                    [ 34%]
+tests/mixed/test_pls.py .....                                            [ 35%]
+tests/mixed/test_r_validation.py ....................................... [ 35%]
+......................................                                   [ 36%]
+tests/mixed/test_random_effects.py ................                      [ 37%]
+tests/mixed/test_satterthwaite.py .....                                  [ 37%]
+tests/mixed/test_singular.py ..........                                  [ 37%]
+tests/mixed/test_structured.py ............                              [ 37%]
+tests/montecarlo/test_backend_convention.py ...                          [ 37%]
+tests/montecarlo/test_batched_solver.py ...........                      [ 37%]
+tests/montecarlo/test_boot_ci.py .................                       [ 38%]
+tests/montecarlo/test_bootstrap.py .............................         [ 38%]
+tests/montecarlo/test_gpu.py .....................                       [ 39%]
+tests/montecarlo/test_influence.py ..........                            [ 39%]
+tests/montecarlo/test_permutation.py ..................                  [ 40%]
+tests/montecarlo/test_r_parity.py ............                           [ 40%]
+tests/montecarlo/test_r_validation.py .................................. [ 41%]
+...                                                                      [ 41%]
+tests/multinomial/test_conf_int.py ...                                   [ 41%]
+tests/multinomial/test_multinom.py ..........................F.......... [ 41%]
+................                                                         [ 42%]
+tests/multivariate/test_multivariate.py .......................s........ [ 43%]
+sssssssssssssssssss..................................................... [ 44%]
+........                                                                 [ 44%]
+tests/mvnmle/test_backend_routing.py ........s........                   [ 45%]
+tests/mvnmle/test_degeneracy.py .......................................  [ 46%]
+tests/mvnmle/test_dveb_integration.py ..................                 [ 46%]
+tests/mvnmle/test_em.py ................................                 [ 47%]
+tests/mvnmle/test_gpu.py ..............................                  [ 47%]
+tests/mvnmle/test_gpu_batched_equiv.py .............................s.   [ 48%]
+tests/mvnmle/test_gpu_unpack_equiv.py ........................           [ 48%]
+tests/mvnmle/test_jitter_scale.py ...                                    [ 49%]
+tests/mvnmle/test_mcar.py .........                                      [ 49%]
+tests/mvnmle/test_mlest.py ..........................                    [ 49%]
+tests/mvnmle/test_monotone.py ..............                             [ 50%]
+tests/mvnmle/test_no_silent_fallback.py .......                          [ 50%]
+tests/mvnmle/test_optimize.py .........                                  [ 50%]
+tests/mvnmle/test_pattern_codes_large_p.py ......                        [ 50%]
+tests/mvnmle/test_pattern_summary_format.py .                            [ 50%]
+tests/mvnmle/test_patterns_large_p.py ........                           [ 50%]
+tests/mvnmle/test_squarem.py ....                                        [ 50%]
+tests/ordinal/test_conf_int.py ...                                       [ 50%]
+tests/ordinal/test_information.py ......                                 [ 51%]
+tests/ordinal/test_ordinal.py .......................................... [ 51%]
+.........................................                                [ 52%]
+tests/regression/test_conf_int.py ......                                 [ 53%]
+tests/regression/test_diagnostics_anova.py .........                     [ 53%]
+tests/regression/test_fit.py ..............................              [ 53%]
+tests/regression/test_gamma_nb.py ...................................... [ 54%]
+.................                                                        [ 55%]
+tests/regression/test_glm.py ........................................... [ 56%]
+..........                                                               [ 56%]
+tests/regression/test_glm_gpu.py .....................                   [ 56%]
+tests/regression/test_glm_r_validation.py .............................. [ 57%]
+........................................................................ [ 58%]
+...................................................                      [ 60%]
+tests/regression/test_gpu_fp32_acceptance.py .....                       [ 60%]
+tests/regression/test_gpu_mps_cg.py ....ss                               [ 60%]
+tests/regression/test_gpu_se_ill_conditioned.py .....                    [ 60%]
+tests/regression/test_ic_dispersion_r_match.py .................         [ 60%]
+tests/regression/test_irls_step.py .........                             [ 60%]
+tests/regression/test_links_families.py .................                [ 61%]
+tests/regression/test_module_split.py .........                          [ 61%]
+tests/regression/test_nb_autotheta_r_validation.py ..................    [ 61%]
+tests/regression/test_profile_confint.py .......                         [ 62%]
+tests/regression/test_r_validation.py .................................. [ 62%]
+........................................................................ [ 64%]
+..............                                                           [ 64%]
+tests/regression/test_ridge.py .........s                                [ 64%]
+tests/regression/test_simple_ols.py ...................                  [ 65%]
+tests/regression/test_terms.py ...................                       [ 65%]
+tests/regression/test_terms_gpu.py ...                                   [ 65%]
+tests/regression/test_weights_offset.py ..........................       [ 66%]
+tests/regression/test_weights_offset_gpu.py ...                          [ 66%]
+tests/regression/test_weights_offset_r_validation.py ................... [ 66%]
+..............s.......sss..                                              [ 67%]
+tests/survival/test_concordance_cython_parity.py ....................... [ 67%]
+.............                                                            [ 68%]
+tests/survival/test_conf_int.py ....                                     [ 68%]
+tests/survival/test_cox_zph.py ...............                           [ 68%]
+tests/survival/test_coxph.py ...............................             [ 69%]
+tests/survival/test_discrete_conf_int.py ...                             [ 69%]
+tests/survival/test_discrete_time.py ............................        [ 70%]
+tests/survival/test_entry_time.py ..........                             [ 70%]
+tests/survival/test_gpu.py .......                                       [ 70%]
+tests/survival/test_kaplan_meier.py .................................... [ 71%]
+................                                                         [ 71%]
+tests/survival/test_logrank.py ..................                        [ 71%]
+tests/survival/test_r_validation.py .................................... [ 72%]
+.......................                                                  [ 73%]
+tests/survival/test_robust_se.py .........                               [ 73%]
+tests/survival/test_stratified.py ..........                             [ 73%]
+tests/survival/test_stratified_km.py ......                              [ 73%]
+tests/survival/test_survival_hardening.py ...........                    [ 73%]
+tests/survival/test_uniform_accessors_and_errors.py .....                [ 74%]
+tests/survival/test_warnings.py .........                                [ 74%]
+tests/test_code_quality.py .                                             [ 74%]
+tests/timeseries/test_acf_stationarity.py .............................. [ 74%]
+...................................................                      [ 76%]
+tests/timeseries/test_arima.py ......................................... [ 76%]
+.............................................                            [ 77%]
+tests/timeseries/test_arima_batch_contract.py ...................        [ 78%]
+tests/timeseries/test_arima_ic.py ...........................            [ 78%]
+tests/timeseries/test_arima_kalman_cython_parity.py .................... [ 79%]
+.............................                                            [ 80%]
+tests/timeseries/test_arima_kalman_r_parity.py ......................... [ 80%]
+.................................................                        [ 81%]
+tests/timeseries/test_arima_workspace_fit_regression.py ...........      [ 81%]
+tests/timeseries/test_arima_xreg.py .................................... [ 82%]
+....                                                                     [ 82%]
+tests/timeseries/test_decomposition.py ................................. [ 83%]
+..........                                                               [ 83%]
+tests/timeseries/test_ets.py ........................................... [ 84%]
+..................................                                       [ 85%]
+tests/timeseries/test_ets_kernel_parity.py ............................. [ 86%]
+...........................                                              [ 86%]
+tests/timeseries/test_ets_selection.py ................................. [ 87%]
+......................................                                   [ 88%]
+tests/timeseries/test_ets_workspace_fit_regression.py .....              [ 88%]
+tests/timeseries/test_loess.py ................                          [ 88%]
+tests/timeseries/test_stationarity_mackinnon.py ........................ [ 89%]
+....                                                                     [ 89%]
+tests/timeseries/test_stl_cython_parity.py ............................. [ 89%]
+........................................................................ [ 91%]
+........................................................................ [ 93%]
+........................................................................ [ 94%]
+........................................................................ [ 96%]
+........................................................................ [ 97%]
+.......................................                                  [ 98%]
+tests/timeseries/test_stl_r_parity.py .................................. [ 99%]
+..............                                                           [ 99%]
+tests/timeseries/test_stl_robust.py ..........                           [ 99%]
+tests/timeseries/test_whittle_batch_compile.py ....                      [ 99%]
+tests/timeseries/test_whittle_gpu_rfft.py ..                             [100%]
+
+=================================== FAILURES ===================================
+_____________________ TestGPUvsCPU.test_describe_kurtosis ______________________
+tests/descriptive/test_gpu.py:69: in test_describe_kurtosis
+    np.testing.assert_allclose(gpu.kurtosis, cpu.kurtosis, rtol=1e-4)
+E   AssertionError: 
+E   Not equal to tolerance rtol=0.0001, atol=0
+E   
+E   Mismatched elements: 1 / 5 (20%)
+E   Max absolute difference among violations: 6.79605395e-07
+E   Max relative difference among violations: 0.00017979
+E    ACTUAL: array([-0.003779,  0.239676, -0.294634, -0.261414,  0.312806])
+E    DESIRED: array([-0.00378 ,  0.239676, -0.294634, -0.261414,  0.312806])
+__________ TestFailureCases.test_complete_separation_vcov_fails_loud ___________
+tests/multinomial/test_multinom.py:479: in test_complete_separation_vcov_fails_loud
+    with pytest.raises(NotPositiveDefiniteError, match="not positive definite"):
+E   Failed: DID NOT RAISE <class 'pystatistics.core.exceptions.NotPositiveDefiniteError'>
+=============================== warnings summary ===============================
+tests/gam/test_factor_by.py::TestFactorByMatchesMgcv::test_two_smooths_share_one_factor
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_criteria.py:281: UserWarning: GAM design is rank deficient (rank 42 < 45 columns) — coefficients of dependent columns in s(x):g=0, s(x):g=1, s(x):g=2, s(w):g=0, s(w):g=1, s(w):g=2 set to zero (concurvity or over-specified k)
+    fit = fit_fixed_lambda(
+
+tests/gam/test_factor_by.py::TestFactorByMatchesMgcv::test_two_smooths_share_one_factor
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_gam.py:370: UserWarning: GAM design is rank deficient (rank 42 < 45 columns) — coefficients of dependent columns in s(x):g=0, s(x):g=1, s(x):g=2, s(w):g=0, s(w):g=1, s(w):g=2 set to zero (concurvity or over-specified k)
+    fit = fit_fixed_lambda(
+
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-UBRE]
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-REML]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/gam/test_sp_gradient.py:149: UserWarning: fitted probabilities numerically 0 or 1 occurred (possible complete separation)
+    ga = _analytic(rho, y, X, roots, fam, method)
+
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-UBRE]
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-REML]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/gam/test_sp_gradient.py:139: UserWarning: fitted probabilities numerically 0 or 1 occurred (possible complete separation)
+    g[j] = (_criterion(rp, y, X, roots, fam, method)
+
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-UBRE]
+tests/gam/test_sp_gradient.py::TestGradientMatchesFiniteDifference::test_two_smooths[binomial-cloglog-REML]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/gam/test_sp_gradient.py:140: UserWarning: fitted probabilities numerically 0 or 1 occurred (possible complete separation)
+    - _criterion(rm, y, X, roots, fam, method)) / (2 * eps)
+
+tests/gam/test_sp_gradient.py: 13 warnings
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_criteria.py:350: UserWarning: fitted probabilities numerically 0 or 1 occurred (possible complete separation)
+    val, grad = value_and_grad(log_lam)
+
+tests/gam/test_sp_gradient.py::TestGradientFailureCases::test_singular_newton_region_completes_via_public_gam
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_criteria.py:304: UserWarning: analytic smoothing-parameter gradient: the Newton system X'WnX + S_lambda is numerically singular at lambda=array([1.19762186e-05, 1.00503049e-04]); using the Fisher-weight implicit solve for this evaluation
+    grad = ubre_gradient_glm(fit, roots, lam, y, X, family)
+
+tests/gam/test_sp_gradient.py::TestGradientFailureCases::test_singular_newton_region_completes_via_public_gam
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_criteria.py:304: UserWarning: analytic smoothing-parameter gradient: the Newton system X'WnX + S_lambda is numerically singular at lambda=array([1.19737211e-05, 1.00477932e-04]); using the Fisher-weight implicit solve for this evaluation
+    grad = ubre_gradient_glm(fit, roots, lam, y, X, family)
+
+tests/gam/test_sp_gradient.py::TestGradientFailureCases::test_singular_newton_region_completes_via_public_gam
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/gam/_criteria.py:397: UserWarning: fitted probabilities numerically 0 or 1 occurred (possible complete separation)
+    fit_b, f_b = _branch_fit(mu0)
+
+tests/mice/test_categorical.py::TestEncoding::test_categorical_predictor_is_dummy_encoded
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mice/design.py:202: UserWarning: Column 'x2' has (near-)constant observed values (= np.float64(9.0)); its imputations will all equal that constant with zero uncertainty, which understates missing-data uncertainty in Rubin's rules (between-imputation variance 0, fraction of missing information 0). Consider excluding it.
+    _warn_constant_numeric_columns(
+
+tests/mixed/test_glmm.py::TestGLMMOptimizerRobustness::test_genuine_singular_stays_zero
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mixed/test_glmm.py:258: RuntimeWarning: boundary (singular) fit: a random-effects variance is near zero or a correlation is near ±1. The fit is on the boundary of the feasible region; consider simplifying the random-effects structure. (See GLMMSolution.is_singular.)
+    res = glmm(y, X, groups={"g": g}, family="binomial")
+
+tests/mixed/test_lmm_intercept.py::TestLMMNoEffect::test_no_signal
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mixed/test_lmm_intercept.py:173: RuntimeWarning: boundary (singular) fit: a random-effects variance is near zero or a correlation is near ±1. The fit is on the boundary of the feasible region; consider simplifying the random-effects structure. (See LMMSolution.is_singular.)
+    result = lmm(y, X, groups={'group': group})
+
+tests/mixed/test_r_validation.py::TestLMMNoEffect::test_fixed_intercept
+tests/mixed/test_r_validation.py::TestLMMNoEffect::test_fixed_slope
+tests/mixed/test_r_validation.py::TestLMMNoEffect::test_variance_group_near_zero
+tests/mixed/test_r_validation.py::TestLMMNoEffect::test_variance_residual
+tests/mixed/test_r_validation.py::TestLMMNoEffect::test_log_likelihood
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mixed/test_r_validation.py:462: RuntimeWarning: boundary (singular) fit: a random-effects variance is near zero or a correlation is near ±1. The fit is on the boundary of the feasible region; consider simplifying the random-effects structure. (See LMMSolution.is_singular.)
+    self.result = lmm(y, X, groups=groups, reml=True)
+
+tests/mvnmle/test_backend_routing.py: 1 warning
+tests/mvnmle/test_gpu.py: 13 warnings
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='gpu': proceeding on GPU as requested, but 18x2 data (n*v=36) is below the empirical GPU-worth-it threshold of 1500. CPU is expected to be faster on this shape due to GPU kernel-launch overhead. Pass backend='cpu' or 'auto' to skip GPU.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_gpu.py::TestEMGPU::test_em_gpu_matches_cpu_missvals
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='gpu': proceeding on GPU as requested, but 13x5 data (n*v=65) is below the empirical GPU-worth-it threshold of 1500. CPU is expected to be faster on this shape due to GPU kernel-launch overhead. Pass backend='cpu' or 'auto' to skip GPU.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_gpu.py::TestAutoBackendWithGPU::test_auto_em_runs
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='auto': dispatching EM to CPU on 18x2 data (n*v=36 below the empirical GPU-worth-it threshold of 1500). GPU is available but would likely be slower due to kernel-launch overhead on small per-iteration work. Pass backend='gpu' to force GPU anyway.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_gpu.py::TestAutoBackendWithGPU::test_auto_em_convergence_missvals
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='auto': dispatching EM to CPU on 13x5 data (n*v=65 below the empirical GPU-worth-it threshold of 1500). GPU is available but would likely be slower due to kernel-launch overhead on small per-iteration work. Pass backend='gpu' to force GPU anyway.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_gpu.py::TestGPUEdgeCases::test_complete_data_gpu_em
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='gpu': proceeding on GPU as requested, but 50x2 data (n*v=100) is below the empirical GPU-worth-it threshold of 1500. CPU is expected to be faster on this shape due to GPU kernel-launch overhead. Pass backend='cpu' or 'auto' to skip GPU.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_gpu.py::TestGPUEdgeCases::test_high_missing_rate_gpu
+  /home/haishuo/worktrees/pystatistics-dveb/pystatistics/mvnmle/solvers.py:198: UserWarning: backend='gpu': proceeding on GPU as requested, but 100x2 data (n*v=200) is below the empirical GPU-worth-it threshold of 1500. CPU is expected to be faster on this shape due to GPU kernel-launch overhead. Pass backend='cpu' or 'auto' to skip GPU.
+    result = _solve_em(design, backend, tol, max_iter, regularize, verbose)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.43e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.37e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.02e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.39e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.38e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.33e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.36e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.34e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.11e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.35e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.00e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.01e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.04e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.03e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.41e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.22e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.31e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.15e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.30e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.19e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.42e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.10e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.07e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.40e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.21e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.27e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.16e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.28e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.32e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.09e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.20e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.05e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.08e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.13e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.14e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.29e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.06e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.26e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.12e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.18e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.17e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/mvnmle/test_mcar.py::test_sklearn_demo_datasets_complete[breast_cancer]
+  /home/haishuo/worktrees/pystatistics-dveb/tests/mvnmle/test_mcar.py:75: UserWarning: Covariance matrix for a missingness pattern is ill-conditioned (cond=1.23e+12 > threshold=1e+12). Using Moore-Penrose pseudo-inverse; chi-square contribution for this pattern may have reduced precision. Pass regularize=False to raise instead.
+    result = little_mcar_test(X)
+
+tests/timeseries/test_arima.py::TestArimaBatchGPU::test_gpu_matches_serial_whittle_on_phi
+  /home/haishuo/miniconda3/envs/gradflow/lib/python3.11/site-packages/torch/backends/cuda/__init__.py:131: UserWarning: This API is going to be deprecated, please see https://pytorch.org/docs/main/notes/cuda.html#tensorfloat-32-tf32-on-ampere-and-later-devices (Triggered internally at /pytorch/aten/src/ATen/Context.cpp:78.)
+    return torch._C._get_cublas_allow_tf32()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis - ...
+FAILED tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud
+= 2 failed, 4478 passed, 94 skipped, 27 deselected, 94 warnings in 129.46s (0:02:09) =

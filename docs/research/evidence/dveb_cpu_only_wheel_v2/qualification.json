@@ -1,0 +1,159 @@
+{
+  "schema": "pystatistics-dveb-cpu-only-wheel-qualification-v2",
+  "date": "2026-09-02",
+  "protocol": {
+    "path": "docs/research/DVEB_CPU_ONLY_WHEEL_PROTOCOL_V2.md",
+    "freeze_commit": "2639f19fb9cb59d83789076aa6bd3fe7205c309d",
+    "freeze_tree": "45e4a56c601dc6437151eb321d4560e0c39644a8",
+    "v1_protocol_path": "docs/research/DVEB_CPU_ONLY_WHEEL_PROTOCOL.md",
+    "v1_decision_preserved": "NO-GO"
+  },
+  "source": {
+    "inherited_baseline_commit": "da75578",
+    "wheel_build_commit": "2639f19fb9cb59d83789076aa6bd3fe7205c309d",
+    "dveb_commit": "a4b0286",
+    "generated_source_sha256": "407e77b0ad55a92719a3a70139901bdfde0576bb1da74054824e242ec3213879",
+    "manylinux_builder_artifact_sha256": "69e93f9f1c377f2f9bc5aad14633a43cf1efadec93cc21dd4a2324db4c2e2a00",
+    "manylinux_builder_artifact_size_bytes": 34968,
+    "auditwheel_final_artifact_sha256": "65438a0d742257acc0dc7bd2ff13d2017669fd21dc07f64add41b18fb229fe38",
+    "auditwheel_final_artifact_size_bytes": 47977,
+    "frozen_forge_native_artifact_sha256": "a96e410282fae692f532185ba9c6d0377885f9f7f2b696ff772eda13b1fb102f"
+  },
+  "builder": {
+    "image": "quay.io/pypa/manylinux_2_28_x86_64",
+    "repo_digest": "sha256:0536c364004fa2a3c5041120b6fe35d84fc5bfe31f04c6a6304f13eac4a67b63",
+    "image_id": "sha256:cc663ea4c0703d34523c4aff27749a4f66f972da7cea2bc887fa1a89b47cc813",
+    "distribution": "AlmaLinux 8.10",
+    "glibc": "2.28",
+    "gcc": "14.2.1",
+    "auditwheel": "6.8.2"
+  },
+  "wheels": {
+    "cp311": {
+      "filename": "pystatistics-6.2.0.dev0+dveb-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "92fa398c2785eac02d824c4bb589cabc2a9a966b4c87ab915a622df5b44caa4a",
+      "size_bytes": 3529467,
+      "tags": [
+        "cp311-cp311-manylinux_2_24_x86_64",
+        "cp311-cp311-manylinux_2_28_x86_64"
+      ]
+    },
+    "cp312": {
+      "filename": "pystatistics-6.2.0.dev0+dveb-cp312-cp312-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl",
+      "sha256": "7fb9c35c17ac169556cf0529ee5f3c67d05f1a173bfeefa1c6263fd185f03565",
+      "size_bytes": 3481511,
+      "tags": [
+        "cp312-cp312-manylinux_2_24_x86_64",
+        "cp312-cp312-manylinux_2_28_x86_64"
+      ]
+    },
+    "base_requirements": [
+      "numpy>=1.24",
+      "scipy>=1.10"
+    ],
+    "vendored_runtime": "pystatistics.libs/libgomp-e985bcbb.so.1.0.0",
+    "vendored_runtime_size_bytes": 2114857,
+    "forbidden_base_requirements": [],
+    "auditwheel_policy_observed": "manylinux_2_24_x86_64",
+    "claim_remains_frozen_at": "manylinux_2_28_x86_64 plus x86-64-v2"
+  },
+  "runtime_environments": {
+    "r1": {
+      "name": "manylinux policy floor",
+      "python": "3.11.16",
+      "distribution": "AlmaLinux 8.10",
+      "glibc": "2.28",
+      "network_during_check": false,
+      "status": "pass",
+      "evidence": "r1-manylinux-cp311.json"
+    },
+    "r2": {
+      "name": "disjoint SGC application image",
+      "python": "3.12.13",
+      "distribution": "Debian 13",
+      "glibc": "2.41",
+      "numpy": "2.4.6",
+      "scipy": "1.18.0",
+      "network_during_check": false,
+      "status": "pass",
+      "evidence": "r2-debian-cp312.json"
+    },
+    "r3": {
+      "name": "clean Forge host environment",
+      "python": "3.12.3",
+      "distribution": "Ubuntu 24.04.3",
+      "glibc": "2.39",
+      "numpy": "2.5.2",
+      "scipy": "1.18.1",
+      "status": "pass",
+      "evidence": "r3-forge-cp312.json"
+    }
+  },
+  "correctness": {
+    "focused_dveb_integration": {
+      "passed": 18,
+      "failed": 0
+    },
+    "runtime_environments_passed": 3,
+    "apple_loglik_each_environment": -74.21747613185018,
+    "apple_reference_pass": true,
+    "caller_input_unchanged": true,
+    "serial_parallel_auto_within_existing_tolerance": true,
+    "serial_and_auto_bitwise_equal": true,
+    "parallel_value_bitwise_equal": true,
+    "parallel_gradient_bitwise_equal": false,
+    "torch_absent_before_and_after_fit": true,
+    "forbidden_native_dependencies": [],
+    "unresolved_native_dependencies": []
+  },
+  "full_branch_suite": {
+    "passed": 4478,
+    "failed": 2,
+    "skipped": 94,
+    "deselected": 27,
+    "failures": [
+      "tests/descriptive/test_gpu.py::TestGPUvsCPU::test_describe_kurtosis",
+      "tests/multinomial/test_multinom.py::TestFailureCases::test_complete_separation_vcov_fails_loud"
+    ],
+    "unexpected_failures": [],
+    "qualitative_signatures_match_v1": true,
+    "collection_completed": true,
+    "skip_and_deselection_counts_match_v1": true,
+    "task_changed_affected_files": false,
+    "classification": "exact frozen baseline allowlist; no new regression"
+  },
+  "process_failures_preserved": [
+    "The first v2 builder invocation used a read-only worktree mount and stopped before wheel production when the existing build script attempted to refresh the tracked artifact.",
+    "The R3 numerical qualification passed, but the compound command's final local-pip inventory step failed because the venv was deliberately created without pip; inventory was collected through host pip --python.",
+    "The full-suite process exited 1 on exactly the two frozen allowlisted failures; v2 applies its separately committed baseline-relative decision rule."
+  ],
+  "evidence_files": {
+    "artifact-build.json": "62c783a823a845c6b26454baee6cbece1c1ebd49f2316ac758073eb7ea7d2988",
+    "cp311-auditwheel-show.txt": "b51c2cec6884c0ee460ca5299c6d94a9cd2b56f5c1d09e8ab9d68bc5a1b241cb",
+    "cp311-finalize.json": "4946acdcd525004194b020ee249e8da03170fe089d45eb41816d05b34a933253",
+    "cp312-auditwheel-show.txt": "e7fae4830b087b01bc08c99c8109050cf2cff6e80cf864f36b1a12cb379b68cd",
+    "cp312-finalize.json": "ee2c4795412bc3a4bae568123490872d2eccbac524a10e6500b48f1a9e2e9d3c",
+    "focused-suite.txt": "78c6d2dd0d6c2ffc7197a828e2df025fd90e34c91244a9a26309e2b21b1be88a",
+    "full-suite.txt": "44a500b55592b33f9d9b1135d2d1888931d573eb7edda2d88d5d2a6f71081ef8",
+    "process-attempts.txt": "12a37b318df07969ceb5e14370da6e974e2d05bd4be789f7fa2aa8eb4d393f69",
+    "r1-freeze.txt": "9ab4641c1684745191c1eae5ef044ed4b2d141572fd8ab6814c43396650acb16",
+    "r1-manylinux-cp311.json": "02a45447ef227925775a6a438a791b6cc5ac234350eeac1f4320b07eefc0155c",
+    "r2-base-freeze.txt": "61397b4adee65e3ca3a7d7f8e75e59fab3ed778a261ae18a2655ea8573858de5",
+    "r2-debian-cp312.json": "5e43ce2a2b5f5ca4181444652a955810dd1cc045d72c9cbd1f001493666d9177",
+    "r3-forge-cp312.json": "6e13d6f85ecd2ea3f068b323d14048d4736e96b1b2977a7299359e0fd20893ab",
+    "r3-freeze.txt": "1c5cc455b3fff93e5a9b8d0b410f48e3533ebcf540daf6f103cba65f2ce5ea94"
+  },
+  "engineering_result": "PASS",
+  "regression_rule": "no new failures relative to da75578",
+  "formal_protocol_decision": "GO",
+  "formal_reason": "All fresh wheel gates passed in R1/R2/R3, the focused integration passed 18/18, and the complete suite contained only the exact two predeclared inherited failures with unchanged qualitative signatures.",
+  "nonclaims": [
+    "V1 remains NO-GO under its absolute full-suite gate.",
+    "No wheel was published or installed into PyStatistics main.",
+    "No support is claimed for x86-64-v1, musl, Arm, macOS, Windows, or CPython 3.13.",
+    "The runtime environments share one physical CPU, so hardware-diverse ISA validation is not claimed.",
+    "The old performance campaign applies to the archived Forge-native artifact, not to the portable wheel artifact.",
+    "No new wheel performance measurement was made.",
+    "No merge to main or change to PyPI 6.1.5 is authorized."
+  ]
+}
