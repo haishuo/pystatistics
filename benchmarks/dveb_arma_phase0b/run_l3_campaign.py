@@ -99,6 +99,10 @@ class TorchTrace:
         )
         return elapsed, result
 
+    def close(self) -> None:
+        """Match the native/context adapter lifecycle; tensors need no explicit close."""
+
+
 
 class NativeCUDATrace:
     def __init__(

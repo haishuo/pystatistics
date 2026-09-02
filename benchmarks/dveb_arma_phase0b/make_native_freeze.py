@@ -44,6 +44,9 @@ def command(*arguments: str) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--admitted-dir", type=Path, required=True)
+    parser.add_argument("--freeze-name", default="native-freeze.json")
+    parser.add_argument("--invalidated-attempts", type=int, default=0)
+    parser.add_argument("--invalidated-reason")
     args = parser.parse_args()
     EVIDENCE.mkdir(parents=True, exist_ok=True)
     copies = {
@@ -121,10 +124,12 @@ def main() -> int:
         "selected_cuda_blocks": calibration["block_mapping_by_r"],
         "derived_floor_relative": tolerances["derived_floor_relative"],
         "decision_observations": 0,
+        "invalidated_attempts": args.invalidated_attempts,
+        "invalidated_reason": args.invalidated_reason,
         "native_diagnostic_authorized": True,
         "dveb_compiler_work_authorized": False,
     }
-    (EVIDENCE / "native-freeze.json").write_text(
+    (EVIDENCE / args.freeze_name).write_text(
         json.dumps(result, indent=2, sort_keys=True) + "\n"
     )
     print(json.dumps({"evidence": str(EVIDENCE), "artifacts": result["artifacts"]}, indent=2))

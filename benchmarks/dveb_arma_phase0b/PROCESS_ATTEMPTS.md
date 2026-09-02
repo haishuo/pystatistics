@@ -40,3 +40,14 @@ test or numerical code executed. Re-running the identical four-file selection
 through the environment's `python -m pytest` entry point collected and passed
 all 153 tests. The permanent regression record uses the successful,
 worktree-aware invocation.
+
+## 2026-09-02 — native L3 campaign cleanup adapter
+
+The first frozen CUDA L3 decision attempt completed its first cell in memory
+and then failed during cleanup because `TorchTrace` did not implement the
+no-op `close()` method shared by the native adapters. The process wrote no
+result file, emitted no cell timings, and exposed no comparative result. The
+entire attempt is invalidated. The only harness change adds the missing no-op
+lifecycle method; no numerical operation, candidate, workload, threshold,
+order seed, warmup, or observation rule changed. A v2 source freeze records
+one invalidated attempt and zero retained decision observations before rerun.
